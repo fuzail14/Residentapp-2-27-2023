@@ -8,5 +8,6 @@ const String roleIdSPKey = 'roleId';
 const String familymemberIdSPKey = 'familymemberid';
 const String fresidentIdSPKey = 'residentid';
 const String cnicSPKey = 'cnic';
+const String userStatusSPKey = 'status';
 const String bearerTokenSPKey = 'bearerToken';
 const String addressSPKey = 'address';

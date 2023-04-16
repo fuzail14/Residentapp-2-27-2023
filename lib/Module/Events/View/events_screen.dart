@@ -3,6 +3,8 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:userapp/Widgets/Empty%20List/empty_list.dart';
+import 'package:userapp/Widgets/Loader/loader.dart';
 import 'package:userapp/Widgets/My%20Back%20Button/my_back_button.dart';
 import '../../../Constants/constants.dart';
 import '../Controller/event_screen_controller.dart';
@@ -21,7 +23,6 @@ class EventsScreen extends GetView {
               Column(
                 children: [
                   MyBackButton(text: 'Society Events',),
-                  SizedBox(height: 22,),
                   Expanded(
                     child: FutureBuilder<Event>(
                         future: controller.viewEventsApi(
@@ -29,6 +30,8 @@ class EventsScreen extends GetView {
                             token: controller.userdata.bearerToken!),
                         builder: (context, snapshot) {
                           if (snapshot.hasData) {
+
+    if (snapshot.data != null && snapshot.data!.data!.length != 0) {
                             return ListView.builder(
                                 itemBuilder: (context, index) {
                                   return GestureDetector(
@@ -73,19 +76,11 @@ class EventsScreen extends GetView {
                                                     SizedBox(
                                                       height: 14,
                                                     ),
+
                                                     Row(
                                                       children: [
-                                                        CircleAvatar(
-                                                            maxRadius: 10,
-                                                            backgroundColor:
-                                                            Color.fromRGBO(
-                                                                255,
-                                                                153,
-                                                                0,
-                                                                0.35),
-                                                            child: SvgPicture
-                                                                .asset(
-                                                                'assets/chaticon.svg')),
+                                                        SvgPicture.asset(
+                                                            'assets/report_history_date_icon.svg'),
                                                         SizedBox(
                                                           width: 8,
                                                         ),
@@ -93,75 +88,90 @@ class EventsScreen extends GetView {
                                                           'Date',
                                                           style: GoogleFonts.ubuntu(
                                                               color: HexColor(
-                                                                  '#4D4D4D'),
+                                                                  '#535353'),
                                                               fontSize:
-                                                              14,
+                                                              12,
                                                               fontWeight:
                                                               FontWeight
-                                                                  .w500),
+                                                                  .w400),
+                                                        )
+                                                      ],
+                                                    ),
+                                                    SizedBox(
+                                                      height: 8,
+                                                    ),
+                                                    Row(
+                                                      children: [
+                                                        Container(
+                                                          width: MediaQuery.of(context).size.width*0.2,
+                                                          height: MediaQuery.of(context).size.height*0.03,
+                                                          decoration: BoxDecoration(
+                                                              borderRadius:
+                                                              BorderRadius.circular(
+                                                                  4),
+                                                              border: Border.all(
+                                                                  color:
+                                                                  primaryColor)),
+                                                          child: Row(
+                                                            mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceEvenly,
+                                                            children: [
+                                                              Text(
+                                                                snapshot
+                                                                    .data!.data![index]
+                                                                    .startdate!,
+                                                                style: GoogleFonts.ubuntu(
+                                                                    color: HexColor('#535353'),
+                                                                    fontSize: 10,
+                                                                    fontWeight: FontWeight.w300),
+                                                              ),
+                                                              SvgPicture.asset(
+                                                                  'assets/complain_history_date_icon1.svg')
+                                                            ],
+                                                          ),
+                                                        ),
+                                                        SizedBox(
+                                                          width: 15,
+                                                        ),
+                                                        SvgPicture.asset(
+                                                            'assets/Arrow 1.svg'),
+                                                        SizedBox(
+                                                          width: 15,
+                                                        ),
+                                                        Container(
+                                                          width: MediaQuery.of(context).size.width*0.2,
+                                                          height: MediaQuery.of(context).size.height*0.03,
+                                                          decoration: BoxDecoration(
+                                                              borderRadius:
+                                                              BorderRadius.circular(
+                                                                  4),
+                                                              border: Border.all(
+                                                                  color:
+                                                                  primaryColor)),
+                                                          child: Row(
+                                                            mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceEvenly,
+                                                            children: [
+                                                              Text(
+                                                                snapshot
+                                                                    .data!.data![index]
+                                                                    .enddate
+                                                                    .toString(),
+                                                                style: GoogleFonts.ubuntu(
+                                                                    color: HexColor('#535353'),
+                                                                    fontSize: 10,
+                                                                    fontWeight: FontWeight.w300),
+                                                              ),
+                                                              SvgPicture.asset(
+                                                                  'assets/complain_history_date_icon1.svg')
+                                                            ],
+                                                          ),
                                                         ),
                                                       ],
                                                     ),
-                                                    Padding(
-                                                      padding:
-                                                      EdgeInsets.only(
-                                                          left: 27,
-                                                          top: 8),
-                                                      child: Container(
-                                                          height: 27,
-                                                          width: 90,
-                                                          decoration:
-                                                          BoxDecoration(
-                                                            border: Border.all(
-                                                                color: HexColor(
-                                                                    '#E8E8E8')),
-                                                            borderRadius:
-                                                            BorderRadius
-                                                                .circular(
-                                                              4,
-                                                            ),
-                                                            color:
-                                                            HexColor('#E1E1E1'),
-                                                          ),
-                                                          child: Padding(
-                                                            padding: EdgeInsets
-                                                                .only(
-                                                                left:
-                                                                8),
-                                                            child: Row(
-                                                              children: [
-                                                                Icon(
-                                                                  Icons
-                                                                      .calendar_month,
-                                                                  size:
-                                                                  12,
-                                                                  color: HexColor(
-                                                                      '#4D4D4D'),
-                                                                ),
-                                                                SizedBox(
-                                                                  width:
-                                                                  10,
-                                                                ),
-                                                                Text(
-                                                                  snapshot
-                                                                      .data!
-                                                                      .data![index]
-                                                                      .startdate!,
-                                                                  style: GoogleFonts.ubuntu(
-                                                                      color: HexColor(
-                                                                          '#4D4D4D'),
-                                                                      fontSize:
-                                                                      10,
-                                                                      fontWeight:
-                                                                      FontWeight.w300),
-                                                                )
-                                                              ],
-                                                            ),
-                                                          )),
-                                                    ),
-                                                    SizedBox(
-                                                      height: 19,
-                                                    ),
+                                                    SizedBox(height: 20,),
                                                     GestureDetector(
                                                       onTap: () {
                                                         Get.back();
@@ -373,11 +383,15 @@ class EventsScreen extends GetView {
                                     ),
                                   );
                                 },
-                                itemCount: snapshot.data!.data!.length);
+                                itemCount: snapshot.data!.data!.length);}
+
+    else {
+      return EmptyList(name: 'No Events');
+    }
                           } else if (snapshot.hasError) {
                             return Icon(Icons.error_outline);
                           } else {
-                            return Center(child: CircularProgressIndicator(color: primaryColor,));
+                            return Loader();
                           }
                         }),
                   ),

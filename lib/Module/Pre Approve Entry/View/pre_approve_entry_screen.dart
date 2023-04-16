@@ -81,7 +81,7 @@ class GatekeeperReports extends GetView {
                                                                         0.35),
                                                                 child: SvgPicture
                                                                     .asset(
-                                                                        'assets/chaticon.svg')),
+                                                                        'assets/ellipse_icon.svg')),
                                                             SizedBox(
                                                               width: 8,
                                                             ),
@@ -130,7 +130,7 @@ class GatekeeperReports extends GetView {
                                                                         0.35),
                                                                 child: SvgPicture
                                                                     .asset(
-                                                                        'assets/chaticon.svg')),
+                                                                        'assets/ellipse_icon.svg')),
                                                             SizedBox(
                                                               width: 8,
                                                             ),
@@ -157,7 +157,7 @@ class GatekeeperReports extends GetView {
                                                                         0.35),
                                                                 child: SvgPicture
                                                                     .asset(
-                                                                        'assets/chaticon.svg')),
+                                                                        'assets/ellipse_icon.svg')),
                                                             SizedBox(
                                                               width: 8,
                                                             ),
@@ -201,7 +201,10 @@ class GatekeeperReports extends GetView {
                                                               ),
                                                               Flexible(
                                                                 child: Text(
-                                                                  'hsahjsahs-987668jsjs8',
+                                                                  snapshot
+                                                                      .data
+                                                                      .data[index]
+                                                                      .vechileno.toString(),
                                                                   overflow:
                                                                       TextOverflow
                                                                           .ellipsis,
@@ -233,12 +236,12 @@ class GatekeeperReports extends GetView {
                                                                         0.35),
                                                                 child: SvgPicture
                                                                     .asset(
-                                                                        'assets/chaticon.svg')),
+                                                                        'assets/ellipse_icon.svg')),
                                                             SizedBox(
                                                               width: 8,
                                                             ),
                                                             Text(
-                                                              'Time',
+                                                              'Expected Arrival Time',
                                                               style: GoogleFonts.ubuntu(
                                                                   color: HexColor(
                                                                       '#4D4D4D'),
@@ -285,12 +288,12 @@ class GatekeeperReports extends GetView {
                                                                         0.35),
                                                                 child: SvgPicture
                                                                     .asset(
-                                                                        'assets/chaticon.svg')),
+                                                                        'assets/ellipse_icon.svg')),
                                                             SizedBox(
                                                               width: 8,
                                                             ),
                                                             Text(
-                                                              'Vechile no',
+                                                              'Visitor Type',
                                                               style: GoogleFonts.ubuntu(
                                                                   color: HexColor(
                                                                       '#4D4D4D'),
@@ -312,7 +315,7 @@ class GatekeeperReports extends GetView {
                                                             snapshot
                                                                 .data
                                                                 .data[index]
-                                                                .vechileno,
+                                                                .visitortype,
                                                             style: GoogleFonts.ubuntu(
                                                                 color: HexColor(
                                                                     '#4D4D4D'),
@@ -437,10 +440,10 @@ class GatekeeperReports extends GetView {
                                                                 width: 10,
                                                               ),
                                                               Text(
-                                                                snapshot
+                                                                formatDate(snapshot
                                                                     .data
                                                                     .data[index]
-                                                                    .arrivaldate,
+                                                                    .arrivaldate.toString()),
                                                                 style: GoogleFonts.ubuntu(
                                                                     color: HexColor(
                                                                         '#A5AAB7'),
@@ -459,7 +462,7 @@ class GatekeeperReports extends GetView {
                                                         .fromLTRB(13, 13, 0, 0),
                                                     child: Text(
                                                         snapshot.data
-                                                            .data[index].name,
+                                                            .data[index].name.toString(),
                                                         style:
                                                             GoogleFonts.ubuntu(
                                                           color: HexColor(
@@ -576,7 +579,7 @@ class GatekeeperReports extends GetView {
                                                             status: snapshot
                                                                 .data
                                                                 .data[index]
-                                                                .statusdescription,
+                                                                .statusdescription.toString(),
                                                             color: HexColor(
                                                                 '#5A8CED')),
                                                       ),

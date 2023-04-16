@@ -15,15 +15,12 @@ class NoticeBoardController extends GetxController {
 
   late final User userdata;
   late final Residents resident;
-
-  List<NoticeBoardModel> li = [];
-  var currentNoticeBoardId;
+  List<NoticeBoardModel> noticeBoardList = [];
 
   @override
   void onInit() {
     // TODO: implement onInit
     super.onInit();
-    print("init");
     userdata = data[0];
     resident = data[1];
   }
@@ -44,7 +41,7 @@ class NoticeBoardController extends GetxController {
     if (response.statusCode == 200) {
       
 
-      li = (data["data"] as List)
+      noticeBoardList = (data["data"] as List)
           .map((e) => NoticeBoardModel(
                 id: e['id'],
                 noticetitle: e['noticetitle'],
@@ -58,10 +55,10 @@ class NoticeBoardController extends GetxController {
               ))
           .toList();
 
-      return li;
+      return noticeBoardList;
       
     }
-    return li;
+    return noticeBoardList;
   }
 
 

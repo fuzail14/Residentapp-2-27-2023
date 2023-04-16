@@ -3,18 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as Http;
 import 'package:userapp/Routes/set_routes.dart';
-
 import '../../../../Constants/api_routes.dart';
 import '../../../HomeScreen/Model/residents.dart';
 import '../../../Login/Model/User.dart';
 
 class AddReportToAdminController extends GetxController {
   var user = Get.arguments;
-
   late DateTime dateTime;
   late final User userdata;
   Residents? resident;
-  bool mystatus = false;
   var isLoading = false;
 
   List<Map<String, dynamic>> visitorTypes = [
@@ -64,27 +61,13 @@ class AddReportToAdminController extends GetxController {
   TextEditingController reportDescriptionController = TextEditingController();
   TextEditingController dateController = TextEditingController();
 
-  Future Date(context) async {
-    DateTime? picked = await showDatePicker(
-        initialDate: new DateTime.now(),
-        firstDate: new DateTime(2020),
-        lastDate: new DateTime(2030),
-        context: context);
-    if (picked != null) {
-      picked.toString();
-      dateController.text = picked.toString().split(' ')[0];
-    } else {
-      dateController.text = '';
-    }
-    update();
-  }
+
 
   Future reportToAdminApi({
     required int userid,
     required String token,
     required String title,
     required String description,
-    required String date,
     required int subadminid,
   }) async {
     print(userid);
@@ -92,7 +75,6 @@ class AddReportToAdminController extends GetxController {
     print(token);
     print(title);
     print(description);
-    print(date);
 
      isLoading = true;
      update();
@@ -107,7 +89,6 @@ class AddReportToAdminController extends GetxController {
         "subadminid": subadminid,
         "title": title,
         "description": description,
-        "date": date,
         "status": "0",
         "statusdescription": "pending",
       }),

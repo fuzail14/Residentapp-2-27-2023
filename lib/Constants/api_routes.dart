@@ -1,9 +1,11 @@
-const String imageBaseUrl = 'http://192.168.100.7:80/smartgate/public/storage/';
+const String imageBaseUrl =
+    'http://192.168.100.7:80/smartgate2023/public/storage/';
+//const String imageBaseUrl = 'https://www.smartgate.pk/storage/';
 
-// const String imageBaseUrl='https://www.smartgate.pk/storage/';
 class Api {
   static const String baseUrl = 'http://192.168.2.45:8080/api/';
-  // static const String baseUrl = 'https://www.smartgate.pk/api/';
+  //static const String baseUrl = 'https://www.smartgate.pk/api/';
+  
   static const String login = baseUrl + "login";
   static const String logout = baseUrl + "logout";
   static const String report_to_admin = baseUrl + "reporttoadmin";
@@ -23,8 +25,10 @@ class Api {
   static const String view_all_societies =
       baseUrl + "society/viewsocietiesforresidents";
   static const String view_all_phases = baseUrl + "viewphasesforresidents";
-  static const String view_all_blocks = baseUrl + "viewblocksforresidents";
-  static const String view_all_streets = baseUrl + "viewstreetsforresidents";
+  // static const String view_all_blocks = baseUrl + "viewblocksforresidents";
+  static const String blocks = baseUrl + "blocks";
+  // static const String view_all_streets = baseUrl + "viewstreetsforresidents";
+  static const String streets = baseUrl + "streets";
   static const String view_properties_for_residents =
       baseUrl + "viewpropertiesforresidents";
   static const String registerresident = baseUrl + "registerresident";
@@ -50,9 +54,23 @@ class Api {
   static const String fetchchatroomusers = baseUrl + "fetchchatroomusers";
   static const String housesapartmentmeasurements =
       baseUrl + "housesapartmentmeasurements";
-  static const String societybuildings = baseUrl + "societybuildings";
+
+  /* For Apartments */
+
+  static const String allsocietybuildings = baseUrl + "allsocietybuildings";
   static const String viewsocietybuildingfloors =
       baseUrl + "viewsocietybuildingfloors";
   static const String viewsocietybuildingapartments =
       baseUrl + "viewsocietybuildingapartments";
+  static const String zegocall = baseUrl + "zegocall";
+
+  static const String alldiscussionchats = baseUrl + "alldiscussionchats";
+  static const String creatediscussionroom = baseUrl + "creatediscussionroom";
+  static const String discussionchats = baseUrl + "discussionchats";
+  static const String resetpassword = baseUrl + "resetpassword";
+  static const String monthlybills = baseUrl + "monthlybills";
+  static const String viewlocalbuildingfloors = baseUrl + "viewlocalbuildingfloors";
+  static const String viewlocalbuildingapartments = baseUrl + "viewlocalbuildingapartments";
+
+  
 }

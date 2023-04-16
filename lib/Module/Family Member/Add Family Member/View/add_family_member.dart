@@ -44,6 +44,8 @@ class AddFamilyMember extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
+
+
                       MyBackButton(text: 'Family Members',onTap: (){
 
                         Get.offNamed(
@@ -63,7 +65,7 @@ class AddFamilyMember extends StatelessWidget {
                               radius: 50.0,
                               backgroundColor: Colors.white,
                               backgroundImage: controller.imageFile == null
-                                  ? AssetImage('assets/mia.png') as ImageProvider
+                                  ? AssetImage('assets/user.png') as ImageProvider
                                   : FileImage(
                                 File(controller.imageFile!.path),
                               ),
@@ -132,7 +134,7 @@ class AddFamilyMember extends StatelessWidget {
                         ],
                       ),
                       SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.05,
+                        height: 20,
                       ),
                       // Padding(
                       //   padding: const EdgeInsets.all(20),
@@ -226,24 +228,25 @@ class AddFamilyMember extends StatelessWidget {
                         validator: emptyStringValidator,
                         hintText: 'First Name',
                         labelText: 'Enter First Name',
-                        onFocusedBorderColor: primaryColor,
-                        onEnabledBorderColor: primaryColor,
+
                       ),
                       MyTextFormField(
                           controller: controller.lastnameController,
                           validator: emptyStringValidator,
                           hintText: 'Last Name',
                           labelText: 'Enter Last Name',
-                          onFocusedBorderColor: primaryColor,
-                          onEnabledBorderColor: primaryColor),
+
+                      ),
 
                       MyTextFormField(
                           controller: controller.cnicController,
                           validator: emptyStringValidator,
                           hintText: 'Cnic',
                           labelText: 'Enter Cnic',
-                          onFocusedBorderColor: primaryColor,
-                          onEnabledBorderColor: primaryColor),
+                        textInputType: TextInputType.number,
+
+
+                      ),
                       // MyTextFormField(
                       //     controller: controller.vehiclenoController,
                       //     validator: emptyStringValidator,
@@ -257,8 +260,10 @@ class AddFamilyMember extends StatelessWidget {
                           validator: emptyStringValidator,
                           hintText: 'Mobile No',
                           labelText: 'Enter Mobile No',
-                          onFocusedBorderColor: primaryColor,
-                          onEnabledBorderColor: primaryColor),
+                        textInputType: TextInputType.number,
+
+
+                      ),
                       MyPasswordTextFormField(
                         maxLines: 1,
                         controller: controller.passwordController,
@@ -267,8 +272,7 @@ class AddFamilyMember extends StatelessWidget {
                         validator: emptyStringValidator,
                         hintText: 'Enter Password',
                         labelText: 'Password',
-                        onFocusedBorderColor: primaryColor,
-                        onEnabledBorderColor: primaryColor,
+
                       ),
 
                       SizedBox(

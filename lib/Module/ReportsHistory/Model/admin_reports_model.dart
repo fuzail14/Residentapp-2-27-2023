@@ -23,4 +23,9 @@ class AdminReportHistory {
       required this.updated_at,
       
       });
+
+  setDate()
+  {
+    this.created_at= created_at;
+  }
 }

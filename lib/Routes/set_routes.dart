@@ -25,7 +25,8 @@ const String residentpersonaldetail = '/ResidentPersonalDetail';
 const String residentaddressdetail = '/ResidentaddressDetail';
 const String addfamilymember = '/AddFamilyMember';
 const String viewfamilymember = '/ViewFamilyMember';
-const String audiocallscreen = '/AudioCallScreen';
+const String discussion_form = '/DiscussionForm';
+const String monthly_bill = '/MonthlyBill';
 
 
 

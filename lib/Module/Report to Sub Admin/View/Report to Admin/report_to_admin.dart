@@ -38,64 +38,29 @@ class ReportToAdmin extends GetView {
 
                       MyTextFormField(
                           controller: controller.reportTitleController,
-                          hintTextColor: primaryColor,
-                          fillColor: Colors.white,
                           validator: emptyStringValidator,
                           hintText: 'Enter Compliant Title',
                           labelText: 'Complaint Title',
-                          onFocusedBorderColor: primaryColor,
-                          onEnabledBorderColor: primaryColor),
+
+                      ),
                       SizedBox(
                         height: 10,
                       ),
 
                       //third Element
                       MyTextFormField(
+                          width: null,maxLines: 5,
                           controller: controller.reportDescriptionController,
-                          hintTextColor: primaryColor,
-                          fillColor: Colors.white,
                           validator: emptyStringValidator,
                           hintText: 'Enter Report Description',
                           labelText: 'Complaint Description',
-                          onFocusedBorderColor: primaryColor,
-                          onEnabledBorderColor: primaryColor),
+                         contentPadding: EdgeInsets.all(50)
+                      ),
 
                       SizedBox(
                         height: 10,
                       ),
 
-                      MyTextFormField(
-                          onTap: () {
-                            controller.Date(context);
-                          },
-                          suffixIcon: SizedBox(
-                            child: SvgPicture.asset(
-                                "assets/complaint_date_icon.svg",
-                                height: 5,
-                                width: 5,
-                                fit: BoxFit.scaleDown),
-                          ),
-                          controller: controller.dateController,
-                          hintTextColor: primaryColor,
-                          fillColor: Colors.white,
-                          validator: emptyStringValidator,
-                          hintText: 'Enter Complaint Date',
-                          labelText: 'Complain Date',
-                          onFocusedBorderColor: primaryColor,
-                          onEnabledBorderColor: primaryColor),
-                      SizedBox(
-                        height: 10,
-                      ),
-// TextFormField(decoration: InputDecoration(
-//   border: InputBorder.none,
-//   labelText: 'Helo',
-//     labelStyle:TextStyle(color: Colors.grey,
-//
-//   decoration:TextDecoration.none,
-//
-//
-//
-// ) ),),
 
                       MyButton(
                         color: primaryColor,
@@ -107,7 +72,6 @@ class ReportToAdmin extends GetView {
                                 subadminid: controller.resident!.subadminid!,
                                 userid: controller.userdata.userid!,
                                 title: controller.reportTitleController.text,
-                                date: controller.dateController.text,
                                 description:
                                     controller.reportDescriptionController.text);
                           }

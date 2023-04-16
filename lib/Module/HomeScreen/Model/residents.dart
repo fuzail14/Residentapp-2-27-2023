@@ -6,11 +6,7 @@ class Residents {
   String? country;
   String? state;
   String? city;
-  String? societyname;
-  String? phasename;
-  String? blockname;
-  String? streetname;
-  int? houseid;
+
   String? houseaddress;
   String? vechileno;
   String? residenttype;
@@ -19,9 +15,9 @@ class Residents {
   int? status;
   String? createdAt;
   String? updatedAt;
-  String? buildingname;
-  String? floorname;
-  int? apartmentid;
+
+
+
 
   Residents(
       {
@@ -31,11 +27,6 @@ class Residents {
       required  this.country,
       required  this.state,
     required    this.city,
-    required    this.societyname,
-     required   this.phasename,
-     required   this.blockname,
-     required   this.streetname,
-       required this.houseid,
       required  this.houseaddress,
       required  this.vechileno,
      required   this.residenttype,
@@ -44,9 +35,6 @@ class Residents {
       required  this.status,
       required  this.createdAt,
       required  this.updatedAt,
-        this.buildingname,
-        this.apartmentid,
-        this.floorname,
 
 
 

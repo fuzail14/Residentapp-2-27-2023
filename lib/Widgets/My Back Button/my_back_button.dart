@@ -4,18 +4,18 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 
-class MyBackButton extends GetView {
+class MyBackButton extends StatelessWidget {
 
   final String? text;
   final Widget? widget;
- final void Function()? onTap;
+  final void Function()? onTap;
 
   const MyBackButton({ this.text,this.widget, this.onTap});
 
   @override
   Widget build(BuildContext context) {
     return  Padding(
-      padding: EdgeInsets.only(left: 38, top: 40),
+      padding: EdgeInsets.only(left: 38, top: 20,bottom: 20),
       child: Row(
         children: [
           GestureDetector(
@@ -24,10 +24,11 @@ class MyBackButton extends GetView {
             },
             child: Container(
 
-             child:  SvgPicture.asset(
-               "assets/arrow_back.svg",
+              child:  SvgPicture.asset(
+                "assets/arrow_back.svg",
+                width: 26,
 
-             ),
+              ),
             ),
           ),
           SizedBox(

@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:intl/intl.dart';
 
 final Color primaryColor = HexColor("#FF9900");
 const String assetsBaseUrl = "assets/";
@@ -137,4 +138,81 @@ String? cnicValidator(String? v) {
   } else {
     return null;
   }
+
+
+
+
+
+}
+
+
+String  formatDate (String date)
+
+{
+  DateFormat formatter = DateFormat('yyyy-MM-dd');
+
+  DateTime myDate = DateTime.parse(date);
+   formatter.format(myDate);
+ var  formattedDate=   myDate.toString().split(' ')[0];
+
+  return formattedDate;
+
+
+}
+
+String getFormattedTime({required String time}) {
+  int hour = int.parse(time.split(':')[0].toString());
+  String hourZero = '';
+
+  String minute = '00';
+
+  String isAmOrPm = 'AM';
+
+  if (hour > 12) {
+    hour = hour - 12;
+    isAmOrPm = 'PM';
+  } else if (hour == 00) {
+    hour = 12;
+  } else if(hour == 12){
+    isAmOrPm = 'PM';
+  }
+
+  if (minute == '0') {
+    minute = '00';
+  }
+
+  if (hour < 10) {
+    hourZero = '0';
+  }
+
+  return '${hourZero.toString()}${hour.toString()}:${minute.toString()} $isAmOrPm';
+}
+
+
+String getFormattedTime2({required String time}) {
+  int hour = int.parse(time.split(':')[0].toString());
+  String hourZero = '';
+
+  String minute = time.split(':')[1].toString();
+
+  String isAmOrPm = 'AM';
+
+  if (hour > 12) {
+    hour = hour - 12;
+    isAmOrPm = 'PM';
+  } else if (hour == 00) {
+    hour = 12;
+  } else if(hour == 12){
+    isAmOrPm = 'PM';
+  }
+
+  if (minute == '0') {
+    minute = '00';
+  }
+
+  if (hour < 10) {
+    hourZero = '0';
+  }
+
+  return '${hourZero.toString()}${hour.toString()}:${minute.toString()}:00 $isAmOrPm';
 }

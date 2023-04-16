@@ -1,11 +1,6 @@
-import 'Data.dart';
-import 'dart:convert';
-
 /// success : true
-/// data : [{"id":15,"gatekeeperid":8,"userid":3,"visitortype":"Guest","name":"karachi","description":"haha","cnic":"yaha","mobileno":"hahah","vechileno":"yayaya","arrivaldate":"2022-11-01","arrivaltime":"11:50:00","status":1,"statusdescription":"Approved","created_at":"2022-11-01T06:50:05.000000Z","updated_at":"2022-11-01T14:10:56.000000Z"},{"id":14,"gatekeeperid":8,"userid":3,"visitortype":"Guest","name":"bwjw","description":"hwyw","cnic":"yquq","mobileno":"hqhqu","vechileno":"qyyq","arrivaldate":"2022-11-01","arrivaltime":"05:30:00","status":0,"statusdescription":"unapproved","created_at":"2022-11-01T06:30:44.000000Z","updated_at":"2022-11-01T06:30:44.000000Z"},{"id":13,"gatekeeperid":8,"userid":3,"visitortype":"Delivery","name":"bbb","description":"yy","cnic":"hh","mobileno":"hhh","vechileno":"gg","arrivaldate":"2022-11-01","arrivaltime":"03:41:00","status":0,"statusdescription":"unapproved","created_at":"2022-11-01T05:41:38.000000Z","updated_at":"2022-11-01T05:41:38.000000Z"},{"id":12,"gatekeeperid":8,"userid":3,"visitortype":"Delivery","name":"iqrar","description":"","cnic":"","mobileno":"03283884","vechileno":"22882","arrivaldate":"2022-11-01","arrivaltime":"10:38:00","status":0,"statusdescription":"unapproved","created_at":"2022-11-01T05:38:10.000000Z","updated_at":"2022-11-01T05:38:10.000000Z"},{"id":11,"gatekeeperid":8,"userid":3,"visitortype":"Cab","name":"waqae","description":"","cnic":"","mobileno":"03219990979","vechileno":"rwpnenw","arrivaldate":"2022-11-01","arrivaltime":"04:36:00","status":0,"statusdescription":"unapproved","created_at":"2022-11-01T05:37:28.000000Z","updated_at":"2022-11-01T05:37:28.000000Z"},{"id":10,"gatekeeperid":8,"userid":3,"visitortype":"Delivery","name":"zinger","description":"burger","cnic":"032155079","mobileno":"030082","vechileno":"rwp 228","arrivaldate":"2022-11-01","arrivaltime":"10:28:00","status":0,"statusdescription":"unapproved","created_at":"2022-11-01T05:28:35.000000Z","updated_at":"2022-11-01T05:28:35.000000Z"},{"id":9,"gatekeeperid":8,"userid":3,"visitortype":"Cab","name":"hh","description":"tt","cnic":"tt","mobileno":"ttt","vechileno":"tt","arrivaldate":"2022-10-31","arrivaltime":"17:44:00","status":0,"statusdescription":"unapproved","created_at":"2022-10-31T12:44:32.000000Z","updated_at":"2022-10-31T12:44:32.000000Z"},{"id":8,"gatekeeperid":7,"userid":3,"visitortype":"guest","name":"hadi abrar","description":"this is my first entry","cnic":"37805","mobileno":"03215550979","vechileno":"rwp 2005","arrivaldate":"2022-10-30","arrivaltime":"04:00:00","status":1,"statusdescription":"approved","created_at":"2022-10-31T11:57:23.000000Z","updated_at":"2022-10-31T11:57:23.000000Z"},{"id":7,"gatekeeperid":7,"userid":3,"visitortype":"guest","name":"hadi abrar","description":"this is my first entry","cnic":"37805","mobileno":"03215550979","vechileno":"rwp 2005","arrivaldate":"2022-10-30","arrivaltime":"04:00:00","status":0,"statusdescription":"unapproved","created_at":"2022-10-30T17:30:32.000000Z","updated_at":"2022-10-30T17:30:32.000000Z"},{"id":6,"gatekeeperid":7,"userid":3,"visitortype":"guest","name":"hadi abrar","description":"this is my first entry","cnic":"37805","mobileno":"03215550979","vechileno":"rwp 2005","arrivaldate":"2022-10-30","arrivaltime":"04:00:00","status":0,"statusdescription":"unapproved","created_at":"2022-10-30T17:30:06.000000Z","updated_at":"2022-10-30T17:30:06.000000Z"},{"id":5,"gatekeeperid":7,"userid":3,"visitortype":"guest","name":"hadi abrar","description":"this is my first entry","cnic":"37805","mobileno":"03215550979","vechileno":"rwp 2005","arrivaldate":"2022-10-30","arrivaltime":"04:00:00","status":0,"statusdescription":"unapproved","created_at":"2022-10-30T17:29:54.000000Z","updated_at":"2022-10-30T17:29:54.000000Z"},{"id":4,"gatekeeperid":7,"userid":3,"visitortype":"guest","name":"hadi abrar","description":"this is my first entry","cnic":"37805","mobileno":"03215550979","vechileno":"rwp 2005","arrivaldate":"2022-10-30","arrivaltime":"04:00:00","status":0,"statusdescription":"unapproved","created_at":"2022-10-30T17:29:50.000000Z","updated_at":"2022-10-30T17:29:50.000000Z"},{"id":3,"gatekeeperid":7,"userid":3,"visitortype":"guest","name":"hadi abrar","description":"this is my first entry","cnic":"37805","mobileno":"03215550979","vechileno":"rwp 2005","arrivaldate":"2022-10-30","arrivaltime":"04:00:00","status":0,"statusdescription":"unapproved","created_at":"2022-10-30T17:25:11.000000Z","updated_at":"2022-10-30T17:25:11.000000Z"},{"id":2,"gatekeeperid":7,"userid":3,"visitortype":"guest","name":"hadi abrar","description":"this is my first entry","cnic":"37805","mobileno":"03215550979","vechileno":"rwp 2005","arrivaldate":"2022-10-30","arrivaltime":"04:00:00","status":0,"statusdescription":"unapproved","created_at":"2022-10-30T17:24:45.000000Z","updated_at":"2022-10-30T17:24:45.000000Z"},{"id":1,"gatekeeperid":7,"userid":3,"visitortype":"guest","name":"hadi abrar","description":"this is my first entry","cnic":"37805","mobileno":"03215550979","vechileno":"rwp 2005","arrivaldate":"2022-10-30","arrivaltime":"04:00:00","status":0,"statusdescription":"unapproved","created_at":"2022-10-30T17:18:54.000000Z","updated_at":"2022-10-30T17:18:54.000000Z"}]
+/// data : [{"id":1,"gatekeeperid":14,"userid":13,"visitortype":"Guest","name":"hhhj","description":"ggh","cnic":"666","mobileno":"55","vechileno":"gv","arrivaldate":"2023-03-15","arrivaltime":"13:21:00","status":0,"statusdescription":"unapproved","created_at":"2023-03-15T08:21:23.000000Z","updated_at":"2023-03-15T08:21:23.000000Z"}]
 
-PreApproveEntry preApproveEntryFromJson(String str) => PreApproveEntry.fromJson(json.decode(str));
-String preApproveEntryToJson(PreApproveEntry data) => json.encode(data.toJson());
 class PreApproveEntry {
   PreApproveEntry({
       bool? success, 
@@ -39,6 +34,157 @@ PreApproveEntry copyWith({  bool? success,
     if (_data != null) {
       map['data'] = _data?.map((v) => v.toJson()).toList();
     }
+    return map;
+  }
+
+}
+
+/// id : 1
+/// gatekeeperid : 14
+/// userid : 13
+/// visitortype : "Guest"
+/// name : "hhhj"
+/// description : "ggh"
+/// cnic : "666"
+/// mobileno : "55"
+/// vechileno : "gv"
+/// arrivaldate : "2023-03-15"
+/// arrivaltime : "13:21:00"
+/// status : 0
+/// statusdescription : "unapproved"
+/// created_at : "2023-03-15T08:21:23.000000Z"
+/// updated_at : "2023-03-15T08:21:23.000000Z"
+
+class Data {
+  Data({
+      num? id, 
+      num? gatekeeperid, 
+      num? userid, 
+      String? visitortype, 
+      String? name, 
+      String? description, 
+      String? cnic, 
+      String? mobileno, 
+      String? vechileno, 
+      String? arrivaldate, 
+      String? arrivaltime, 
+      num? status, 
+      String? statusdescription, 
+      String? createdAt, 
+      String? updatedAt,}){
+    _id = id;
+    _gatekeeperid = gatekeeperid;
+    _userid = userid;
+    _visitortype = visitortype;
+    _name = name;
+    _description = description;
+    _cnic = cnic;
+    _mobileno = mobileno;
+    _vechileno = vechileno;
+    _arrivaldate = arrivaldate;
+    _arrivaltime = arrivaltime;
+    _status = status;
+    _statusdescription = statusdescription;
+    _createdAt = createdAt;
+    _updatedAt = updatedAt;
+}
+
+  Data.fromJson(dynamic json) {
+    _id = json['id'];
+    _gatekeeperid = json['gatekeeperid'];
+    _userid = json['userid'];
+    _visitortype = json['visitortype'];
+    _name = json['name'];
+    _description = json['description'];
+    _cnic = json['cnic'];
+    _mobileno = json['mobileno'];
+    _vechileno = json['vechileno'];
+    _arrivaldate = json['arrivaldate'];
+    _arrivaltime = json['arrivaltime'];
+    _status = json['status'];
+    _statusdescription = json['statusdescription'];
+    _createdAt = json['created_at'];
+    _updatedAt = json['updated_at'];
+  }
+  num? _id;
+  num? _gatekeeperid;
+  num? _userid;
+  String? _visitortype;
+  String? _name;
+  String? _description;
+  String? _cnic;
+  String? _mobileno;
+  String? _vechileno;
+  String? _arrivaldate;
+  String? _arrivaltime;
+  num? _status;
+  String? _statusdescription;
+  String? _createdAt;
+  String? _updatedAt;
+Data copyWith({  num? id,
+  num? gatekeeperid,
+  num? userid,
+  String? visitortype,
+  String? name,
+  String? description,
+  String? cnic,
+  String? mobileno,
+  String? vechileno,
+  String? arrivaldate,
+  String? arrivaltime,
+  num? status,
+  String? statusdescription,
+  String? createdAt,
+  String? updatedAt,
+}) => Data(  id: id ?? _id,
+  gatekeeperid: gatekeeperid ?? _gatekeeperid,
+  userid: userid ?? _userid,
+  visitortype: visitortype ?? _visitortype,
+  name: name ?? _name,
+  description: description ?? _description,
+  cnic: cnic ?? _cnic,
+  mobileno: mobileno ?? _mobileno,
+  vechileno: vechileno ?? _vechileno,
+  arrivaldate: arrivaldate ?? _arrivaldate,
+  arrivaltime: arrivaltime ?? _arrivaltime,
+  status: status ?? _status,
+  statusdescription: statusdescription ?? _statusdescription,
+  createdAt: createdAt ?? _createdAt,
+  updatedAt: updatedAt ?? _updatedAt,
+);
+  num? get id => _id;
+  num? get gatekeeperid => _gatekeeperid;
+  num? get userid => _userid;
+  String? get visitortype => _visitortype;
+  String? get name => _name;
+  String? get description => _description;
+  String? get cnic => _cnic;
+  String? get mobileno => _mobileno;
+  String? get vechileno => _vechileno;
+  String? get arrivaldate => _arrivaldate;
+  String? get arrivaltime => _arrivaltime;
+  num? get status => _status;
+  String? get statusdescription => _statusdescription;
+  String? get createdAt => _createdAt;
+  String? get updatedAt => _updatedAt;
+
+  Map<String, dynamic> toJson() {
+    final map = <String, dynamic>{};
+    map['id'] = _id;
+    map['gatekeeperid'] = _gatekeeperid;
+    map['userid'] = _userid;
+    map['visitortype'] = _visitortype;
+    map['name'] = _name;
+    map['description'] = _description;
+    map['cnic'] = _cnic;
+    map['mobileno'] = _mobileno;
+    map['vechileno'] = _vechileno;
+    map['arrivaldate'] = _arrivaldate;
+    map['arrivaltime'] = _arrivaltime;
+    map['status'] = _status;
+    map['statusdescription'] = _statusdescription;
+    map['created_at'] = _createdAt;
+    map['updated_at'] = _updatedAt;
     return map;
   }
 

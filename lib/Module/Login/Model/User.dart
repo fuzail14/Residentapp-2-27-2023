@@ -11,17 +11,17 @@ class User {
   final String? roleName;
   final String? bearerToken;
 
-  User(
-      {this.userid,
-      this.subadminid,
-      this.firstName,
-      this.lastName,
-        this.familymemberid,
-        this.residentid,
-      this.cnic,
-      this.roleId,
-      this.roleName,
-      this.bearerToken,
-      this.address,
-      });
+  User({
+    this.userid,
+    this.subadminid,
+    this.firstName,
+    this.lastName,
+    this.familymemberid,
+    this.residentid,
+    this.cnic,
+    this.roleId,
+    this.roleName,
+    this.bearerToken,
+    this.address,
+  });
 }

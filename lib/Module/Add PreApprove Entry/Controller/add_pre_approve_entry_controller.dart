@@ -7,14 +7,14 @@ import 'package:userapp/Routes/set_routes.dart';
 import '../../../Constants/api_routes.dart';
 import '../../HomeScreen/Model/residents.dart';
 import '../../Login/Model/User.dart';
-import '../Model/GateKeeper.dart';
+import '../Model/gatekeeper.dart';
 
 class AddPreApproveEntryController extends GetxController {
   late final User userdata;
   late final Residents resident;
   var data = Get.arguments;
-  String? gateKeeperdropdownvalue;
-  String? visitorTypedropdownvalue = 'Guest';
+  String? gateKeeperDropDownValue;
+  String? visitorTypeDropDownValue = 'Guest';
   List<GateKeeper> gateKeeperList = [];
   List<String> visitorTypesList = ['Guest', 'Delivery', 'Cab', 'Visiting Help'];
 
@@ -44,7 +44,7 @@ class AddPreApproveEntryController extends GetxController {
     }
   ];
 
-  setVisitortype(bool status) {
+  setVisitorType(bool status) {
     status = true;
     print(visitorTypes);
     update();
@@ -63,16 +63,16 @@ class AddPreApproveEntryController extends GetxController {
 
     userdata = data[0];
     resident = data[1];
-    getGateKeeperlist();
+    getGateKeeperList();
     print(userdata);
   }
 
-  setVisitorTypeDropDownvalue(val) {
-    visitorTypedropdownvalue = val;
+  setVisitorTypeDropDownValue(val) {
+    visitorTypeDropDownValue = val;
     update();
   }
 
-  getGateKeeperlist() async {
+  getGateKeeperList() async {
     gateKeeperList =
         await getGateKeepersApi(resident.subadminid!, userdata.bearerToken!);
     isData = true;
@@ -125,13 +125,13 @@ class AddPreApproveEntryController extends GetxController {
   }
 
   setGateKeeperDropDown(newValue) {
-    gateKeeperdropdownvalue = newValue;
+    gateKeeperDropDownValue = newValue;
 
     update();
   }
 
   setVisitorTypeDropDown(newValue) {
-    visitorTypedropdownvalue = newValue;
+    visitorTypeDropDownValue = newValue;
 
     update();
   }
@@ -177,7 +177,7 @@ class AddPreApproveEntryController extends GetxController {
     return li;
   }
 
-  Future addPreApprovEntryApi({
+  Future addPreApproveEntryApi({
     required String token,
     required int gatekeeperid,
     required int userid,

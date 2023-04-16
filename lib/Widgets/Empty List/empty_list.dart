@@ -12,6 +12,7 @@ final String?  name;
   Widget build(BuildContext context) {
     return
       Center(child: Text(name??"No Data",
+          textAlign: TextAlign.center,
           style: GoogleFonts.ubuntu(
         color:
         HexColor('#404345'),

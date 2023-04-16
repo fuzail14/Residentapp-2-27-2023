@@ -12,6 +12,7 @@ class MyTextFormField extends GetView {
   final double? width;
   final double? height;
   final bool? fill;
+  final bool? readOnly;
   final Widget? prefixIcon;
   final Widget? suffixIcon;
   final EdgeInsetsGeometry? contentPadding;
@@ -21,17 +22,18 @@ class MyTextFormField extends GetView {
   final Color? labelTextColor;
   final Color? hintTextColor;
   final Color? fillColor;
-  final Color onFocusedBorderColor;
-  final Color onEnabledBorderColor;
+  final TextInputType? textInputType;
 
-  // final bool obscureText;
+
   final String? Function(String?)? validator;
   final void Function()? onTap;
   const MyTextFormField(
       {super.key,
-   // required  this.obscureText,
-   //    this.togglePasswordView,
+
+
       this.maxLines,
+        this.readOnly,
+        this.textInputType,
       this.contentPadding,
       this.prefixIcon,
       this.suffixIcon,
@@ -48,17 +50,19 @@ class MyTextFormField extends GetView {
       this.labelTextColor,
       required this.labelText,
       this.hintTextColor,
-      required this.onFocusedBorderColor,
-      required this.onEnabledBorderColor});
+
+      });
 
   Widget build(BuildContext context) {
     return Padding(
       padding:  EdgeInsets.fromLTRB(39, 16, 38, 0),
       child: SizedBox(
-        width: MediaQuery.of(context).size.width * 0.8,
+        width:width?? MediaQuery.of(context).size.width * 0.8,
+
         height: height,
         child: TextFormField(
 
+          keyboardType: textInputType,
           // obscureText: widget.obscureText,
           textAlign: TextAlign.left,
           onTap: onTap,
@@ -66,9 +70,12 @@ class MyTextFormField extends GetView {
           maxLines: maxLines??1,
           controller: controller,
           cursorColor: primaryColor,
+          readOnly:readOnly??false ,
           decoration: InputDecoration(
 
-
+            enabledBorder: InputBorder.none,
+            errorBorder: InputBorder.none ,
+            focusedErrorBorder:InputBorder.none ,
             prefixIcon: prefixIcon,
             suffixIcon: suffixIcon,
             contentPadding: contentPadding??EdgeInsets.fromLTRB(60, 0, 20, 0),
@@ -81,28 +88,25 @@ class MyTextFormField extends GetView {
             //     )),
             filled: fill??true,
 
+
             labelStyle: GoogleFonts.ubuntu(
                 fontStyle: FontStyle.normal,
                 fontWeight: FontWeight.w400,
                 fontSize: 15,
                 color:labelTextColor?? HexColor('#B6B6B6')),
             hintStyle: TextStyle(
-              color:hintTextColor??HexColor("#B6B6B6"),
+fontWeight: FontWeight.w400,
+
+              color:hintTextColor??HexColor("#555555"),
             ),
             hintText: hintText,
             labelText: labelText,
-            fillColor: fillColor??Colors.white,
+            fillColor: fillColor??HexColor('#EEEEEE'),
+
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10.0),
               borderSide:
-              BorderSide(color: onFocusedBorderColor, width: 1.5),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10.0),
-              borderSide: BorderSide(
-                color: onEnabledBorderColor,
-                width: 1.5,
-              ),
+              BorderSide(color: primaryColor, width: 1.5),
             ),
           ),
         ),

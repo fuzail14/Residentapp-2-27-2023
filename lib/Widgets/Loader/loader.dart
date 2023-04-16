@@ -12,7 +12,7 @@ class Loader extends GetView {
       Column(
         crossAxisAlignment: CrossAxisAlignment.center,mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          CircularProgressIndicator(color: primaryColor,),
+          Center(child: CircularProgressIndicator(color: primaryColor,)),
         ],
       );;
   }

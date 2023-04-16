@@ -61,8 +61,9 @@ class AdminReports extends GetView {
                                                 ),
                                                 Text(
                                                   snapshot
-                                                      .data.data[index].title,
+                                                      .data.data[index].title.toString(),
                                                   style: GoogleFonts.ubuntu(
+
                                                       color:
                                                           HexColor('#4D4D4D'),
                                                       fontSize: 14,
@@ -70,11 +71,11 @@ class AdminReports extends GetView {
                                                           FontWeight.w500),
                                                 ),
                                                 SizedBox(
-                                                  height: 8,
+                                                  height:10,
                                                 ),
                                                 Text(
                                                   snapshot.data.data[index]
-                                                      .description,
+                                                      .description.toString(),
                                                   style: GoogleFonts.ubuntu(
                                                       color:
                                                           HexColor('#4D4D4D'),
@@ -83,34 +84,179 @@ class AdminReports extends GetView {
                                                           FontWeight.w400),
                                                 ),
                                                 SizedBox(
-                                                  height: 17,
+                                                  height: 15,
+                                                ),
+
+                                                Text(
+                                                  'Complaint At',
+                                                  style: GoogleFonts.ubuntu(
+
+                                                      color:
+                                                      HexColor('#4D4D4D'),
+                                                      fontSize: 14,
+                                                      fontWeight:
+                                                      FontWeight.w500),
+                                                ), SizedBox(
+                                                  height:15,
                                                 ),
                                                 Row(
                                                   children: [
-                                                    Icon(
-                                                      Icons.calendar_month,
-                                                      color:
-                                                          HexColor('#A7A7A7'),
-                                                      size: 20,
+                                                    Container(
+                                                      width: 82,
+                                                      height: 25,
+                                                      decoration: BoxDecoration(
+                                                          borderRadius:
+                                                          BorderRadius.circular(
+                                                              4),
+                                                          border: Border.all(
+                                                              color:
+                                                              primaryColor)),
+                                                      child: Row(
+                                                        mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceEvenly,
+                                                        children: [
+                                                          Text(
+                                                            snapshot.data.data[index]
+                                                                .createdAt.toString().split('T')[0].toString(),
+                                                            style: GoogleFonts.ubuntu(
+                                                                color: HexColor('#535353'),
+                                                                fontSize: 10,
+                                                                fontWeight: FontWeight.w300),
+                                                          ),
+                                                          SvgPicture.asset(
+                                                              'assets/complain_history_date_icon1.svg',color: HexColor('#A7A7A7'),)
+                                                        ],
+                                                      ),
                                                     ),
                                                     SizedBox(
-                                                      width: 14,
+                                                      width: 15,
                                                     ),
-                                                    Text(
-                                                      snapshot.data.data[index]
-                                                          .date,
-                                                      style: GoogleFonts.ubuntu(
-                                                          color: HexColor(
-                                                              '#4D4D4D'),
-                                                          fontSize: 10,
-                                                          fontWeight:
-                                                              FontWeight.w300),
+                                                    SvgPicture.asset(
+                                                        'assets/Arrow 1.svg'),
+                                                    SizedBox(
+                                                      width: 15,
+                                                    ),
+                                                    Container(
+                                                      width: 82,
+                                                      height: 25,
+                                                      decoration: BoxDecoration(
+                                                          borderRadius:
+                                                          BorderRadius.circular(
+                                                              4),
+                                                          border: Border.all(
+                                                              color:
+                                                              primaryColor)),
+                                                      child: Row(
+                                                        mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceEvenly,
+                                                        children: [
+                                                          Text(
+                                                            snapshot.data.data[index]
+                                                                .createdAt.toString().split('T')[1].toString().split('.')[0].toString(),
+                                                            style: GoogleFonts.ubuntu(
+                                                                color: HexColor('#535353'),
+                                                                fontSize: 10,
+                                                                fontWeight: FontWeight.w300),
+                                                          ),
+                                                          SvgPicture.asset(
+                                                              'assets/clock.svg')
+                                                        ],
+                                                      ),
                                                     ),
                                                   ],
                                                 ),
                                                 SizedBox(
-                                                  height: 45,
+                                                  height: 15,
                                                 ),
+
+                                                Text(
+                                                  'Action At',
+                                                  style: GoogleFonts.ubuntu(
+
+                                                      color:
+                                                      HexColor('#4D4D4D'),
+                                                      fontSize: 14,
+                                                      fontWeight:
+                                                      FontWeight.w500),
+                                                ), SizedBox(
+                                                  height:15,
+                                                ),
+                                                Row(
+                                                  children: [
+                                                    Container(
+                                                      width: 82,
+                                                      height: 25,
+                                                      decoration: BoxDecoration(
+                                                          borderRadius:
+                                                          BorderRadius.circular(
+                                                              4),
+                                                          border: Border.all(
+                                                              color:
+                                                              primaryColor)),
+                                                      child: Row(
+                                                        mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceEvenly,
+                                                        children: [
+                                                          Text(
+                                                            snapshot.data.data[index]
+                                                                .updatedAt.toString().split('T')[0].toString(),
+                                                            style: GoogleFonts.ubuntu(
+                                                                color: HexColor('#535353'),
+                                                                fontSize: 10,
+                                                                fontWeight: FontWeight.w300),
+                                                          ),
+                                                          SvgPicture.asset(
+                                                            'assets/complain_history_date_icon1.svg',color: HexColor('#A7A7A7'),)
+                                                        ],
+                                                      ),
+                                                    ),
+                                                    SizedBox(
+                                                      width: 15,
+                                                    ),
+                                                    SvgPicture.asset(
+                                                        'assets/Arrow 1.svg'),
+                                                    SizedBox(
+                                                      width: 15,
+                                                    ),
+                                                    Container(
+                                                      width: 82,
+                                                      height: 25,
+                                                      decoration: BoxDecoration(
+                                                          borderRadius:
+                                                          BorderRadius.circular(
+                                                              4),
+                                                          border: Border.all(
+                                                              color:
+                                                              primaryColor)),
+                                                      child: Row(
+                                                        mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceEvenly,
+                                                        children: [
+                                                          Text(
+                                                            snapshot.data.data[index]
+                                                                .updatedAt.toString().split('T')[1].toString().split('.')[0].toString(),
+                                                            style: GoogleFonts.ubuntu(
+                                                                color: HexColor('#535353'),
+                                                                fontSize: 10,
+                                                                fontWeight: FontWeight.w300),
+                                                          ),
+                                                          SvgPicture.asset(
+                                                              'assets/clock.svg')
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                SizedBox(
+                                                  height: 30,
+                                                ),
+
+
+
                                                 GestureDetector(
                                                   onTap: () {
                                                     Get.back();
@@ -156,7 +302,10 @@ class AdminReports extends GetView {
                                                       ),
                                                     ),
                                                   ),
+                                                ), SizedBox(
+                                                  height: 30,
                                                 ),
+
                                               ],
                                             ),
                                           ));
@@ -166,7 +315,7 @@ class AdminReports extends GetView {
                                       horizontal: 16, vertical: 13),
                                   child: SizedBox(
                                     width: 343,
-                                    height: 112,
+                                    height: 120,
                                     child: Card(
                                       shape: RoundedRectangleBorder(
                                         borderRadius:
@@ -184,7 +333,8 @@ class AdminReports extends GetView {
                                             padding: const EdgeInsets.fromLTRB(
                                                 12, 15, 0, 0),
                                             child: Text(
-                                              snapshot.data.data[index].title,
+                                              overflow:TextOverflow.ellipsis,
+                                              snapshot.data.data[index].title.toString(),
                                               style: GoogleFonts.montserrat(
                                                   color: HexColor('#4D4D4D'),
                                                   fontSize: 16,
@@ -193,10 +343,10 @@ class AdminReports extends GetView {
                                           ),
                                           Padding(
                                             padding: const EdgeInsets.fromLTRB(
-                                                12, 35, 75, 0),
+                                                12, 35,50, 0),
                                             child: Text(
                                               overflow: TextOverflow.ellipsis,
-                                              maxLines: 3,
+                                              maxLines: 2,
                                               snapshot
                                                   .data.data[index].description
                                                   .toString(),
@@ -206,30 +356,82 @@ class AdminReports extends GetView {
                                                   fontWeight: FontWeight.w400),
                                             ),
                                           ),
-
                                           Padding(
                                             padding: const EdgeInsets.fromLTRB(
                                                 12, 76, 75, 0),
                                             child: Row(
                                               children: [
-                                                SvgPicture.asset(
-                                                    'assets/complain_history_date_icon1.svg'),
-                                                SizedBox(
-                                                  width: 11.2,
+                                                Container(
+                                                  width: 82,
+                                                  height: 25,
+                                                  decoration: BoxDecoration(
+                                                      borderRadius:
+                                                      BorderRadius.circular(
+                                                          4),
+                                                      border: Border.all(
+                                                          color:
+                                                          primaryColor)),
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceEvenly,
+                                                    children: [
+                                                      Text(
+                                                        snapshot.data.data[index]
+                                                            .updatedAt.toString().split('T')[0].toString(),
+                                                        style: GoogleFonts.ubuntu(
+                                                            color: HexColor('#535353'),
+                                                            fontSize: 10,
+                                                            fontWeight: FontWeight.w300),
+                                                      ),
+                                                      SvgPicture.asset(
+                                                        'assets/complain_history_date_icon1.svg',color: HexColor('#A7A7A7'),)
+                                                    ],
+                                                  ),
                                                 ),
-                                                Text(
-                                                  snapshot.data.data[index].date
-                                                      .toString(),
-                                                  style: GoogleFonts.ubuntu(
-                                                      color:
-                                                          HexColor('#A5AAB7'),
-                                                      fontSize: 10,
-                                                      fontWeight:
-                                                          FontWeight.w300),
+                                                SizedBox(
+                                                  width: 15,
+                                                ),
+                                                SvgPicture.asset(
+                                                    'assets/Arrow 1.svg'),
+                                                SizedBox(
+                                                  width: 15,
+                                                ),
+                                                Container(
+                                                  width: 82,
+                                                  height: 25,
+                                                  decoration: BoxDecoration(
+                                                      borderRadius:
+                                                      BorderRadius.circular(
+                                                          4),
+                                                      border: Border.all(
+                                                          color:
+                                                          primaryColor)),
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceEvenly,
+                                                    children: [
+                                                      Text(
+                                                        snapshot.data.data[index]
+                                                            .updatedAt.toString().split('T')[1].toString().split('.')[0].toString(),
+                                                        style: GoogleFonts.ubuntu(
+                                                            color: HexColor('#535353'),
+                                                            fontSize: 10,
+                                                            fontWeight: FontWeight.w300),
+                                                      ),
+                                                      SvgPicture.asset(
+                                                          'assets/clock.svg')
+                                                    ],
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  width: 15,
                                                 ),
                                               ],
                                             ),
                                           ),
+
 
                                           (snapshot.data.data[index].status ==
                                                   0)
@@ -366,207 +568,6 @@ class AdminReports extends GetView {
                                                 )
                                               : Container()
 
-                                          // Padding(
-                                          //   padding: EdgeInsets.only(
-                                          //     left: 15,
-                                          //   ),
-                                          //   child: Column(
-                                          //     crossAxisAlignment:
-                                          //     CrossAxisAlignment.start,
-                                          //     children: [
-                                          //       Text(
-                                          //         snapshot
-                                          //             .data.data[index].title,
-                                          //         style: GoogleFonts.ubuntu(
-                                          //             color:
-                                          //             HexColor('#A5AAB7'),
-                                          //             fontSize: 12,
-                                          //             fontWeight:
-                                          //             FontWeight.w500),
-                                          //       ),
-                                          //       SizedBox(
-                                          //         height: 10,
-                                          //       ),
-                                          //       Row(
-                                          //         children: [
-                                          //           Flexible(
-                                          //             child: Text(
-                                          //               snapshot.data.data[index]
-                                          //                   .date.toString(),
-                                          //               overflow: TextOverflow.ellipsis,
-                                          //
-                                          //               style: GoogleFonts.ubuntu(
-                                          //                 color:
-                                          //                 HexColor('#606470'),
-                                          //                 fontSize: 16,
-                                          //                 fontWeight:
-                                          //                 FontWeight.w500,
-                                          //                 fontStyle:
-                                          //                 FontStyle.normal,
-                                          //               ),
-                                          //             ),
-                                          //           ),
-                                          //           SizedBox(
-                                          //             width: Get.width*0.500,
-                                          //           ),
-                                          //           (snapshot.data.data[index]
-                                          //               .status ==
-                                          //               0)
-                                          //               ? Container()
-                                          //               : ElevatedButton(
-                                          //             style: ElevatedButton.styleFrom(
-                                          //                 primary: HexColor(
-                                          //                     '#4EC018'),
-                                          //                 fixedSize: Size(
-                                          //                     80, 22),
-                                          //                 shape: RoundedRectangleBorder(
-                                          //                     borderRadius:
-                                          //                     BorderRadius.circular(
-                                          //                         10))),
-                                          //             onPressed: () {},
-                                          //             child: Text(
-                                          //               'Inprogress',
-                                          //               textAlign:
-                                          //               TextAlign
-                                          //                   .center,
-                                          //               style: GoogleFonts.ubuntu(
-                                          //                   color: HexColor(
-                                          //                       '#FFFFFF'),
-                                          //                   fontSize: 12,
-                                          //                   fontWeight:
-                                          //                   FontWeight
-                                          //                       .w500),
-                                          //             ),
-                                          //           )
-                                          //         ],
-                                          //       ),
-                                          //     ],
-                                          //   ),
-                                          // ),
-                                          //
-                                          // (snapshot.data.data[index].status ==
-                                          //     0)
-                                          //     ? SizedBox(
-                                          //   height: 30,
-                                          // )
-                                          //     : SizedBox(
-                                          //   height: 10,
-                                          // ),
-                                          // Padding(
-                                          //   padding: EdgeInsets.only(left: 15),
-                                          //   child: Row(
-                                          //     children: [
-                                          //       Icon(
-                                          //         Icons.calendar_month_sharp,
-                                          //         color: HexColor('#A5AAB7'),
-                                          //         size: 15,
-                                          //       ),
-                                          //       SizedBox(
-                                          //         width: 10,
-                                          //       ),
-                                          //       Text(
-                                          //         snapshot
-                                          //             .data.data[index].date,
-                                          //         style: GoogleFonts.ubuntu(
-                                          //             color:
-                                          //             HexColor('#A5AAB7'),
-                                          //             fontSize: 12,
-                                          //             fontWeight:
-                                          //             FontWeight.w500),
-                                          //       ),
-                                          //       (snapshot.data.data[index]
-                                          //           .status ==
-                                          //           0)
-                                          //           ? Padding(
-                                          //         padding:
-                                          //         EdgeInsets.only(
-                                          //           left: 163,
-                                          //         ),
-                                          //         child: ElevatedButton(
-                                          //           style: ElevatedButton.styleFrom(
-                                          //               primary: HexColor(
-                                          //                   '#ED0909'),
-                                          //               fixedSize:
-                                          //               Size(80, 22),
-                                          //               shape: RoundedRectangleBorder(
-                                          //                   borderRadius:
-                                          //                   BorderRadius
-                                          //                       .circular(
-                                          //                       10))),
-                                          //           onPressed: () {},
-                                          //           child: Text(
-                                          //             snapshot
-                                          //                 .data
-                                          //                 .data[index]
-                                          //                 .statusdescription,
-                                          //             textAlign: TextAlign
-                                          //                 .center,
-                                          //             style: GoogleFonts.ubuntu(
-                                          //                 color: HexColor(
-                                          //                     '#FFFFFF'),
-                                          //                 fontSize: 12,
-                                          //                 fontWeight:
-                                          //                 FontWeight
-                                          //                     .w500),
-                                          //           ),
-                                          //         ),
-                                          //       )
-                                          //           : Padding(
-                                          //         padding:
-                                          //         EdgeInsets.only(
-                                          //           left: 163,
-                                          //         ),
-                                          //         child: ElevatedButton(
-                                          //           style: ElevatedButton.styleFrom(
-                                          //               primary: HexColor(
-                                          //                   '#1E2772'),
-                                          //               fixedSize:
-                                          //               Size(80, 22),
-                                          //               shape: RoundedRectangleBorder(
-                                          //                   borderRadius:
-                                          //                   BorderRadius
-                                          //                       .circular(
-                                          //                       10))),
-                                          //           onPressed: () {
-
-                                          // Text(snapshot
-                                          //     .data.data[index].statusdescription
-                                          //     .toString()),
-
-                                          // (snapshot.data.data[index].status == 0)
-                                          //     ? Container()
-                                          //     : Center(
-                                          //         child: ElevatedButton(
-                                          //           style: ElevatedButton.styleFrom(
-                                          //               primary: Colors.green,
-                                          //               fixedSize: Size(100, 30),
-                                          //               shape:
-                                          //                   RoundedRectangleBorder(
-                                          //                       borderRadius:
-                                          //                           BorderRadius
-                                          //                               .circular(
-                                          //                                   20))),
-                                          //           onPressed: () {
-                                          //             showProblemDialog(
-                                          //                 context,
-                                          //                 snapshot
-                                          //                     .data.data[index].id,
-                                          //                 snapshot.data.data[index]
-                                          //                     .userid,
-                                          //                 controller.userdata
-                                          //                     .bearerToken!);
-                                          //           },
-                                          //           child: const Text(
-                                          //             'Problem Solved',
-                                          //             style: TextStyle(
-
-                                          //                 color: Colors.white,
-                                          //                 fontWeight:
-                                          //                     FontWeight.bold),
-                                          //             textAlign: TextAlign.center,
-                                          //           ),
-                                          //         ),
-                                          //       )
                                         ],
                                       ),
                                     ),

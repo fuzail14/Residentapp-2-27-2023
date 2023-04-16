@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 import 'package:userapp/Constants/api_routes.dart';
 import '../../HomeScreen/Model/residents.dart';
 import '../../Login/Model/User.dart';
-import '../Model/ChatGatekeepers.dart';
 import '../Model/ChatNeighbours.dart';
 import '../Model/ChatRoomModel.dart';
 import '../Model/ChatRoomUsers.dart';
@@ -23,30 +22,6 @@ class ChatAvailbilityController extends GetxController {
     resident = data[1];
   }
 
-
-  Future<ChatGatekeepers> viewChatGatekeepers(
-      {required int subadminid, required String token}) async {
-
-    print(token);
-
-    final response = await Http.get(
-      Uri.parse(Api.chatgatekeepers + "/" + subadminid.toString()),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        'Authorization': "Bearer $token"
-      },
-    );
-    print(response.body);
-    var data = jsonDecode(response.body.toString());
-
-    ;
-
-    if (response.statusCode == 200) {
-      return ChatGatekeepers.fromJson(data);
-    }
-
-    return ChatGatekeepers.fromJson(data);
-  }
 
 
   Future<ChatNeighbours> viewChatNeighbours(
