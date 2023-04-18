@@ -2100,8 +2100,40 @@ class ResidentAddressDetail extends GetView {
                                       buildingid: controller.building?.id,
                                       floorid: controller.floor?.id,
                                     );
+                                 
                                   } else {
                                     print('local building');
+                                       controller.addResidentApi(
+                                      subadminid:
+                                          controller.societies!.subAdminId!,
+                                      residentid: controller.user!.userid!,
+                                      country: controller.country,
+                                      state: controller.state,
+                                      city: controller.city,
+                                      societyid: controller.societies?.id,
+                                      
+                                      
+                                      houseaddress: controller
+                                          .houseaddressdetailController.text,
+                                      residentalType: controller.rentalorowner,
+                                      propertyType: 'localbuildingapartment',
+                                      vechileno:
+                                          controller.vehiclenoController.text,
+                                      bearerToken:
+                                          controller.user!.bearerToken!,
+                                      ownerName:
+                                          controller.ownernameController.text,
+                                      ownerPhoneNo: controller
+                                          .ownerphonenumController.text,
+                                      measurementid:
+                                          controller.housesApartmentsModel?.id,
+                                      apartmentid: controller.apartment?.id,
+                                      
+                                      floorid: controller.floor?.id,
+                                    );
+                                 
+
+                                    
                                   }
                                 }
                               },
