@@ -25,9 +25,7 @@ class AddPreApproveEntry extends GetView {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
                       MyBackButton(text: 'Add PreApprove Entry'),
-
-              SizedBox(height: 20,),
-
+                      SizedBox(height: 20,),
                       controller.isData
                           ? Padding(
                               padding: const EdgeInsets.fromLTRB(39, 0, 38, 0),
@@ -118,7 +116,6 @@ class AddPreApproveEntry extends GetView {
                           },
                         ),
                       ),
-
                       MyTextFormField(
                         controller: controller.nameController,
                         validator: emptyStringValidator,
@@ -183,7 +180,8 @@ class AddPreApproveEntry extends GetView {
                         onTap: () {
                           controller.GuestTime(context);
                         },
-                      ),SizedBox(height: 20,),
+                      ),
+                      SizedBox(height: 20,),
                       MyButton(
                         name: 'Save',
                         onPressed: () {
@@ -203,7 +201,7 @@ class AddPreApproveEntry extends GetView {
                                   name: controller.nameController.text,
                                   mobileno:
                                       controller.mobileNoController.text,
-                                  userid: controller.userdata.userid!,
+                                  userid: controller.userdata.userId!,
                                   arrivaldate: controller.arrivaldate.text,
                                   arrivaltime: controller.arrivaltime.text,
                                   description:

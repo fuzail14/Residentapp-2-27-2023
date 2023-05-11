@@ -52,7 +52,7 @@ class HomeScreenController extends GetxController {
 
     print('Home Screen Controller Data');
     this.user = data;
-    print(user.userid);
+    print(user.userId);
     print(user.bearerToken);
   }
 
@@ -80,7 +80,6 @@ class HomeScreenController extends GetxController {
         country: e["country"],
         state: e["state"],
         city: e["city"],
-
         houseaddress: e["houseaddress"],
         vechileno: e["vechileno"],
         residenttype: e["residenttype"],

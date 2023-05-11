@@ -388,7 +388,8 @@ class EventsScreen extends GetView {
     else {
       return EmptyList(name: 'No Events');
     }
-                          } else if (snapshot.hasError) {
+                          }
+                          else if (snapshot.hasError) {
                             return Icon(Icons.error_outline);
                           } else {
                             return Loader();

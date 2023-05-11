@@ -67,7 +67,7 @@ class AdminReportsController extends GetxController {
       encoding: encoding,
     );
 
-    var data = jsonDecode(response.body.toString());
+    print(response.statusCode);
 
     if (response.statusCode == 200) {
       Get.snackbar('Message:', 'Report Completed',
@@ -75,7 +75,7 @@ class AdminReportsController extends GetxController {
           showProgressIndicator: true,
           progressIndicatorBackgroundColor: primaryColor);
 
-      adminReportsApi(user.userid!, user.bearerToken!);
+      adminReportsApi(user.userId!, user.bearerToken!);
 
       update();
     }

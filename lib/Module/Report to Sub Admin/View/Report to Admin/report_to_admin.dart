@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
@@ -70,7 +69,7 @@ class ReportToAdmin extends GetView {
                             controller.reportToAdminApi(
                                 token: controller.userdata.bearerToken!,
                                 subadminid: controller.resident!.subadminid!,
-                                userid: controller.userdata.userid!,
+                                userid: controller.userdata.userId!,
                                 title: controller.reportTitleController.text,
                                 description:
                                     controller.reportDescriptionController.text);

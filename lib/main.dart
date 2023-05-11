@@ -7,9 +7,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:userapp/Routes/set_routes.dart';
 
-const String YOUR_APP_KEY = '3c358bce6465e1821b3b';
-late PusherClient pusher;
-
 @pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   // If you're going to use other Firebase services in the background, such as Firestore,
@@ -18,6 +15,11 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 
   print("Handling a background message: ${message.messageId}");
 }
+
+
+const String YOUR_APP_KEY = '3c358bce6465e1821b3b';
+late PusherClient pusher;
+
 
 main() async {
 

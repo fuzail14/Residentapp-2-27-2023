@@ -10,9 +10,23 @@ import '../../Login/Model/User.dart';
 import '../Model/gatekeeper.dart';
 
 class AddPreApproveEntryController extends GetxController {
+  final formKey = new GlobalKey<FormState>();
+  TextEditingController nameController = TextEditingController();
+  TextEditingController descriptionController = TextEditingController();
+  TextEditingController cnicController = TextEditingController();
+  TextEditingController mobileNoController = TextEditingController();
+  TextEditingController addressController = TextEditingController();
+  TextEditingController vehicleNoController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  File? imageFile;
+  TextEditingController arrivaldate = TextEditingController();
+  TextEditingController guestVehicleNo = TextEditingController();
+  TextEditingController arrivaltime = TextEditingController();
+
+  var data = Get.arguments;
   late final User userdata;
   late final Residents resident;
-  var data = Get.arguments;
+
   String? gateKeeperDropDownValue;
   String? visitorTypeDropDownValue = 'Guest';
   List<GateKeeper> gateKeeperList = [];
@@ -79,18 +93,6 @@ class AddPreApproveEntryController extends GetxController {
     update();
   }
 
-  final formKey = new GlobalKey<FormState>();
-  TextEditingController nameController = TextEditingController();
-  TextEditingController descriptionController = TextEditingController();
-  TextEditingController cnicController = TextEditingController();
-  TextEditingController mobileNoController = TextEditingController();
-  TextEditingController addressController = TextEditingController();
-  TextEditingController vehicleNoController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
-  File? imageFile;
-  TextEditingController arrivaldate = TextEditingController();
-  TextEditingController guestVehicleNo = TextEditingController();
-  TextEditingController arrivaltime = TextEditingController();
 
   Future StartDate(context) async {
     DateTime? picked = await showDatePicker(

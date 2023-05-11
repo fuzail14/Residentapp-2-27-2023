@@ -26,7 +26,7 @@ class ReportsHistoryScreen extends GetView {
                   child: FutureBuilder<List<AdminReportHistory>>(
                       future: controller.ViewAdminReportsHistoryApi(
                           controller.resident.subadminid!,
-                          controller.user.userid!,
+                          controller.user.userId!,
                           controller.user.bearerToken!),
                       builder: (context, snapshot) {
                         if (snapshot.hasData) {

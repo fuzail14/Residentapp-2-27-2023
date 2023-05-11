@@ -63,7 +63,7 @@ class Login extends GetView{
                               fontSize: 20,
                             ),),
                         ),
-                        SizedBox(height: 36,),
+                        SizedBox(height: 34,),
                         MyTextFormField(controller: controller.userCnicController,
                             validator: emptyStringValidator,
                             hintText: 'Enter Cnic',

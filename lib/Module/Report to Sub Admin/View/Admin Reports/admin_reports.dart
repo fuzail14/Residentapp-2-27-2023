@@ -28,7 +28,7 @@ class AdminReports extends GetView {
               Expanded(
                 child: FutureBuilder(
                     future: controller.adminReportsApi(
-                        controller.user.userid!, controller.user.bearerToken!),
+                        controller.user.userId!, controller.user.bearerToken!),
                     builder: (BuildContext context, AsyncSnapshot snapshot) {
                       if (snapshot.hasData) {
 
@@ -525,7 +525,7 @@ class AdminReports extends GetView {
                                                                               MyButton(
                                                                                 width: 80,
                                                                                 onPressed: () {
-                                                                                  _adminReportsController.ProblemSolvedButtonApi(snapshot.data.data[index].id, controller.user.userid!, controller.user.bearerToken!);
+                                                                                  _adminReportsController.ProblemSolvedButtonApi(snapshot.data.data[index].id, controller.user.userId!, controller.user.bearerToken!);
 
                                                                                   Get.back();
                                                                                 },

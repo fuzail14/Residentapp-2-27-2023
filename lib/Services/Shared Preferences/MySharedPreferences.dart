@@ -9,9 +9,9 @@ import '../../Module/Login/Model/User.dart';
 class MySharedPreferences {
   static setUserData({required User user}) async {
     await SharedPreferences.getInstance().then((value) {
-      value.setInt(userIdSPKey, user.userid ?? 0);
+      value.setInt(userIdSPKey, user.userId ?? 0);
       value.setInt(subAminIdSPKey, user.subadminid ?? 0);
-      value.setInt(familymemberIdSPKey, user.familymemberid ?? 0);
+      value.setInt(familymemberIdSPKey, user.familyMemberId ?? 0);
       value.setInt(residentIdSPKey, user.residentid ?? 0);
       value.setString(firstNameSPKey, user.firstName ?? '');
       value.setString(lastNameSPKey, user.lastName ?? '');
@@ -47,9 +47,9 @@ class MySharedPreferences {
 
       _user = User(
 
-          userid: value.getInt(userIdSPKey),
+          userId: value.getInt(userIdSPKey),
           subadminid: value.getInt(subAminIdSPKey),
-          familymemberid: value.getInt(familymemberIdSPKey),
+          familyMemberId: value.getInt(familymemberIdSPKey),
           residentid: value.getInt(residentIdSPKey),
           firstName: value.getString(firstNameSPKey),
           lastName: value.getString(lastNameSPKey),

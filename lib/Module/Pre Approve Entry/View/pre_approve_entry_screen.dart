@@ -34,7 +34,7 @@ class GatekeeperReports extends GetView {
                     Expanded(
                       child: FutureBuilder(
                           future: controller.viewPreApproveEntryReportsApi(
-                              controller.userdata.userid!,
+                              controller.userdata.userId!,
                               controller.userdata.bearerToken!),
                           builder:
                               (BuildContext context, AsyncSnapshot snapshot) {

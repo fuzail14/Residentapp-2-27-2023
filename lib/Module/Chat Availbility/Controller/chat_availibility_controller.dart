@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:http/http.dart' as Http;
 import 'package:get/get.dart';
 import 'package:userapp/Constants/api_routes.dart';
-import '../../HomeScreen/Model/residents.dart';
 import '../../Login/Model/User.dart';
 import '../Model/ChatNeighbours.dart';
 import '../Model/ChatRoomModel.dart';
@@ -10,7 +9,7 @@ import '../Model/ChatRoomUsers.dart';
 
 class ChatAvailbilityController extends GetxController {
   late final User userdata;
-  late final Residents resident;
+  var resident;
 
   var data = Get.arguments;
   @override

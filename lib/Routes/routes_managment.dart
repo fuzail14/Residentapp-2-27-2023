@@ -1,10 +1,8 @@
 import 'package:get/get.dart';
 import 'package:userapp/Module/Discussion%20Form/View/discussion_form.dart';
 import 'package:userapp/Module/Events/View/events_screen.dart';
-import 'package:userapp/Module/Events/View/view_event_images_screen.dart';
 import 'package:userapp/Module/Family%20Member/Add%20Family%20Member/View/add_family_member.dart';
 import 'package:userapp/Module/Family%20Member/View%20Family%20Member/View/view_family_member.dart';
-import 'package:userapp/Module/GuestHistory/View/guests_history_screen.dart';
 import 'package:userapp/Module/Monthly%20Bills/View/monthly_bills.dart';
 import 'package:userapp/Module/Splash/View/splash_screen.dart';
 import 'package:userapp/Routes/screen_binding.dart';
@@ -13,6 +11,7 @@ import 'package:userapp/Widgets/image_show.dart';
 import '../Module/Add PreApprove Entry/View/add_pre_aprove_entry.dart';
 import '../Module/Chat Availbility/View/chat_availbility_screen.dart';
 import '../Module/Chat Screens/Neighbour Chat Screen/View/neighbour_chat_screen.dart';
+import '../Module/Guest History/View/guests_history_screen.dart';
 import '../Module/HomeScreen/View/home_screen.dart';
 import '../Module/Login/View/login_screen.dart';
 import '../Module/NoticeBoard/View/notice_board_screen.dart';
@@ -27,118 +26,114 @@ class RouteManagement {
   static List<GetPage> getPages() {
     return [
       GetPage(
-          name: splashscreen,
-          page: () => SplashScreen
-          (),
-          binding: ScreenBindings(),
-          transition: Transition.noTransition),
+        name: splashscreen,
+        page: () => SplashScreen(),
+        binding: ScreenBindings(),
+      ),
       GetPage(
-          name: loginscreen,
-          page: () => Login(),
-          binding: ScreenBindings(),
-          transition: Transition.noTransition),
+        name: loginscreen,
+        page: () => Login(),
+        binding: ScreenBindings(),
+      ),
       GetPage(
-          name: homescreen,
-          page: () => HomeScreen(),
-          binding: ScreenBindings(),
-          transition: Transition.noTransition),
+        name: homescreen,
+        page: () => HomeScreen(),
+        binding: ScreenBindings(),
+      ),
       GetPage(
-          name: eventsscreen,
-          page: () => EventsScreen(),
-          binding: ScreenBindings(),
-          transition: Transition.noTransition),
+        name: eventsscreen,
+        page: () => EventsScreen(),
+        binding: ScreenBindings(),
+      ),
       GetPage(
-          name: neighbourchatscreen,
-          page: () => NeighbourChatScreen(),
-          binding: ScreenBindings(),
-          transition: Transition.noTransition),
+        name: neighbourchatscreen,
+        page: () => NeighbourChatScreen(),
+        binding: ScreenBindings(),
+      ),
       GetPage(
-          name: chatavailbilityscreen,
-          page: () => ChatAvailbilityScreen(),
-          binding: ScreenBindings(),
-          transition: Transition.noTransition),
+        name: chatavailbilityscreen,
+        page: () => ChatAvailbilityScreen(),
+        binding: ScreenBindings(),
+      ),
       GetPage(
-          name: reporttoadmin,
-          page: () => ReportToAdmin(),
-          binding: ScreenBindings(),
-          transition: Transition.noTransition),
+        name: reporttoadmin,
+        page: () => ReportToAdmin(),
+        binding: ScreenBindings(),
+      ),
       GetPage(
-          name: adminreports,
-          page: () => AdminReports(),
-          binding: ScreenBindings(),
-          transition: Transition.noTransition),
+        name: adminreports,
+        page: () => AdminReports(),
+        binding: ScreenBindings(),
+      ),
       GetPage(
-          name: preapproveentryscreen,
-          page: () => GatekeeperReports(),
-          binding: ScreenBindings(),
-          transition: Transition.noTransition),
+        name: preapproveentryscreen,
+        page: () => GatekeeperReports(),
+        binding: ScreenBindings(),
+      ),
       GetPage(
-          name: addpreapproveentryscreen,
-          page: () => AddPreApproveEntry(),
-          binding: ScreenBindings(),
-          transition: Transition.noTransition),
+        name: addpreapproveentryscreen,
+        page: () => AddPreApproveEntry(),
+        binding: ScreenBindings(),
+      ),
       GetPage(
-          name: reportshistoryscreen,
-          page: () => ReportsHistoryScreen(),
-          binding: ScreenBindings(),
-          transition: Transition.noTransition),
+        name: reportshistoryscreen,
+        page: () => ReportsHistoryScreen(),
+        binding: ScreenBindings(),
+      ),
       GetPage(
-          name: guestshistoryscreen,
-          page: () => GuestsHistoryScreen(),
-          binding: ScreenBindings(),
-          transition: Transition.noTransition),
+        name: guestshistoryscreen,
+        page: () => GuestsHistoryScreen(),
+        binding: ScreenBindings(),
+      ),
+
       GetPage(
-          name: vieweventimages,
-          page: () => ViewEventImages(),
-          binding: ScreenBindings(),
-          transition: Transition.noTransition),
+        name: viewimage,
+        page: () => ViewImage(),
+        binding: ScreenBindings(),
+      ),
       GetPage(
-          name: viewimage,
-          page: () => ViewImage(),
-          binding: ScreenBindings(),
-          transition: Transition.noTransition),
+        name: noticeboardscreen,
+        page: () => NoticeBoardScreen(),
+        binding: ScreenBindings(),
+      ),
       GetPage(
-          name: noticeboardscreen,
-          page: () => NoticeBoardScreen(),
-          binding: ScreenBindings(),
-          transition: Transition.noTransition),
+        name: gatekeeperreports,
+        page: () => GatekeeperReports(),
+        binding: ScreenBindings(),
+      ),
       GetPage(
-          name: gatekeeperreports,
-          page: () => GatekeeperReports(),
-          binding: ScreenBindings(),
-          transition: Transition.noTransition),
+        name: residentpersonaldetail,
+        page: () => ResidentPersonalDetail(),
+        binding: ScreenBindings(),
+      ),
       GetPage(
-          name: residentpersonaldetail,
-          page: () => ResidentPersonalDetail(),
-          binding: ScreenBindings(),
-          transition: Transition.noTransition),
+        name: residentaddressdetail,
+        page: () => ResidentAddressDetail(),
+        binding: ScreenBindings(),
+      ),
       GetPage(
-          name: residentaddressdetail,
-          page: () => ResidentAddressDetail(),
-          binding: ScreenBindings(),
-          transition: Transition.noTransition),
+        name: addfamilymember,
+        page: () => AddFamilyMember(),
+        binding: ScreenBindings(),
+      ),
       GetPage(
-          name: addfamilymember,
-          page: () => AddFamilyMember(),
-          binding: ScreenBindings(),
-          transition: Transition.noTransition),
+        name: viewfamilymember,
+        page: () => ViewFamilyMember(),
+        binding: ScreenBindings(),
+      ),
       GetPage(
-          name: viewfamilymember,
-          page: () => ViewFamilyMember(),
-          binding: ScreenBindings(),
-          transition: Transition.noTransition),
-      GetPage(
-          name: discussion_form,
-          page: () => DiscussionForm(),
-          binding: ScreenBindings(),
-          transition: Transition.noTransition),
+        name: discussion_form,
+        page: () => DiscussionForm(),
+        binding: ScreenBindings(),
+
+      ),
       GetPage(
         name: monthly_bill,
         page: () => MonthlyBills(),
         binding: ScreenBindings(),
-        transition: Transition.noTransition
-        
+
       ),
+
     ];
   }
 }

@@ -35,7 +35,7 @@ class LoginController extends GetxController {
     var data = jsonDecode(response.body);
     if (response.statusCode == 200 && data['data']['roleid'] == 3) {
       final User user = User(
-          userid: data['data']['id'],
+          userId: data['data']['id'],
           subadminid: data['data']['subadminid'] ?? 0,
           residentid: data['data']['residentid'] ?? 0,
           firstName: data['data']['firstname'],
@@ -49,7 +49,7 @@ class LoginController extends GetxController {
       MySharedPreferences.setUserData(user: user);
       final NotificationServices notificationServices = NotificationServices();
       final String? token = await notificationServices.getDeviceToken();
-      fcmtokenrefresh(user.userid!, token!, user.bearerToken!);
+      fcmtokenrefresh(user.userId!, token!, user.bearerToken!);
       if (user.address == "NA") {
         Get.offAndToNamed(residentaddressdetail, arguments: user);
       } else {
@@ -59,7 +59,7 @@ class LoginController extends GetxController {
       // isLoading=false;
       // update();
       final User user = User(
-          userid: data['data']['id'],
+          userId: data['data']['residentid'],
           subadminid: data['data']['subadminid'] ?? 0,
           residentid: data['data']['residentid'] ?? 0,
           firstName: data['data']['firstname'],
@@ -73,7 +73,7 @@ class LoginController extends GetxController {
       MySharedPreferences.setUserData(user: user);
       final NotificationServices notificationServices = NotificationServices();
       final String? token = await notificationServices.getDeviceToken();
-      fcmtokenrefresh(user.userid!, token!, user.bearerToken!);
+      fcmtokenrefresh(user.userId!, token!, user.bearerToken!);
       if (user.address == "NA") {
         Get.offAndToNamed(residentaddressdetail, arguments: user);
       } else {

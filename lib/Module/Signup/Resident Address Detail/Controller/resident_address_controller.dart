@@ -312,7 +312,8 @@ class ResidentAddressDetailController extends GetxController {
 
     request.headers.addAll(headers);
     if (societyorbuildingval == 'society') {
-      if (residentalType.contains('Rental')) {
+      if (residentalType.contains('Rental'))
+      {
         print('iam inside rental');
         request.fields['residentid'] = residentid.toString();
         request.fields['state'] = state;
@@ -350,7 +351,7 @@ class ResidentAddressDetailController extends GetxController {
 
           final User user = await MySharedPreferences.getUserData();
           final User user1 = User(
-            userid: user.userid,
+            userId: user.userId,
             firstName: user.firstName,
             lastName: user.lastName,
             cnic: user.cnic,
@@ -362,10 +363,20 @@ class ResidentAddressDetailController extends GetxController {
           MySharedPreferences.setUserData(user: user1);
           await loginResidentUpdateAddressApi(
               address: address,
-              residentid: user.userid!,
+              residentid: user.userId!,
               bearerToken: user.bearerToken!);
           Get.offAndToNamed(homescreen, arguments: user1);
-        } else if (response.statusCode == 403) {
+        }
+        else if (response.statusCode == 409) {
+
+          isLoading = false;
+          update();
+          var data = jsonDecode(response.body.toString());
+
+          Get.snackbar(data['message'], "");
+
+        }
+        else if (response.statusCode == 403) {
           isLoading = false;
           update();
 
@@ -375,11 +386,14 @@ class ResidentAddressDetailController extends GetxController {
             "Error",
             data.toString(),
           );
-        } else {
+        }
+
+        else {
           Get.snackbar("Failed to Register", "");
         }
-      } else {
-        print("ima in else");
+      }
+      else {
+        print("Owner");
         request.fields['residentid'] = residentid.toString();
         request.fields['state'] = state;
         request.fields['city'] = city;
@@ -414,7 +428,7 @@ class ResidentAddressDetailController extends GetxController {
           Get.snackbar("Resident Register Successfully", "");
           final User user = await MySharedPreferences.getUserData();
           final User user1 = User(
-            userid: user.userid,
+            userId: user.userId,
             firstName: user.firstName,
             lastName: user.lastName,
             cnic: user.cnic,
@@ -426,10 +440,20 @@ class ResidentAddressDetailController extends GetxController {
           MySharedPreferences.setUserData(user: user1);
           await loginResidentUpdateAddressApi(
               address: address,
-              residentid: user.userid!,
+              residentid: user.userId!,
               bearerToken: user.bearerToken!);
           Get.offAndToNamed(homescreen, arguments: user1);
-        } else if (response.statusCode == 403) {
+        }
+        else if (response.statusCode == 409) {
+
+          isLoading = false;
+          update();
+          var data = jsonDecode(response.body.toString());
+
+          Get.snackbar(data['message'], "");
+
+        }
+        else if (response.statusCode == 403) {
           isLoading = false;
           update();
 
@@ -439,21 +463,26 @@ class ResidentAddressDetailController extends GetxController {
             "Error",
             data.toString(),
           );
-        } else {
+        }
+        else {
           isLoading = false;
           update();
 
           Get.snackbar("Failed to Register", "");
         }
       }
-    } else {
+    }
+
+
+
+    else if (societyorbuildingval == 'building') {
+      print("Local Building");
       if (residentalType.contains('Rental')) {
         print('iam inside rental local buiulding');
         request.fields['residentid'] = residentid.toString();
         request.fields['state'] = state;
         request.fields['city'] = city;
         request.fields['localbuildingid'] = societyid.toString();
-        
         request.fields['fid'] = floorid.toString();
         request.fields['aid'] = apartmentid.toString();
         request.fields['propertyid'] = propertyid.toString();
@@ -482,7 +511,7 @@ class ResidentAddressDetailController extends GetxController {
 
           final User user = await MySharedPreferences.getUserData();
           final User user1 = User(
-            userid: user.userid,
+            userId: user.userId,
             firstName: user.firstName,
             lastName: user.lastName,
             cnic: user.cnic,
@@ -494,10 +523,11 @@ class ResidentAddressDetailController extends GetxController {
           MySharedPreferences.setUserData(user: user1);
           await loginResidentUpdateAddressApi(
               address: address,
-              residentid: user.userid!,
+              residentid: user.userId!,
               bearerToken: user.bearerToken!);
           Get.offAndToNamed(homescreen, arguments: user1);
-        } else if (response.statusCode == 403) {
+        }
+        else if (response.statusCode == 403) {
           isLoading = false;
           update();
 
@@ -507,17 +537,28 @@ class ResidentAddressDetailController extends GetxController {
             "Error",
             data.toString(),
           );
-        } else {
+        }
+        else if (response.statusCode == 409) {
+
+          isLoading = false;
+          update();
+
+
+          var data = jsonDecode(response.body.toString());
+
+          Get.snackbar(data['message'], "");
+        }
+
+        else {
           Get.snackbar("Failed to Register", "");
         }
-      } else {
-        print("ima in else local building");
+      }
+      else {
+        print("ima in else local building ");
         request.fields['residentid'] = residentid.toString();
         request.fields['state'] = state;
         request.fields['city'] = city;
         request.fields['localbuildingid'] = societyid.toString();
-        
-        
         request.fields['fid'] = floorid.toString();
         request.fields['aid'] = apartmentid.toString();
         request.fields['propertyid'] = propertyid.toString();
@@ -544,7 +585,7 @@ class ResidentAddressDetailController extends GetxController {
           Get.snackbar("Resident Register Successfully", "");
           final User user = await MySharedPreferences.getUserData();
           final User user1 = User(
-            userid: user.userid,
+            userId: user.userId,
             firstName: user.firstName,
             lastName: user.lastName,
             cnic: user.cnic,
@@ -556,10 +597,11 @@ class ResidentAddressDetailController extends GetxController {
           MySharedPreferences.setUserData(user: user1);
           await loginResidentUpdateAddressApi(
               address: address,
-              residentid: user.userid!,
+              residentid: user.userId!,
               bearerToken: user.bearerToken!);
           Get.offAndToNamed(homescreen, arguments: user1);
-        } else if (response.statusCode == 403) {
+        }
+        else if (response.statusCode == 403) {
           isLoading = false;
           update();
 
@@ -569,7 +611,21 @@ class ResidentAddressDetailController extends GetxController {
             "Error",
             data.toString(),
           );
-        } else {
+        }
+        else if (response.statusCode == 409) {
+          isLoading = false;
+          update();
+
+
+          var data = jsonDecode(response.body.toString());
+
+          Get.snackbar(data['message'], "");
+
+
+        }
+
+
+        else {
           isLoading = false;
           update();
 

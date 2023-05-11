@@ -50,7 +50,7 @@ class AddReportToAdminController extends GetxController {
 
     this.userdata = user[0];
     this.resident = user[1];
-    print(userdata.userid);
+    print(userdata.userId);
     print(userdata.bearerToken);
     print(userdata.subadminid);
   }

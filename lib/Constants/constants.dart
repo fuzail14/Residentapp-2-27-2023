@@ -50,7 +50,7 @@ Future<String> getDate(BuildContext context) async {
             ),
             textButtonTheme: TextButtonThemeData(
               style: TextButton.styleFrom(
-                primary: primaryColor, // button text color
+                backgroundColor: primaryColor, // button text color
               ),
             ),
           ),

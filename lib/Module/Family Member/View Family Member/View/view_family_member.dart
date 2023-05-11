@@ -1,9 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_state_manager/src/simple/get_state.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:userapp/Module/Family%20Member/View%20Family%20Member/Controller/reset_password_controller.dart';
@@ -44,7 +41,7 @@ class ViewFamilyMember extends GetView {
                       child: FutureBuilder(
                           future: controller.viewResidentsApi(
                               controller.resident.subadminid!,
-                              controller.userdata.userid!,
+                              controller.userdata.userId!,
                               controller.userdata.bearerToken!),
                           builder: (context, AsyncSnapshot snapshot) {
                             if (snapshot.hasData) {
@@ -95,7 +92,7 @@ class ViewFamilyMember extends GetView {
                                                           decoration: BoxDecoration(
                                                               image: DecorationImage(
                                                                   image: NetworkImage(
-                                                                      imageBaseUrl +
+                                                                      Api.imageBaseUrl +
                                                                           snapshot
                                                                               .data!
                                                                               .data[
@@ -202,7 +199,7 @@ class ViewFamilyMember extends GetView {
                                                                                  .resetPasswordApi(
                                                                                  familymemberid:  snapshot.data
                                                                                      .data[index]
-                                                                                     .familymemberid,
+                                                                                     .familyMemberId,
                                                                                  bearerToken: controller
                                                                                      .userdata
                                                                                      .bearerToken!,

@@ -1,13 +1,11 @@
- import 'dart:async';
+import 'dart:async';
 import 'dart:convert';
-
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:pusher_client/pusher_client.dart';
- import 'package:http/http.dart' as Http;
+import 'package:http/http.dart' as Http;
 import 'package:userapp/Module/HomeScreen/Model/DiscussionRoomModel.dart' as D;
-
 import '../../../Constants/api_routes.dart';
 import '../../../main.dart';
 import '../../HomeScreen/Model/residents.dart' ;
@@ -18,13 +16,12 @@ class DiscussionFormController  extends GetxController
 {
   late final U.User user;
   late final Residents resident;
-late final D.DiscussionRoomModel discussionRoomModel;
+  late final D.DiscussionRoomModel discussionRoomModel;
   var data=Get.arguments;
-  List<DiscussionChatModel> v = [];
+   List <DiscussionChatModel> myList =[];
   final TextEditingController msg = TextEditingController();
 
-  StreamController<List<DiscussionChatModel>> discussionChatStreamController = StreamController<List<DiscussionChatModel>>();
-
+     StreamController<List<DiscussionChatModel>> discussionChatStreamController = StreamController<List<DiscussionChatModel>>.broadcast();
 
   Future<void> _initiatePusherSocketForMessaging() async {
     pusher = PusherClient(
@@ -58,41 +55,31 @@ late final D.DiscussionRoomModel discussionRoomModel;
     channel.bind('event', (PusherEvent? event) {
       print('event data: ' + event!.data.toString());
 
-      update();
+      print(event!.data.toString());
+
       var data = jsonDecode(event!.data.toString());
-      print("---------------------------------------------");
 
-      print( data['message']);
-      print('id ->${data['message']['id']}');
-      print("---------------------------------------------");
-
-    var mydata= [Data(
+      var mydata=data['message']['original'];
 
 
-      id:int.tryParse( data['message']['id'].toString()),
-          discussionroomid:int.tryParse( data['message']['discussionroomid'].toString()),
-          message: data['message']['message'],
-          updatedAt:data['message']['updated_at'],
-        createdAt: data['message']['created_at'],
-          residentid:int.tryParse( data['message']['residentid'].toString()),
+      myList.add(DiscussionChatModel.fromJson(mydata));
 
-
-      )] as List<Data>?;
-
-v.add(DiscussionChatModel(data: mydata, success: true ));
+      discussionChatStreamController.sink.add(myList);
 
 
 
 
-      // update();
+
     });
+
   }
 
 
 
-@override
+  @override
   void onInit() async{
     // TODO: implement onInit
+
     super.onInit();
 
 
@@ -100,13 +87,13 @@ v.add(DiscussionChatModel(data: mydata, success: true ));
     resident=data[1];
     discussionRoomModel=data[2];
 
-    print(DateTime.now());
-    getFormattedDate();
-    _initiatePusherSocketForMessaging();
 
+    // _initiatePusherSocketForMessaging();
+    // allDiscussionChatsApi(token: user!.bearerToken!,discussionroomid:discussionRoomModel?.data?.first.id );
 
 
   }
+
 
 
 
@@ -131,19 +118,6 @@ v.add(DiscussionChatModel(data: mydata, success: true ));
 
 
     msg.text = '';
-
-    var mydata= [Data(
-
-
-
-      discussionroomid:discussionroomid,
-      message: message,
-      residentid:residentid),
-
-
-    ] as List<Data>?;
-
-    v.add(DiscussionChatModel(data: mydata, success: true ));
 
 
 
@@ -175,37 +149,41 @@ v.add(DiscussionChatModel(data: mydata, success: true ));
 
 
 
-  Future<DiscussionChatModel> allDiscussionChatsApi(
-      {required int? discussionroomid,
-        required String token}) async {
-    print(token);
-
-    final response = await Http.get(
-      Uri.parse(Api.alldiscussionchats +
-          "/" +
-          discussionroomid.toString() ),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        'Authorization': "Bearer $token"
-      },
-    );
-    var data = jsonDecode(response.body.toString());
-
-
-    if (response.statusCode == 200) {
-
-
-print(response.statusCode);
-
-
-
-      return DiscussionChatModel.fromJson(data);
-
-    }
-
- return   DiscussionChatModel.fromJson(data);
-
-  }
-
+//  allDiscussionChatsApi(
+//       {required int? discussionroomid,
+//         required String token}) async {
+//     print(token);
+//     print("hello");
+//
+//     final response = await Http.get(
+//       Uri.parse(Api.alldiscussionchats +
+//           "/" +
+//           discussionroomid.toString() ),
+//       headers: <String, String>{
+//         'Content-Type': 'application/json; charset=UTF-8',
+//         'Authorization': "Bearer $token"
+//       },
+//     );
+//     var data = jsonDecode(response.body.toString());
+//     if (response.statusCode == 200) {
+//
+//
+//
+// myList.add(DiscussionChatModel.fromJson(data));
+// discussionChatStreamController.sink.add(myList);
+//
+//
+//
+//
+//     }
+//
+//     myList.add(DiscussionChatModel.fromJson(data));
+//     discussionChatStreamController.sink.add(myList);
+//
+//
+//
+//
+//    }
+//
 
 }

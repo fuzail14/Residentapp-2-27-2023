@@ -101,7 +101,7 @@ class HomeScreen extends GetView {
                                       _homeScreenController.user.bearerToken!)
                               : // Login user Resident
                               _homeScreenController.loginResidentDetails(
-                                  userid: _homeScreenController.user.userid!,
+                                  userid: _homeScreenController.user.userId!,
                                   token: _homeScreenController.user.bearerToken!),
                       builder: (BuildContext context, AsyncSnapshot snapshot) {
                         if (snapshot.hasData) {
@@ -270,18 +270,7 @@ class HomeScreen extends GetView {
                                         ),
                                       ),
                                     ),
-                                    Padding(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          35, 23, 0, 8),
-                                      child: Text(
-                                        "Services",
-                                        style: GoogleFonts.ubuntu(
-                                            fontStyle: FontStyle.normal,
-                                            fontWeight: FontWeight.w600,
-                                            fontSize: 14,
-                                            color: HexColor('#585353')),
-                                      ),
-                                    ),
+                                    HomeHeading(text: 'Services'),
                                     Padding(
                                       padding: const EdgeInsets.fromLTRB(
                                           35, 8, 21, 0),
@@ -719,7 +708,7 @@ class HomeScreen extends GetView {
                                       padding: const EdgeInsets.fromLTRB(
                                           35, 23, 0, 8),
                                       child: Text(
-                                        "Coversations",
+                                        "Conversations",
                                         style: GoogleFonts.ubuntu(
                                             fontStyle: FontStyle.normal,
                                             fontWeight: FontWeight.w600,
@@ -737,11 +726,13 @@ class HomeScreen extends GetView {
                                             height: 65,
                                             child: GestureDetector(
                                               onTap: () {
-                                                Get.toNamed(
+
+                                                print(snapshot.data.runtimeType);
+
+                                                Get.offAndToNamed(
                                                     chatavailbilityscreen,
                                                     arguments: [
-                                                      _homeScreenController
-                                                          .user,
+                                                      _homeScreenController.user,
                                                       snapshot.data
                                                     ]);
                                               },
@@ -817,7 +808,7 @@ class HomeScreen extends GetView {
                                               onTap: () async{
 
                 DiscussionRoomModel discussionRoomModel=                       await      _homeScreenController.createChatRoomApi(token: _homeScreenController.user.bearerToken!, subadminid: snapshot.data.subadminid);
-                                                Get.toNamed(discussion_form,
+                                                Get.offNamed(discussion_form,
 
                                                     arguments: [
                                                     _homeScreenController
@@ -916,7 +907,7 @@ class HomeScreen extends GetView {
                                               onTap: () {
                                                 // _homeScreenController.payment();
                                                 print(_homeScreenController
-                                                    .user.userid!);
+                                                    .user.userId!);
                                                 print(_homeScreenController
                                                     .user.firstName!);
                                                 print(snapshot
@@ -1096,7 +1087,7 @@ class HomeScreen extends GetView {
                                               onTap: () {
                                                 // _homeScreenController.payment();
                                                 print(_homeScreenController
-                                                    .user.userid!);
+                                                    .user.userId!);
                                                 print(_homeScreenController
                                                     .user.firstName!);
                                                 print(snapshot
@@ -1234,4 +1225,27 @@ class HomeScreen extends GetView {
   //     return false;
   //   }
   // }
+}
+
+class HomeHeading extends StatelessWidget {
+
+  final String? text;
+
+  const HomeHeading({super.key,required this.text});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(
+          35, 23, 0, 8),
+      child: Text(
+       text!,
+        style: GoogleFonts.ubuntu(
+            fontStyle: FontStyle.normal,
+            fontWeight: FontWeight.w600,
+            fontSize: 14,
+            color: HexColor('#585353')),
+      ),
+    );
+  }
 }
