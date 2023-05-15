@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:pusher_client/pusher_client.dart';
 import 'package:userapp/Routes/routes_managment.dart';
@@ -16,13 +17,10 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   print("Handling a background message: ${message.messageId}");
 }
 
-
 const String YOUR_APP_KEY = '3c358bce6465e1821b3b';
 late PusherClient pusher;
 
-
 main() async {
-
   await WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
@@ -41,18 +39,18 @@ class _MyAppState extends State<MyApp> {
     // TODO: implement initState
 
     super.initState();
-
-
   }
 
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
-
-      debugShowCheckedModeBanner: false,
-      initialRoute: splashscreen,
-      getPages: RouteManagement.getPages(),
-
-    );
+    return ScreenUtilInit(
+        designSize: Size(375, 812),
+        builder: (context, child) {
+          return GetMaterialApp(
+            debugShowCheckedModeBanner: false,
+            initialRoute: splashscreen,
+            getPages: RouteManagement.getPages(),
+          );
+        });
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
@@ -27,13 +28,15 @@ class Login extends GetView{
               SingleChildScrollView(
                 child: Column(crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        SizedBox(height:MediaQuery.of(context).size.height*0.05,),
-                        Center(
+
+                        77.h.ph,
+                        Padding(
+                          padding:  EdgeInsets.symmetric(horizontal: 58.w ),
                           child: Image.asset('assets/login_vector.png'),
                         ),
-                        SizedBox(height:MediaQuery.of(context).size.height*0.05,),
+                        33.h.ph,
                         Padding(
-                          padding: const EdgeInsets.fromLTRB(44, 0, 0, 0),
+                          padding:  EdgeInsets.fromLTRB(44.w, 0, 124.w, 0),
                           child: Text("Welcome To",
                             style:  GoogleFonts.ubuntu(
                               color: HexColor('#4D4D4D'),
@@ -42,19 +45,23 @@ class Login extends GetView{
                               fontSize: 36,
                             ),),
                         ),
+                        19.h.ph,
                         Padding(
-                          padding: const EdgeInsets.fromLTRB(44, 0, 0, 0),
-                          child: Text("RESIDENTS APP ",textAlign: TextAlign.center,
+                          padding:  EdgeInsets.fromLTRB(46.w, 0, 142.w, 0),
+                          child: Text("RESIDENTS APP ",
+                            textAlign: TextAlign.center,
+
                             style:  GoogleFonts.ubuntu(
                               color: HexColor('#717171'),
                               letterSpacing:3.2 ,
                               fontStyle: FontStyle.normal,
                               fontWeight: FontWeight.w400,
-                              fontSize: 15,
+                              fontSize: 15.sp,
                             ),),
                         ),
-                        SizedBox(height: 34,),
-                        Center(
+                        34.h.ph,
+                        Padding(
+                          padding:  EdgeInsets.fromLTRB(158.w, 0, 160.w, 0),
                           child: Text("Log In",
                             style:  GoogleFonts.ubuntu(
                               color: HexColor('#FF9900'),
@@ -63,28 +70,27 @@ class Login extends GetView{
                               fontSize: 20,
                             ),),
                         ),
-                        SizedBox(height: 34,),
+                        38.h.ph,
                         MyTextFormField(controller: controller.userCnicController,
                             validator: emptyStringValidator,
-                            hintText: 'Enter Cnic',
-                            labelText: 'Cnic',
+                            hintText: 'CNIC',
+                            labelText: 'CNIC',
                           textInputType: TextInputType.number,
 
 
-
                         ),
-
                         MyPasswordTextFormField(
 
                             controller: controller.userPasswordController,
                             validator: emptyStringValidator,
                             labelText: 'Password',
-                            hintText: 'Enter Password',
+                            hintText: 'Password',
                             togglePasswordView: controller.togglePasswordView,
 
                             obscureText: controller.isHidden),
-                        SizedBox(height:18,),
-                        Center(
+                        17.h.ph,
+                        Padding(
+                          padding:  EdgeInsets.fromLTRB(99.w, 0, 103.w, 0),
                           child: MyButton(
 
 
@@ -107,7 +113,7 @@ class Login extends GetView{
 
                           }, name: 'LOG IN',fontSize: 15,fontWeight: FontWeight.w400,letterSpacing: 0.8,),
                         ),
-                        SizedBox(height:18,),
+                        25.h.ph,
                         Center(
                           child: Wrap(
                             children: [
@@ -119,9 +125,7 @@ class Login extends GetView{
                                     color: Colors.grey,
                                     fontWeight: FontWeight.w400),
                               ),
-                              const SizedBox(
-                                width: 10,
-                              ),
+                              10.w.pw,
                               GestureDetector(
                                   onTap: () {
 
@@ -132,14 +136,14 @@ class Login extends GetView{
                                     "Signup",
                                     style:    GoogleFonts.montserrat(
                                         color: primaryColor,
-                                        fontWeight: FontWeight.w500
+                                        fontWeight: FontWeight.w600
                                     ),
                                   )),
-                              SizedBox(height:MediaQuery.of(context).size.height*0.05,),
 
                             ],
                           ),
-                        )
+                        ),
+                        57.h.ph,
 
 
                       ]),

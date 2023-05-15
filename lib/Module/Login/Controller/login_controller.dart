@@ -1,8 +1,10 @@
 import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as Http;
 import 'package:userapp/Services/Notification%20Services/notification_services.dart';
+
 import '../../../Constants/api_routes.dart';
 import '../../../Routes/set_routes.dart';
 import '../../../Services/Shared Preferences/MySharedPreferences.dart';
@@ -47,9 +49,9 @@ class LoginController extends GetxController {
           bearerToken: data['Bearer']);
 
       MySharedPreferences.setUserData(user: user);
-      final NotificationServices notificationServices = NotificationServices();
-      final String? token = await notificationServices.getDeviceToken();
-      fcmtokenrefresh(user.userId!, token!, user.bearerToken!);
+      // final NotificationServices notificationServices = NotificationServices();
+      // final String? token = await notificationServices.getDeviceToken();
+      // fcmtokenrefresh(user.userId!, token!, user.bearerToken!);
       if (user.address == "NA") {
         Get.offAndToNamed(residentaddressdetail, arguments: user);
       } else {
@@ -123,7 +125,7 @@ class LoginController extends GetxController {
 
     try {
       final response = await Http.post(
-        Uri.parse(Api.fcmtokenrefresh),
+        Uri.parse(Api.fcmTokenRefresh),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
           'Authorization': "Bearer $bearertoken"

@@ -25,7 +25,7 @@ class AdminReportsController extends GetxController {
     print("token $token");
 
     final response = await Http.get(
-      Uri.parse(Api.admin_reports + "/" + userid.toString()),
+      Uri.parse(Api.adminReports + "/" + userid.toString()),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': "Bearer $token"
@@ -46,7 +46,7 @@ class AdminReportsController extends GetxController {
 
     print('token $token');
 
-    final uri = Uri.parse(Api.updatereportstatus);
+    final uri = Uri.parse(Api.updateReportStatus);
     final headers = {
       'Content-Type': 'application/json; charset=UTF-8',
       'Authorization': "Bearer $token"

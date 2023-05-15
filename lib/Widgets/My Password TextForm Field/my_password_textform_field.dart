@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -43,11 +44,13 @@ class MyPasswordTextFormField extends GetView{
   @override
   Widget build(BuildContext context) {
     return  Padding(
-      padding:  EdgeInsets.fromLTRB(39, 16, 38, 0),
+      padding:  EdgeInsets.fromLTRB(44.w,16.h, 45.w, 0),
       child: SizedBox(
-        width: MediaQuery.of(context).size.width * 0.8,
-        height:height ,
+        width:width?? 286.w,
+        // height: height??43.h,
         child: TextFormField(
+          style: GoogleFonts.ubuntu(fontWeight: FontWeight.w400,fontSize: 15,letterSpacing: 0.05),
+
           textAlign: TextAlign.left,
           onTap: onTap,
           validator: validator,
@@ -58,20 +61,22 @@ class MyPasswordTextFormField extends GetView{
           controller: controller,
           decoration: InputDecoration(
 
-            enabledBorder: InputBorder.none,
+            // enabledBorder: InputBorder.none,
             errorBorder: InputBorder.none ,
             focusedErrorBorder:InputBorder.none ,
             filled: true,
-            contentPadding: contentPadding??EdgeInsets.fromLTRB(60, 0, 0, 0),            suffix: GestureDetector(
+            contentPadding: contentPadding??EdgeInsets.fromLTRB(25.w, 13.h,0.w, 13.h),
+
+            suffix: GestureDetector(
               onTap: togglePasswordView,
               child:
               obscureText
                   ?     Padding(
-                    padding: const EdgeInsets.fromLTRB(0, 0, 17, 0),
+                    padding:  EdgeInsets.fromLTRB(0, 0, 17.w, 0),
                     child: SvgPicture.asset('assets/eye_closed.svg',fit: BoxFit.scaleDown,width: 30,),
                   ):
               Padding(
-                padding: const EdgeInsets.fromLTRB(0, 0, 17, 0),
+                padding:  EdgeInsets.fromLTRB(0, 0, 17.w, 0),
                 child: SvgPicture.asset("assets/eye_opened.svg",fit: BoxFit.scaleDown, width: 30,),
               )
 
@@ -88,7 +93,7 @@ class MyPasswordTextFormField extends GetView{
 
                 // color: secondaryColor,
                 fontWeight: FontWeight.w400,
-                fontSize: 15,
+                fontSize: 15.sp,
                 color: HexColor('#B6B6B6')
             ),
             hintStyle: TextStyle(
@@ -96,7 +101,7 @@ class MyPasswordTextFormField extends GetView{
               fontWeight: FontWeight.w400,
             ),
             hintText: hintText,
-            labelText: labelText,
+            // labelText: labelText,
             fillColor: fillcolor??HexColor('#EEEEEE'),
 
             focusedBorder: OutlineInputBorder(
@@ -104,7 +109,11 @@ class MyPasswordTextFormField extends GetView{
               borderSide:
               BorderSide(color: primaryColor, width: 1.5),
             ),
-
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10.0.r),
+              borderSide:
+              BorderSide(color: HexColor('#EEEEEE'), width: 1.5),
+            ),
           ),
         ),
       ),

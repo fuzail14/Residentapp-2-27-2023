@@ -43,7 +43,7 @@ class GuestHistoryController extends GetxController
     print(token);
 
     final response = await Http.get(
-      Uri.parse(Api.preapproveentryhistories + "/" + userid.toString() ),
+      Uri.parse(Api.preApproveEntryHistories + "/" + userid.toString() ),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': "Bearer $token"

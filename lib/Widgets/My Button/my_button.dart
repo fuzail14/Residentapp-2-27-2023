@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../Constants/constants.dart';
@@ -49,17 +50,20 @@ class MyButton extends GetView {
                 ??5,
             shape: outlinedBorder
                 ?? RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(border ??14.0)),
+                    borderRadius: BorderRadius.circular(border ??16.r)),
             backgroundColor: color??primaryColor),
         child: Text(
           name,
+
           maxLines: maxLines??1,
           style: GoogleFonts.ubuntu(
+
               color: textColor??Colors.white,
-              fontWeight: fontWeight,
-              letterSpacing: letterSpacing,
+              fontWeight: FontWeight.w400,
+              letterSpacing: 1,
               fontStyle: fontStyle,
-              fontSize: fontSize),
+              fontSize: 15),
+            textAlign:TextAlign.center
         ),
         onPressed: onPressed,
       ),

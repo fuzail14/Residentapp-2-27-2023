@@ -8,6 +8,7 @@ import 'package:userapp/Module/Splash/View/splash_screen.dart';
 import 'package:userapp/Routes/screen_binding.dart';
 import 'package:userapp/Routes/set_routes.dart';
 import 'package:userapp/Widgets/image_show.dart';
+
 import '../Module/Add PreApprove Entry/View/add_pre_aprove_entry.dart';
 import '../Module/Chat Availbility/View/chat_availbility_screen.dart';
 import '../Module/Chat Screens/Neighbour Chat Screen/View/neighbour_chat_screen.dart';
@@ -85,7 +86,6 @@ class RouteManagement {
         page: () => GuestsHistoryScreen(),
         binding: ScreenBindings(),
       ),
-
       GetPage(
         name: viewimage,
         page: () => ViewImage(),
@@ -125,15 +125,12 @@ class RouteManagement {
         name: discussion_form,
         page: () => DiscussionForm(),
         binding: ScreenBindings(),
-
       ),
       GetPage(
         name: monthly_bill,
         page: () => MonthlyBills(),
         binding: ScreenBindings(),
-
       ),
-
     ];
   }
 }

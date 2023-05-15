@@ -1,9 +1,7 @@
 import 'dart:io';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_state_manager/src/simple/get_state.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:userapp/Module/Family%20Member/Add%20Family%20Member/Controller/add_family_member_controller.dart';
 import '../../../../Constants/constants.dart';
@@ -13,12 +11,11 @@ import '../../../../Widgets/My Button/my_button.dart';
 import '../../../../Widgets/My Password TextForm Field/my_password_textform_field.dart';
 import '../../../../Widgets/My TextForm Field/my_textform_field.dart';
 
-class AddFamilyMember extends StatelessWidget {
-  const AddFamilyMember({Key? key}) : super(key: key);
+class AddFamilyMember extends GetView {
+
 
   @override
   Widget build(BuildContext context) {
-    print('build');
     return SafeArea(
 
       child: Scaffold(
@@ -55,7 +52,8 @@ class AddFamilyMember extends StatelessWidget {
                                   .userdata,
                               controller.resident
                             ]);                    },),
-                      SizedBox(height: 20,),
+                      100.h.ph,
+
                       Stack(
                         children: <Widget>[
                           FittedBox(
@@ -133,95 +131,7 @@ class AddFamilyMember extends StatelessWidget {
                           ),
                         ],
                       ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      // Padding(
-                      //   padding: const EdgeInsets.all(20),
-                      //   child: Column(
-                      //     crossAxisAlignment: CrossAxisAlignment.start,
-                      //     children: [
-                      //       Padding(
-                      //         padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
-                      //         child: Text(
-                      //           "Select Residential Type",
-                      //           style: GoogleFonts.ubuntu(
-                      //               fontStyle: FontStyle.normal,
-                      //               // color: secondaryColor,
-                      //               fontWeight: FontWeight.w400,
-                      //               fontSize: 14,
-                      //               color: HexColor('#4D4D4D')),
-                      //         ),
-                      //       ),
-                      //       Padding(
-                      //         padding: const EdgeInsets.all(8.0),
-                      //         child: DropdownButton(
-                      //           isExpanded: true,
-                      //           style: GoogleFonts.ubuntu(
-                      //               fontStyle: FontStyle.normal,
-                      //               fontWeight: FontWeight.w300,
-                      //               fontSize: 14,
-                      //               color: HexColor('#4D4D4D')),
-                      //           value: controller.rentalorownerval,
-                      //           icon: Icon(
-                      //             Icons.arrow_drop_down_sharp,
-                      //             color: primaryColor,
-                      //           ),
-                      //           items: controller.rentalorownerlist
-                      //               .map((String items) {
-                      //             return DropdownMenuItem(
-                      //               value: items,
-                      //               child: Text(items),
-                      //             );
-                      //           }).toList(),
-                      //           onChanged: (String? newValue) {
-                      //             controller.RentalOrOwner(newValue);
-                      //           },
-                      //         ),
-                      //       ),
-                      //       Padding(
-                      //         padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
-                      //         child: Text(
-                      //           "Select Property Type",
-                      //           style: GoogleFonts.ubuntu(
-                      //               fontStyle: FontStyle.normal,
-
-                      //               // color: secondaryColor,
-                      //               fontWeight: FontWeight.w400,
-                      //               fontSize: 14,
-                      //               color: HexColor('#4D4D4D')),
-                      //         ),
-                      //       ),
-                      //       Padding(
-                      //         padding: const EdgeInsets.all(8.0),
-                      //         child: DropdownButton(
-                      //           isExpanded: true,
-                      //           style: GoogleFonts.ubuntu(
-                      //               fontStyle: FontStyle.normal,
-                      //               fontWeight: FontWeight.w300,
-                      //               fontSize: 14,
-                      //               color: HexColor('#4D4D4D')),
-                      //           value: controller.houseorapartment,
-                      //           icon: Icon(
-                      //             Icons.arrow_drop_down_sharp,
-                      //             color: primaryColor,
-                      //           ),
-                      //           items: controller.houseorapartmentlist
-                      //               .map((String items) {
-                      //             return DropdownMenuItem(
-                      //               value: items,
-                      //               child: Text(items),
-                      //             );
-                      //           }).toList(),
-                      //           onChanged: (String? newValue) {
-                      //             controller.HouseApartment(newValue);
-                      //           },
-                      //         ),
-                      //       ),
-                      //     ],
-                      //   ),
-                      // ),
-
+                      16.h.ph,
                       MyTextFormField(
                         controller: controller.firstnameController,
                         maxLines: 1,
@@ -237,7 +147,6 @@ class AddFamilyMember extends StatelessWidget {
                           labelText: 'Enter Last Name',
 
                       ),
-
                       MyTextFormField(
                           controller: controller.cnicController,
                           validator: emptyStringValidator,
@@ -247,14 +156,6 @@ class AddFamilyMember extends StatelessWidget {
 
 
                       ),
-                      // MyTextFormField(
-                      //     controller: controller.vehiclenoController,
-                      //     validator: emptyStringValidator,
-                      //     hintText: 'Vechile No',
-                      //     labelText: 'Enter Vechile No',
-                      //     onFocusedBorderColor: primaryColor,
-                      //     onEnabledBorderColor: primaryColor),
-
                       MyTextFormField(
                           controller: controller.mobileNoController,
                           validator: emptyStringValidator,
@@ -274,10 +175,7 @@ class AddFamilyMember extends StatelessWidget {
                         labelText: 'Password',
 
                       ),
-
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.05,
-                      ),
+                      17.h.ph,
                       MyButton(
                         onPressed: controller.isLoading
                             ? null
@@ -315,6 +213,7 @@ class AddFamilyMember extends StatelessWidget {
                           borderRadius: BorderRadius.circular(16.0),
                         ),
                       ),
+                      25.h.ph,
                     ],
                   ),
                 ),

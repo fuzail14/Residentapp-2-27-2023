@@ -29,7 +29,7 @@ class ChatAvailbilityController extends GetxController {
     print(token);
 
     final response = await Http.get(
-      Uri.parse(Api.chatneighbours + "/" + subadminid.toString()),
+      Uri.parse(Api.chatNeighbours + "/" + subadminid.toString()),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': "Bearer $token"
@@ -59,7 +59,7 @@ class ChatAvailbilityController extends GetxController {
 
   }) async {
     final response = await Http.post(
-      Uri.parse(Api.createchatroom),
+      Uri.parse(Api.createChatRoom),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': "Bearer $token"
@@ -95,7 +95,7 @@ class ChatAvailbilityController extends GetxController {
 
 
     final response = await Http.get(
-      Uri.parse(Api.fetchchatroomusers + "/" +userid.toString()+ "/" +chatuserid.toString()),
+      Uri.parse(Api.fetchChatroomUsers + "/" +userid.toString()+ "/" +chatuserid.toString()),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': "Bearer $token"

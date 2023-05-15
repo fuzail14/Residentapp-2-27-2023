@@ -15,7 +15,7 @@ class ResetPasswordController extends GetxController {
   }) async {
     Map<String, String> headers = {"Authorization": "Bearer $bearerToken"};
 
-    var request = Http.MultipartRequest('POST', Uri.parse(Api.resetpassword));
+    var request = Http.MultipartRequest('POST', Uri.parse(Api.resetPassword));
     request.headers.addAll(headers);
 
     request.fields['password'] = password;

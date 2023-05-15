@@ -42,7 +42,7 @@ dependencies:
   firebase_messaging: ^14.2.4
   cloud_firestore: ^4.5.0
   flutter_local_notifications: ^12.0.2
-  google_fonts: ^3.0.1
+  google_fonts: ^4.0.4
   flutter_svg: ^1.1.6
   csc_picker: ^0.2.6
   intl: ^0.17.0
@@ -52,11 +52,13 @@ dependencies:
   pusher_client: ^2.0.0
   app_settings: ^4.2.0
   firebase_analytics: ^10.1.4
+  flutter_screenutil: ^5.7.0
+  #device_preview: ^1.1.0
 #  jazzcash_flutter: ^1.0.5
 #  zego_uikit_prebuilt_call: any
 #  zego_uikit_signaling_plugin: any
   firebase_core_platform_interface: ^4.5.1
-
+  
 
 
 

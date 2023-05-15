@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -7,6 +8,8 @@ import 'package:userapp/Module/Report%20to%20Sub%20Admin/Controller/Admin%20Repo
 import 'package:userapp/Routes/set_routes.dart';
 import 'package:userapp/Widgets/Empty%20List/empty_list.dart';
 import 'package:userapp/Widgets/My%20Back%20Button/my_back_button.dart';
+import 'package:userapp/Widgets/My%20Floating%20Action%20Button/my_floating_action_button.dart';
+
 import '../../../../Constants/constants.dart';
 import '../../../../Widgets/My Button/my_button.dart';
 
@@ -18,590 +21,657 @@ class AdminReports extends GetView {
   Widget build(BuildContext context) {
     return GetBuilder<AdminReportsController>(
       init: AdminReportsController(),
-      builder: (controller) => SafeArea(
-        child: Scaffold(
-          body: Column(
-            children: [
-              MyBackButton(
-                text: 'Complaint',
-              ),
-              Expanded(
-                child: FutureBuilder(
-                    future: controller.adminReportsApi(
-                        controller.user.userId!, controller.user.bearerToken!),
-                    builder: (BuildContext context, AsyncSnapshot snapshot) {
-                      if (snapshot.hasData) {
+      builder: (controller) => WillPopScope(
+        onWillPop: () async {
+          Get.offNamed(homescreen, arguments: controller.user);
 
-                        if (snapshot.data.data != null && snapshot.data.data!.length != 0)
-                        {
-                          return ListView.builder(
-                            itemBuilder: (context, index) {
-                              return GestureDetector(
-                                onTap: () {
-                                  showDialog(
-                                      context: context,
-                                      builder: (BuildContext context) =>
-                                          AlertDialog(
-                                            title: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
+          return true;
+        },
+        child: SafeArea(
+          child: Scaffold(
+              body: Column(
+                children: [
+                  MyBackButton(
+                    text: 'Complaint',
+                    onTap: () {
+                      Get.offNamed(homescreen, arguments: controller.user);
+                    },
+                  ),
+                  Expanded(
+                    child: FutureBuilder(
+                        future: controller.adminReportsApi(
+                            controller.user.userId!,
+                            controller.user.bearerToken!),
+                        builder:
+                            (BuildContext context, AsyncSnapshot snapshot) {
+                          if (snapshot.hasData) {
+                            if (snapshot.data.data != null &&
+                                snapshot.data.data!.length != 0) {
+                              return ListView.builder(
+                                  itemBuilder: (context, index) {
+                                    return GestureDetector(
+                                      onTap: () {
+                                        showDialog(
+                                            context: context,
+                                            builder:
+                                                (BuildContext context) =>
+                                                    AlertDialog(
+                                                      title: Column(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                          Center(
+                                                              child: Text(
+                                                            'Complaint',
+                                                            style: GoogleFonts.ubuntu(
+                                                                color: HexColor(
+                                                                    '#4D4D4D'),
+                                                                fontSize: 18,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w700),
+                                                          )),
+                                                          SizedBox(
+                                                            height: 10,
+                                                          ),
+                                                          Text(
+                                                            snapshot
+                                                                .data
+                                                                .data[index]
+                                                                .title
+                                                                .toString(),
+                                                            style: GoogleFonts.ubuntu(
+                                                                color: HexColor(
+                                                                    '#4D4D4D'),
+                                                                fontSize: 14,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w500),
+                                                          ),
+                                                          SizedBox(
+                                                            height: 10,
+                                                          ),
+                                                          Text(
+                                                            snapshot
+                                                                .data
+                                                                .data[index]
+                                                                .description
+                                                                .toString(),
+                                                            style: GoogleFonts.ubuntu(
+                                                                color: HexColor(
+                                                                    '#4D4D4D'),
+                                                                fontSize: 12,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w400),
+                                                          ),
+                                                          SizedBox(
+                                                            height: 15,
+                                                          ),
+                                                          Text(
+                                                            'Complaint At',
+                                                            style: GoogleFonts.ubuntu(
+                                                                color: HexColor(
+                                                                    '#4D4D4D'),
+                                                                fontSize: 14,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w500),
+                                                          ),
+                                                          SizedBox(
+                                                            height: 15,
+                                                          ),
+                                                          Row(
+                                                            children: [
+                                                              Container(
+                                                                width: 82,
+                                                                height: 25,
+                                                                decoration: BoxDecoration(
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            4),
+                                                                    border: Border.all(
+                                                                        color:
+                                                                            primaryColor)),
+                                                                child: Row(
+                                                                  mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .spaceEvenly,
+                                                                  children: [
+                                                                    Text(
+                                                                      snapshot
+                                                                          .data
+                                                                          .data[
+                                                                              index]
+                                                                          .createdAt
+                                                                          .toString()
+                                                                          .split(
+                                                                              'T')[0]
+                                                                          .toString(),
+                                                                      style: GoogleFonts.ubuntu(
+                                                                          color: HexColor(
+                                                                              '#535353'),
+                                                                          fontSize:
+                                                                              10,
+                                                                          fontWeight:
+                                                                              FontWeight.w300),
+                                                                    ),
+                                                                    SvgPicture
+                                                                        .asset(
+                                                                      'assets/complain_history_date_icon1.svg',
+                                                                      color: HexColor(
+                                                                          '#A7A7A7'),
+                                                                    )
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                              SizedBox(
+                                                                width: 15,
+                                                              ),
+                                                              SvgPicture.asset(
+                                                                  'assets/Arrow 1.svg'),
+                                                              SizedBox(
+                                                                width: 15,
+                                                              ),
+                                                              Container(
+                                                                width: 82,
+                                                                height: 25,
+                                                                decoration: BoxDecoration(
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            4),
+                                                                    border: Border.all(
+                                                                        color:
+                                                                            primaryColor)),
+                                                                child: Row(
+                                                                  mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .spaceEvenly,
+                                                                  children: [
+                                                                    Text(
+                                                                      snapshot
+                                                                          .data
+                                                                          .data[
+                                                                              index]
+                                                                          .createdAt
+                                                                          .toString()
+                                                                          .split('T')[
+                                                                              1]
+                                                                          .toString()
+                                                                          .split(
+                                                                              '.')[0]
+                                                                          .toString(),
+                                                                      style: GoogleFonts.ubuntu(
+                                                                          color: HexColor(
+                                                                              '#535353'),
+                                                                          fontSize:
+                                                                              10,
+                                                                          fontWeight:
+                                                                              FontWeight.w300),
+                                                                    ),
+                                                                    SvgPicture
+                                                                        .asset(
+                                                                            'assets/clock.svg')
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                          SizedBox(
+                                                            height: 15,
+                                                          ),
+                                                          Text(
+                                                            'Action At',
+                                                            style: GoogleFonts.ubuntu(
+                                                                color: HexColor(
+                                                                    '#4D4D4D'),
+                                                                fontSize: 14,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w500),
+                                                          ),
+                                                          SizedBox(
+                                                            height: 15,
+                                                          ),
+                                                          Row(
+                                                            children: [
+                                                              Container(
+                                                                width: 82,
+                                                                height: 25,
+                                                                decoration: BoxDecoration(
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            4),
+                                                                    border: Border.all(
+                                                                        color:
+                                                                            primaryColor)),
+                                                                child: Row(
+                                                                  mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .spaceEvenly,
+                                                                  children: [
+                                                                    Text(
+                                                                      snapshot
+                                                                          .data
+                                                                          .data[
+                                                                              index]
+                                                                          .updatedAt
+                                                                          .toString()
+                                                                          .split(
+                                                                              'T')[0]
+                                                                          .toString(),
+                                                                      style: GoogleFonts.ubuntu(
+                                                                          color: HexColor(
+                                                                              '#535353'),
+                                                                          fontSize:
+                                                                              10,
+                                                                          fontWeight:
+                                                                              FontWeight.w300),
+                                                                    ),
+                                                                    SvgPicture
+                                                                        .asset(
+                                                                      'assets/complain_history_date_icon1.svg',
+                                                                      color: HexColor(
+                                                                          '#A7A7A7'),
+                                                                    )
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                              SizedBox(
+                                                                width: 15,
+                                                              ),
+                                                              SvgPicture.asset(
+                                                                  'assets/Arrow 1.svg'),
+                                                              SizedBox(
+                                                                width: 15,
+                                                              ),
+                                                              Container(
+                                                                width: 82,
+                                                                height: 25,
+                                                                decoration: BoxDecoration(
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            4),
+                                                                    border: Border.all(
+                                                                        color:
+                                                                            primaryColor)),
+                                                                child: Row(
+                                                                  mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .spaceEvenly,
+                                                                  children: [
+                                                                    Text(
+                                                                      snapshot
+                                                                          .data
+                                                                          .data[
+                                                                              index]
+                                                                          .updatedAt
+                                                                          .toString()
+                                                                          .split('T')[
+                                                                              1]
+                                                                          .toString()
+                                                                          .split(
+                                                                              '.')[0]
+                                                                          .toString(),
+                                                                      style: GoogleFonts.ubuntu(
+                                                                          color: HexColor(
+                                                                              '#535353'),
+                                                                          fontSize:
+                                                                              10,
+                                                                          fontWeight:
+                                                                              FontWeight.w300),
+                                                                    ),
+                                                                    SvgPicture
+                                                                        .asset(
+                                                                            'assets/clock.svg')
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                          SizedBox(
+                                                            height: 30,
+                                                          ),
+                                                          Center(
+                                                            child: MyButton(
+                                                              fontSize: 12,
+                                                              name: 'Ok',
+                                                              width: 67,
+                                                              height: 22,
+                                                              onPressed: () {
+                                                                Get.back();
+                                                              },
+                                                            ),
+                                                          )
+                                                        ],
+                                                      ),
+                                                    ));
+                                      },
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 16, vertical: 13),
+                                        child: SizedBox(
+                                          width: 343,
+                                          height: 120,
+                                          child: Card(
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(18.0),
+                                            ),
+                                            child: Stack(
                                               children: [
-                                                Center(
-                                                    child: Text(
-                                                  'Complaint',
-                                                  style: GoogleFonts.ubuntu(
-                                                      color:
-                                                          HexColor('#4D4D4D'),
-                                                      fontSize: 18,
-                                                      fontWeight:
-                                                          FontWeight.w700),
-                                                )),
-                                                SizedBox(
-                                                  height: 10,
+                                                Align(
+                                                  alignment: Alignment.topRight,
+                                                  child: SvgPicture.asset(
+                                                      'assets/cardbg.svg',
+                                                      fit: BoxFit.fill),
                                                 ),
-                                                Text(
-                                                  snapshot
-                                                      .data.data[index].title.toString(),
-                                                  style: GoogleFonts.ubuntu(
-
-                                                      color:
-                                                          HexColor('#4D4D4D'),
-                                                      fontSize: 14,
-                                                      fontWeight:
-                                                          FontWeight.w500),
+                                                Padding(
+                                                  padding: EdgeInsets.fromLTRB(
+                                                      12.w, 15.h, 156.w, 0),
+                                                  child: Text(
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    snapshot
+                                                        .data.data[index].title
+                                                        .toString(),
+                                                    style: GoogleFonts.ubuntu(
+                                                        color:
+                                                            HexColor('#A5AAB7'),
+                                                        fontSize: 12,
+                                                        fontWeight:
+                                                            FontWeight.w500),
+                                                  ),
                                                 ),
-                                                SizedBox(
-                                                  height:10,
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.fromLTRB(
+                                                          12, 35, 191, 0),
+                                                  child: Text(
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    maxLines: 2,
+                                                    snapshot.data.data[index]
+                                                        .description
+                                                        .toString(),
+                                                    style: GoogleFonts.ubuntu(
+                                                        color:
+                                                            HexColor('#606470'),
+                                                        fontSize: 14,
+                                                        fontWeight:
+                                                            FontWeight.w500),
+                                                  ),
                                                 ),
-                                                Text(
-                                                  snapshot.data.data[index]
-                                                      .description.toString(),
-                                                  style: GoogleFonts.ubuntu(
-                                                      color:
-                                                          HexColor('#4D4D4D'),
-                                                      fontSize: 12,
-                                                      fontWeight:
-                                                          FontWeight.w400),
-                                                ),
-                                                SizedBox(
-                                                  height: 15,
-                                                ),
-
-                                                Text(
-                                                  'Complaint At',
-                                                  style: GoogleFonts.ubuntu(
-
-                                                      color:
-                                                      HexColor('#4D4D4D'),
-                                                      fontSize: 14,
-                                                      fontWeight:
-                                                      FontWeight.w500),
-                                                ), SizedBox(
-                                                  height:15,
-                                                ),
-                                                Row(
-                                                  children: [
-                                                    Container(
-                                                      width: 82,
-                                                      height: 25,
-                                                      decoration: BoxDecoration(
-                                                          borderRadius:
-                                                          BorderRadius.circular(
-                                                              4),
-                                                          border: Border.all(
-                                                              color:
-                                                              primaryColor)),
-                                                      child: Row(
-                                                        mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceEvenly,
-                                                        children: [
-                                                          Text(
-                                                            snapshot.data.data[index]
-                                                                .createdAt.toString().split('T')[0].toString(),
-                                                            style: GoogleFonts.ubuntu(
-                                                                color: HexColor('#535353'),
-                                                                fontSize: 10,
-                                                                fontWeight: FontWeight.w300),
-                                                          ),
-                                                          SvgPicture.asset(
-                                                              'assets/complain_history_date_icon1.svg',color: HexColor('#A7A7A7'),)
-                                                        ],
-                                                      ),
-                                                    ),
-                                                    SizedBox(
-                                                      width: 15,
-                                                    ),
-                                                    SvgPicture.asset(
-                                                        'assets/Arrow 1.svg'),
-                                                    SizedBox(
-                                                      width: 15,
-                                                    ),
-                                                    Container(
-                                                      width: 82,
-                                                      height: 25,
-                                                      decoration: BoxDecoration(
-                                                          borderRadius:
-                                                          BorderRadius.circular(
-                                                              4),
-                                                          border: Border.all(
-                                                              color:
-                                                              primaryColor)),
-                                                      child: Row(
-                                                        mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceEvenly,
-                                                        children: [
-                                                          Text(
-                                                            snapshot.data.data[index]
-                                                                .createdAt.toString().split('T')[1].toString().split('.')[0].toString(),
-                                                            style: GoogleFonts.ubuntu(
-                                                                color: HexColor('#535353'),
-                                                                fontSize: 10,
-                                                                fontWeight: FontWeight.w300),
-                                                          ),
-                                                          SvgPicture.asset(
-                                                              'assets/clock.svg')
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                                SizedBox(
-                                                  height: 15,
-                                                ),
-
-                                                Text(
-                                                  'Action At',
-                                                  style: GoogleFonts.ubuntu(
-
-                                                      color:
-                                                      HexColor('#4D4D4D'),
-                                                      fontSize: 14,
-                                                      fontWeight:
-                                                      FontWeight.w500),
-                                                ), SizedBox(
-                                                  height:15,
-                                                ),
-                                                Row(
-                                                  children: [
-                                                    Container(
-                                                      width: 82,
-                                                      height: 25,
-                                                      decoration: BoxDecoration(
-                                                          borderRadius:
-                                                          BorderRadius.circular(
-                                                              4),
-                                                          border: Border.all(
-                                                              color:
-                                                              primaryColor)),
-                                                      child: Row(
-                                                        mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceEvenly,
-                                                        children: [
-                                                          Text(
-                                                            snapshot.data.data[index]
-                                                                .updatedAt.toString().split('T')[0].toString(),
-                                                            style: GoogleFonts.ubuntu(
-                                                                color: HexColor('#535353'),
-                                                                fontSize: 10,
-                                                                fontWeight: FontWeight.w300),
-                                                          ),
-                                                          SvgPicture.asset(
-                                                            'assets/complain_history_date_icon1.svg',color: HexColor('#A7A7A7'),)
-                                                        ],
-                                                      ),
-                                                    ),
-                                                    SizedBox(
-                                                      width: 15,
-                                                    ),
-                                                    SvgPicture.asset(
-                                                        'assets/Arrow 1.svg'),
-                                                    SizedBox(
-                                                      width: 15,
-                                                    ),
-                                                    Container(
-                                                      width: 82,
-                                                      height: 25,
-                                                      decoration: BoxDecoration(
-                                                          borderRadius:
-                                                          BorderRadius.circular(
-                                                              4),
-                                                          border: Border.all(
-                                                              color:
-                                                              primaryColor)),
-                                                      child: Row(
-                                                        mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceEvenly,
-                                                        children: [
-                                                          Text(
-                                                            snapshot.data.data[index]
-                                                                .updatedAt.toString().split('T')[1].toString().split('.')[0].toString(),
-                                                            style: GoogleFonts.ubuntu(
-                                                                color: HexColor('#535353'),
-                                                                fontSize: 10,
-                                                                fontWeight: FontWeight.w300),
-                                                          ),
-                                                          SvgPicture.asset(
-                                                              'assets/clock.svg')
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                                SizedBox(
-                                                  height: 30,
-                                                ),
-
-
-
-                                                GestureDetector(
-                                                  onTap: () {
-                                                    Get.back();
-                                                  },
-                                                  child: Center(
-                                                    child: Container(
-                                                      height: 31,
-                                                      width: 96,
-                                                      decoration: BoxDecoration(
-                                                          color: primaryColor,
-                                                          borderRadius:
-                                                              const BorderRadius
-                                                                  .all(
-                                                            Radius.circular(
-                                                                7.0),
-                                                          ),
-                                                          boxShadow: [
-                                                            BoxShadow(
-                                                              color: Colors.grey
-                                                                  .withOpacity(
-                                                                      0.8),
-                                                              spreadRadius: 4,
-                                                              blurRadius: 10,
-                                                              offset:
-                                                                  Offset(0, 3),
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.fromLTRB(
+                                                          12, 76, 75, 0),
+                                                  child: Row(
+                                                    children: [
+                                                      Container(
+                                                        width: 82,
+                                                        height: 25,
+                                                        decoration: BoxDecoration(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        4),
+                                                            border: Border.all(
+                                                                color:
+                                                                    primaryColor)),
+                                                        child: Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .spaceEvenly,
+                                                          children: [
+                                                            Text(
+                                                              snapshot
+                                                                  .data
+                                                                  .data[index]
+                                                                  .updatedAt
+                                                                  .toString()
+                                                                  .split('T')[0]
+                                                                  .toString(),
+                                                              style: GoogleFonts.ubuntu(
+                                                                  color: HexColor(
+                                                                      '#535353'),
+                                                                  fontSize: 10,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w300),
+                                                            ),
+                                                            SvgPicture.asset(
+                                                              'assets/complain_history_date_icon1.svg',
+                                                              color: HexColor(
+                                                                  '#A7A7A7'),
                                                             )
-                                                          ]),
-                                                      child: Center(
-                                                        child: Text(
-                                                          'OK',
-                                                          textAlign:
-                                                              TextAlign.left,
-                                                          style: TextStyle(
-                                                            fontFamily:
-                                                                "Netflix",
-                                                            fontWeight:
-                                                                FontWeight.w600,
-                                                            fontSize: 18,
-                                                            letterSpacing: 0.0,
-                                                            color: Colors.white,
-                                                          ),
+                                                          ],
                                                         ),
                                                       ),
-                                                    ),
-                                                  ),
-                                                ), SizedBox(
-                                                  height: 30,
-                                                ),
-
-                                              ],
-                                            ),
-                                          ));
-                                },
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 16, vertical: 13),
-                                  child: SizedBox(
-                                    width: 343,
-                                    height: 120,
-                                    child: Card(
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(18.0),
-                                      ),
-                                      child: Stack(
-                                        children: [
-                                          Align(
-                                            alignment: Alignment.topRight,
-                                            child: SvgPicture.asset(
-                                                'assets/cardbg.svg',
-                                                fit: BoxFit.fill),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.fromLTRB(
-                                                12, 15, 0, 0),
-                                            child: Text(
-                                              overflow:TextOverflow.ellipsis,
-                                              snapshot.data.data[index].title.toString(),
-                                              style: GoogleFonts.montserrat(
-                                                  color: HexColor('#4D4D4D'),
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.w700),
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.fromLTRB(
-                                                12, 35,50, 0),
-                                            child: Text(
-                                              overflow: TextOverflow.ellipsis,
-                                              maxLines: 2,
-                                              snapshot
-                                                  .data.data[index].description
-                                                  .toString(),
-                                              style: GoogleFonts.ubuntu(
-                                                  color: HexColor('#757575'),
-                                                  fontSize: 12,
-                                                  fontWeight: FontWeight.w400),
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.fromLTRB(
-                                                12, 76, 75, 0),
-                                            child: Row(
-                                              children: [
-                                                Container(
-                                                  width: 82,
-                                                  height: 25,
-                                                  decoration: BoxDecoration(
-                                                      borderRadius:
-                                                      BorderRadius.circular(
-                                                          4),
-                                                      border: Border.all(
-                                                          color:
-                                                          primaryColor)),
-                                                  child: Row(
-                                                    mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceEvenly,
-                                                    children: [
-                                                      Text(
-                                                        snapshot.data.data[index]
-                                                            .updatedAt.toString().split('T')[0].toString(),
-                                                        style: GoogleFonts.ubuntu(
-                                                            color: HexColor('#535353'),
-                                                            fontSize: 10,
-                                                            fontWeight: FontWeight.w300),
+                                                      SizedBox(
+                                                        width: 15,
                                                       ),
                                                       SvgPicture.asset(
-                                                        'assets/complain_history_date_icon1.svg',color: HexColor('#A7A7A7'),)
+                                                          'assets/Arrow 1.svg'),
+                                                      SizedBox(
+                                                        width: 15,
+                                                      ),
+                                                      Container(
+                                                        width: 82,
+                                                        height: 25,
+                                                        decoration: BoxDecoration(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        4),
+                                                            border: Border.all(
+                                                                color:
+                                                                    primaryColor)),
+                                                        child: Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .spaceEvenly,
+                                                          children: [
+                                                            Text(
+                                                              snapshot
+                                                                  .data
+                                                                  .data[index]
+                                                                  .updatedAt
+                                                                  .toString()
+                                                                  .split('T')[1]
+                                                                  .toString()
+                                                                  .split('.')[0]
+                                                                  .toString(),
+                                                              style: GoogleFonts.ubuntu(
+                                                                  color: HexColor(
+                                                                      '#535353'),
+                                                                  fontSize: 10,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w300),
+                                                            ),
+                                                            SvgPicture.asset(
+                                                                'assets/clock.svg')
+                                                          ],
+                                                        ),
+                                                      ),
+                                                      SizedBox(
+                                                        width: 15,
+                                                      ),
                                                     ],
                                                   ),
                                                 ),
-                                                SizedBox(
-                                                  width: 15,
-                                                ),
-                                                SvgPicture.asset(
-                                                    'assets/Arrow 1.svg'),
-                                                SizedBox(
-                                                  width: 15,
-                                                ),
-                                                Container(
-                                                  width: 82,
-                                                  height: 25,
-                                                  decoration: BoxDecoration(
-                                                      borderRadius:
-                                                      BorderRadius.circular(
-                                                          4),
-                                                      border: Border.all(
-                                                          color:
-                                                          primaryColor)),
-                                                  child: Row(
-                                                    mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceEvenly,
-                                                    children: [
-                                                      Text(
-                                                        snapshot.data.data[index]
-                                                            .updatedAt.toString().split('T')[1].toString().split('.')[0].toString(),
-                                                        style: GoogleFonts.ubuntu(
-                                                            color: HexColor('#535353'),
-                                                            fontSize: 10,
-                                                            fontWeight: FontWeight.w300),
+                                                (snapshot.data.data[index]
+                                                            .status ==
+                                                        0)
+                                                    ? Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .fromLTRB(
+                                                                0, 37, 22, 0),
+                                                        child: Align(
+                                                            alignment: Alignment
+                                                                .topRight,
+                                                            child: MyStatusWidget(
+                                                                status: snapshot
+                                                                    .data
+                                                                    .data[index]
+                                                                    .statusdescription,
+                                                                color: HexColor(
+                                                                    '#ED0909'))),
+                                                      )
+                                                    : Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .fromLTRB(
+                                                                0, 37, 22, 0),
+                                                        child: Align(
+                                                            alignment: Alignment
+                                                                .topRight,
+                                                            child: MyStatusWidget(
+                                                                status: snapshot
+                                                                    .data
+                                                                    .data[index]
+                                                                    .statusdescription,
+                                                                color: HexColor(
+                                                                    '#4EC018'))),
                                                       ),
-                                                      SvgPicture.asset(
-                                                          'assets/clock.svg')
-                                                    ],
-                                                  ),
-                                                ),
-                                                SizedBox(
-                                                  width: 15,
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-
-
-                                          (snapshot.data.data[index].status ==
-                                                  0)
-                                              ? Padding(
-                                                  padding:
-                                                      const EdgeInsets.fromLTRB(
-                                                          0, 37, 22, 0),
-                                                  child: Align(
-                                                      alignment:
-                                                          Alignment.topRight,
-                                                      child: MyStatusWidget(
-                                                          status: snapshot
-                                                              .data
-                                                              .data[index]
-                                                              .statusdescription,
-                                                          color: HexColor(
-                                                              '#ED0909'))),
-                                                )
-                                              : Padding(
-                                                  padding:
-                                                      const EdgeInsets.fromLTRB(
-                                                          0, 37, 22, 0),
-                                                  child: Align(
-                                                      alignment:
-                                                          Alignment.topRight,
-                                                      child: MyStatusWidget(
-                                                          status: snapshot
-                                                              .data
-                                                              .data[index]
-                                                              .statusdescription,
-                                                          color: HexColor(
-                                                              '#4EC018'))),
-                                                ),
-                                          (snapshot.data.data[index].status !=
-                                                  0)
-                                              ? GestureDetector(
-                                                  onTap: () {
-                                                    showDialog(
-                                                        context: context,
-                                                        builder:
-                                                            (BuildContext
-                                                                    context) =>
-                                                                AlertDialog(
-                                                                  title:
-                                                                      SizedBox(
-                                                                    width: 347,
-                                                                    height: 193,
-                                                                    child:
-                                                                        Stack(
-                                                                      alignment:
-                                                                          AlignmentDirectional
-                                                                              .topCenter,
-                                                                      children: [
-                                                                        SvgPicture.asset(
-                                                                            'assets/problem _solved_icon.svg'),
-                                                                        Padding(
-                                                                          padding: const EdgeInsets.fromLTRB(
-                                                                              0,
-                                                                              63,
-                                                                              0,
-                                                                              0),
-                                                                          child:
-                                                                              Text('Complaint'),
-                                                                        ),
-                                                                        Padding(
-                                                                          padding: const EdgeInsets.fromLTRB(
-                                                                              0,
-                                                                              102,
-                                                                              0,
-                                                                              0),
-                                                                          child:
-                                                                              Text(
-                                                                            'Your Problem has been solved?',
-                                                                            style: GoogleFonts.ubuntu(
-                                                                                color: HexColor('#4D4D4D'),
-                                                                                fontSize: 14,
-                                                                                fontWeight: FontWeight.w400),
+                                                (snapshot.data.data[index]
+                                                            .status !=
+                                                        0)
+                                                    ? GestureDetector(
+                                                        onTap: () {
+                                                          showDialog(
+                                                              context: context,
+                                                              builder: (BuildContext
+                                                                      context) =>
+                                                                  AlertDialog(
+                                                                    title:
+                                                                        SizedBox(
+                                                                      width:
+                                                                          347,
+                                                                      height:
+                                                                          193,
+                                                                      child:
+                                                                          Stack(
+                                                                        alignment:
+                                                                            AlignmentDirectional.topCenter,
+                                                                        children: [
+                                                                          SvgPicture.asset(
+                                                                              'assets/problem _solved_icon.svg'),
+                                                                          Padding(
+                                                                            padding: const EdgeInsets.fromLTRB(
+                                                                                0,
+                                                                                63,
+                                                                                0,
+                                                                                0),
+                                                                            child:
+                                                                                Text('Complaint'),
                                                                           ),
-                                                                        ),
-                                                                        Padding(
-                                                                          padding: const EdgeInsets.fromLTRB(
-                                                                              0,
-                                                                              144,
-                                                                              0,
-                                                                              0),
-                                                                          child:
-                                                                              Row(
-                                                                            mainAxisAlignment:
-                                                                                MainAxisAlignment.center,
-                                                                            children: [
-                                                                              MyButton(
-                                                                                width: 80,
-                                                                                onPressed: () {
-                                                                                  _adminReportsController.ProblemSolvedButtonApi(snapshot.data.data[index].id, controller.user.userId!, controller.user.bearerToken!);
-
-                                                                                  Get.back();
-                                                                                },
-                                                                                name: 'Yes',
-                                                                                color: HexColor('#5AE244'),
-                                                                              ),
-                                                                              SizedBox(
-                                                                                width: 18,
-                                                                              ),
-                                                                              MyButton(
-                                                                                width: 80,
-                                                                                onPressed: () {
-                                                                                  Get.back();
-                                                                                },
-                                                                                name: 'No',
-                                                                                color: HexColor('#FF3232'),
-                                                                              ),
-                                                                            ],
+                                                                          Padding(
+                                                                            padding: const EdgeInsets.fromLTRB(
+                                                                                0,
+                                                                                102,
+                                                                                0,
+                                                                                0),
+                                                                            child:
+                                                                                Text(
+                                                                              'Your Problem has been solved?',
+                                                                              style: GoogleFonts.ubuntu(color: HexColor('#4D4D4D'), fontSize: 14, fontWeight: FontWeight.w400),
+                                                                            ),
                                                                           ),
-                                                                        )
-                                                                      ],
+                                                                          Padding(
+                                                                            padding: const EdgeInsets.fromLTRB(
+                                                                                0,
+                                                                                144,
+                                                                                0,
+                                                                                0),
+                                                                            child:
+                                                                                Row(
+                                                                              mainAxisAlignment: MainAxisAlignment.center,
+                                                                              children: [
+                                                                                MyButton(
+                                                                                  width: 80,
+                                                                                  onPressed: () {
+                                                                                    _adminReportsController.ProblemSolvedButtonApi(snapshot.data.data[index].id, controller.user.userId!, controller.user.bearerToken!);
+
+                                                                                    Get.back();
+                                                                                  },
+                                                                                  name: 'Yes',
+                                                                                  color: HexColor('#5AE244'),
+                                                                                ),
+                                                                                SizedBox(
+                                                                                  width: 18,
+                                                                                ),
+                                                                                MyButton(
+                                                                                  width: 80,
+                                                                                  onPressed: () {
+                                                                                    Get.back();
+                                                                                  },
+                                                                                  name: 'No',
+                                                                                  color: HexColor('#FF3232'),
+                                                                                ),
+                                                                              ],
+                                                                            ),
+                                                                          )
+                                                                        ],
+                                                                      ),
                                                                     ),
-                                                                  ),
-                                                                ));
-                                                  },
-                                                  child: Padding(
-                                                    padding: const EdgeInsets
-                                                        .fromLTRB(0, 70, 22, 0),
-                                                    child: Align(
-                                                        alignment:
-                                                            Alignment.topRight,
-                                                        child: MyStatusWidget(
-                                                            width: 87,
-                                                            height: 22,
-                                                            status:
-                                                                'Problem Solved',
-                                                            color: HexColor(
-                                                                '#1E2772'))),
-                                                  ),
-                                                )
-                                              : Container()
-
-                                        ],
+                                                                  ));
+                                                        },
+                                                        child: Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .fromLTRB(
+                                                                  0, 70, 22, 0),
+                                                          child: Align(
+                                                              alignment:
+                                                                  Alignment
+                                                                      .topRight,
+                                                              child: MyStatusWidget(
+                                                                  width: 87,
+                                                                  height: 22,
+                                                                  status:
+                                                                      'Problem Solved',
+                                                                  color: HexColor(
+                                                                      '#1E2772'))),
+                                                        ),
+                                                      )
+                                                    : Container()
+                                              ],
+                                            ),
+                                          ),
+                                        ),
                                       ),
-                                    ),
-                                  ),
-                                ),
+                                    );
+                                  },
+                                  itemCount: snapshot.data.data.length);
+                            } else {
+                              return EmptyList(
+                                name: 'No Complains',
                               );
-                            },
-                            itemCount: snapshot.data.data.length);}
-                        else {
-
-                          return EmptyList(name: 'No Complains',);
-                        }
-                      } else if (snapshot.hasError) {
-                        return Icon(Icons.error_outline);
-                      } else {
-                        return Center(
-                            child: CircularProgressIndicator(
-                          color: primaryColor,
-                        ));
-                      }
-                    }),
+                            }
+                          } else if (snapshot.hasError) {
+                            return Icon(Icons.error_outline);
+                          } else {
+                            return Center(
+                                child: CircularProgressIndicator(
+                              color: primaryColor,
+                            ));
+                          }
+                        }),
+                  ),
+                ],
               ),
-            ],
-          ),
-          floatingActionButton: IconButton(
-              padding: EdgeInsets.only(top: 85),
-              iconSize: MediaQuery.of(context).size.height * 0.065,
-              icon: SvgPicture.asset('assets/floatingbutton.svg'),
-              onPressed: () {
-                Get.offAndToNamed(reporttoadmin, arguments: [
-                  _adminReportsController.user,
-                  _adminReportsController.resident
-                ]);
-              }),
+              floatingActionButton: MyFloatingActionButton(
+                onPressed: () {
+                  Get.offNamed(reporttoadmin, arguments: [
+                    _adminReportsController.user,
+                    _adminReportsController.resident
+                  ]);
+                },
+              )),
         ),
       ),
     );
@@ -671,10 +741,10 @@ class AdminReports extends GetView {
       double? width,
       double? height}) {
     return Container(
-      width: width ?? 64,
+      width: width ?? 64.w,
       height: height ?? 18,
       decoration:
-          BoxDecoration(color: color, borderRadius: BorderRadius.circular(4)),
+          BoxDecoration(color: color, borderRadius: BorderRadius.circular(4.r)),
       child: Center(
         child: Text(
           status,

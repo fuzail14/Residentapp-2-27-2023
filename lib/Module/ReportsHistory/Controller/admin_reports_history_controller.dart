@@ -33,7 +33,7 @@ class AdmoinReportsHistotryController extends GetxController {
     print(token);
 
     final response = await Http.get(
-      Uri.parse(Api.historyreports +
+      Uri.parse(Api.historyReports +
           "/" +
           subadminid.toString() +
           "/" +

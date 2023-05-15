@@ -3,14 +3,39 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as Http;
+import 'package:userapp/Module/Add%20PreApprove%20Entry/View/add_pre_aprove_entry.dart';
 import 'package:userapp/Routes/set_routes.dart';
 import '../../../Constants/api_routes.dart';
 import '../../HomeScreen/Model/residents.dart';
+import '../../HomeScreen/View/home_screen.dart';
 import '../../Login/Model/User.dart';
 import '../Model/gatekeeper.dart';
 
 class AddPreApproveEntryController extends GetxController {
   final formKey = new GlobalKey<FormState>();
+  // List<HomeScreenCard> li=[
+  //   HomeScreenCard(heading: 'Complaint', description: 'Resolve issues. Empower residents. Strengthen community bonds', iconPath: 'assets/icons/complaint.svg',type: 'services',),
+  //   HomeScreenCard(heading: 'Pre Approve Entry', description: 'Seamless access. Secure entry. Hassle-free resident approvals.', iconPath: 'assets/icons/preapprove_entry.svg',type: 'services',),
+  //   HomeScreenCard(heading: 'Family Members', description: 'Inclusive communities. Easy family additions. Strengthening bonds', iconPath: 'assets/icons/complaint.svg',type: 'services',),
+  //
+  //   HomeScreenCard(heading: 'Society Events', description: 'Unforgettable gatherings. Engaging community events.', iconPath: 'assets/icons/event.svg',type: 'events',),
+  //   HomeScreenCard(heading: 'Notice Board', description: 'Stay informed. Important updates. Community notices at fingertips', iconPath: 'assets/icons/noticeboard.svg',type: 'events',),
+  //
+  //   HomeScreenCard(heading: 'Neighbours', description: 'Connect with neighbors. Instant community communication', iconPath: 'assets/icons/chat.svg',type: 'chats',),
+  //   HomeScreenCard(heading: 'Discussion Forum', description: 'Engage. Discuss. Share. Community forum platform', iconPath: 'assets/icons/discussion_forum.svg',type: 'chats',),
+  //
+  //   HomeScreenCard(heading: 'Complaint History', description: 'Track. Resolve. Improve. Complaint history tracker', iconPath: 'assets/icons/history.svg',type: 'history',),
+  //   HomeScreenCard(heading: 'Guest History', description: 'Guest visits. History. Enhanced security.', iconPath: 'assets/icons/history.svg',type: 'history',),
+  //
+  //
+  //
+  //   HomeScreenCard(heading: 'Monthly Bills', description: 'Easy pay your Monthly Bills', iconPath: 'assets/icons/history.svg',type: 'bills',),
+  //
+  //
+  // ];
+
+
+
   TextEditingController nameController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
   TextEditingController cnicController = TextEditingController();
@@ -144,7 +169,7 @@ class AddPreApproveEntryController extends GetxController {
     print('getGateKeepersApi hit');
 
     final response = await Http.get(
-      Uri.parse(Api.getgatekeepers + "/" + subadminid.toString()),
+      Uri.parse(Api.getGatekeepers + "/" + subadminid.toString()),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': "Bearer $token"
@@ -193,7 +218,7 @@ class AddPreApproveEntryController extends GetxController {
     required String arrivaltime,
   }) async {
     final response = await Http.post(
-      Uri.parse(Api.addpreapproventry),
+      Uri.parse(Api.addPreApproveEntry),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': "Bearer $token"

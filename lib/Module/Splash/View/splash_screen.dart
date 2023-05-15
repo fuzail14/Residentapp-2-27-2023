@@ -1,10 +1,13 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:hexcolor/hexcolor.dart';
+import 'package:userapp/Constants/constants.dart';
 import 'package:userapp/Routes/set_routes.dart';
+
 import '../../../Services/Shared Preferences/MySharedPreferences.dart';
 import '../../Login/Model/User.dart';
 
@@ -25,94 +28,69 @@ class _SplashScreenState extends State<SplashScreen> {
     User user = await MySharedPreferences.getUserData();
     print(user.bearerToken);
     print(user.address);
-    
+
     if (user.bearerToken == "") {
-      Timer(Duration(seconds: 3), () => Get.offAndToNamed(loginscreen));
+      Timer(Duration(seconds: 3), () => Get.offNamed(loginscreen));
     } else if (user.address == 'NA') {
-      Timer(
-          Duration(seconds: 3), () => Get.offAndToNamed(residentaddressdetail));
+      Timer(Duration(seconds: 3), () => Get.offNamed(residentaddressdetail));
     } else {
       Timer(Duration(seconds: 3),
-          () => Get.offAndToNamed(homescreen, arguments: user));
+          () => Get.offNamed(homescreen, arguments: user));
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return  SafeArea(
+    return SafeArea(
       child: Scaffold(
-        body: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: EdgeInsets.only(left: 103, top: 110),
+        body: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: EdgeInsets.fromLTRB(138.w, 116.h, 138.w, 0),
+              child: SvgPicture.asset('assets/splashsvg.svg'),
+            ),
+            Padding(
+              padding: EdgeInsets.fromLTRB(67.01.w, 18.h, 67.87.w, 0),
+              child: SvgPicture.asset('assets/smartgate.svg'),
+            ),
+            Padding(
+              padding: EdgeInsets.fromLTRB(67.w, 7.h, 68.w, 0),
+              child: Container(
+                  height: 3,
+                  width: 240,
+                  child: SvgPicture.asset('assets/splashdivider.svg')),
+            ),
+            Padding(
+              padding: EdgeInsets.fromLTRB(88.w, 4.h, 89.w, 0),
+              child: Text(
+                'SMART WAY OF LIVING',
+                textAlign: TextAlign.center,
+                style: GoogleFonts.inriaSerif(
+                    fontStyle: FontStyle.normal,
+                    fontWeight: FontWeight.w400,
+                    fontSize: 18.sp,
+                    color: primaryColor),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.fromLTRB(56.w, 79.h, 56.w, 0),
+              child: SvgPicture.asset('assets/splashsvg2.svg'),
+            ),
+            Expanded(
+              child: Padding(
+                padding: EdgeInsets.fromLTRB(0.h, 46.h, 0.h, 0),
                 child: Container(
-                    height: 194,
-                    width: 190,
-                    decoration: BoxDecoration(
-                        image: DecorationImage(
-                            image: AssetImage('assets/splashline.png'))),
-                    child: Column(
-                      children: [
-                        Container(
-                            height: 98,
-                            width: 98,
-                            child: SvgPicture.asset('assets/splashsvg.svg')),
-                        SizedBox(
-                          height: 18,
-                        ),
-                        Container(
-                            height: 28,
-                            width: 240,
-                            child: SvgPicture.asset('assets/smartgate.svg')),
-                        SizedBox(
-                          height: 7.98,
-                        ),
-                        Container(
-                            height: 3,
-                            width: 240,
-                            child: SvgPicture.asset('assets/splashdivider.svg')),
-                        SizedBox(
-                          height: 4,
-                        ),
-                        Container(
-                          height: 18,
-                          child: Text(
-                            'SMART WAY OF LIVING',
-                            textAlign: TextAlign.center,
-                            style: GoogleFonts.inriaSerif(
-                                fontStyle: FontStyle.normal,
-                                fontWeight: FontWeight.w400,
-                                fontSize: 18,
-                                color: HexColor('#FF9900')),
-                          ),
-                        ),
-                      ],
-                    )),
-              ),
-              SizedBox(
-                height: 80,
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: 56),
-                child: Container(
-                    height: 158,
-                    width: 262,
-                    child: SvgPicture.asset('assets/splashsvg2.svg')),
-              ),
-              SizedBox(
-                height: 46,
-              ),
-              Container(
-                width: double.infinity,
-                child: SvgPicture.asset(
-                  'assets/splashsvg3.svg',
-                  fit: BoxFit.fill,
+                  width: double.infinity,
+                  height: 237.h,
+                  child: SvgPicture.asset(
+                    'assets/splashsvg3.svg', fit: BoxFit.cover,
+                    // fit: BoxFit.fill,
+                  ),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

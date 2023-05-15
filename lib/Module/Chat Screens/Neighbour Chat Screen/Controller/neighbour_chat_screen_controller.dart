@@ -64,7 +64,7 @@ class NeighbourChatScreenController extends GetxController {
 
   }) async {
     final response = await Http.post(
-      Uri.parse(Api.createchatroom),
+      Uri.parse(Api.createChatRoom),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': "Bearer $token"

@@ -123,7 +123,7 @@ class DiscussionFormController  extends GetxController
 
 
     final response = await Http.post(
-      Uri.parse(Api.discussionchats),
+      Uri.parse(Api.discussionChats),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': "Bearer $token"

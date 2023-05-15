@@ -1,4 +1,3 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -6,6 +5,7 @@ import 'package:userapp/Constants/api_routes.dart';
 import 'package:userapp/Constants/constants.dart';
 import 'package:userapp/Widgets/Loader/loader.dart';
 import 'package:userapp/Widgets/My%20Back%20Button/my_back_button.dart';
+
 // import 'package:zego_uikit_prebuilt_call/zego_uikit_prebuilt_call.dart';
 // import 'package:zego_uikit_signaling_plugin/zego_uikit_signaling_plugin.dart';
 
@@ -19,14 +19,10 @@ class NeighbourChatScreen extends GetView {
     return GetBuilder<NeighbourChatScreenController>(
         init: NeighbourChatScreenController(),
         builder: (controller) {
-          return WillPopScope (
-            onWillPop: () async{
-              Get.offAndToNamed(
-                  chatavailbilityscreen,
-                  arguments: [
-                    controller.user,
-                    controller.resident
-                  ]);
+          return WillPopScope(
+            onWillPop: () async {
+              Get.offNamed(chatavailbilityscreen,
+                  arguments: [controller.user, controller.resident]);
               return true;
             },
             child: SafeArea(
@@ -34,32 +30,29 @@ class NeighbourChatScreen extends GetView {
                 body: Column(
                   children: [
                     MyBackButton(
-                        text: '.',
-                        widget: Row(
-                          children: [
-                            SizedBox(
-                              width: 2,
+                      text: '.',
+                      widget: Row(
+                        children: [
+                          SizedBox(
+                            width: 2,
+                          ),
+                          CircleAvatar(
+                            backgroundImage: NetworkImage(Api.imageBaseUrl +
+                                controller.chatNeighbours.image.toString()),
+                            maxRadius: 20,
+                          ),
+                          SizedBox(
+                            width: 12,
+                          ),
+                          Text(
+                            controller.chatNeighbours.firstname.toString() +
+                                ' ' +
+                                controller.chatNeighbours.lastname.toString(),
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
                             ),
-                            CircleAvatar(
-                              backgroundImage: NetworkImage(Api.imageBaseUrl +
-                                  controller.chatNeighbours.image.toString()),
-                              maxRadius: 20,
-                            ),
-                            SizedBox(
-                              width: 12,
-                            ),
-                            Text(
-                              controller.chatNeighbours.firstname.toString() +
-                                  ' ' +
-                                  controller.chatNeighbours.lastname
-                                      .toString(),
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-
-
+                          ),
 
 //                             ZegoUIKitPrebuiltCallWithInvitation(
 //                               androidNotificationConfig: ZegoAndroidNotificationConfig(channelID:'ZegoUIKit',channelName: 'Zego Call' ),
@@ -90,41 +83,32 @@ class NeighbourChatScreen extends GetView {
 //                               ],
 //                             ),
 //
-
-
-                          ],
-                        ),onTap: (){
-
-
-                      Get.offAndToNamed(
-                          chatavailbilityscreen,
-                          arguments: [
-                            controller.user,
-                            controller.resident
-                          ]);
-                    },
-
+                        ],
+                      ),
+                      onTap: () {
+                        Get.offNamed(chatavailbilityscreen,
+                            arguments: [controller.user, controller.resident]);
+                      },
                     ),
                     Expanded(
                         child: Container(
                             padding: EdgeInsets.symmetric(horizontal: 10),
                             child: StreamBuilder(
-                                stream:FirebaseFirestore.instance
-                                    .collection('chats').
-                                where('chatroomid',isEqualTo: controller.chatRoomId).
-                                orderBy('createdat',descending: true)
-
-                                    .snapshots() ,
+                                stream: FirebaseFirestore.instance
+                                    .collection('chats')
+                                    .where('chatroomid',
+                                        isEqualTo: controller.chatRoomId)
+                                    .orderBy('createdat', descending: true)
+                                    .snapshots(),
                                 builder: (context,
                                     AsyncSnapshot<QuerySnapshot> snapshot) {
                                   if (snapshot.hasData) {
-                                    var data = snapshot.data!.docs ;
+                                    var data = snapshot.data!.docs;
 
-                                    if(data.length==0)
-                                    {
+                                    if (data.length == 0) {
                                       return EmptyList(
                                           name:
-                                          "Say Hi! to your Neighbour. 😊 .");
+                                              "Say Hi! to your Neighbour. 😊 .");
                                     }
                                     return ListView.builder(
                                       reverse: true,
@@ -134,80 +118,77 @@ class NeighbourChatScreen extends GetView {
 
                                         return Row(
                                           mainAxisAlignment: data[index]
-                                          ['residentid'] ==
-                                              controller.user.userId
+                                                      ['residentid'] ==
+                                                  controller.user.userId
                                               ? MainAxisAlignment.end
                                               : MainAxisAlignment.start,
                                           children: [
                                             Flexible(
                                               child: Padding(
-                                                padding: const EdgeInsets.all(4),
+                                                padding:
+                                                    const EdgeInsets.all(4),
                                                 child: Container(
-                                                    padding: EdgeInsets.symmetric(
-                                                        horizontal: 12,
-                                                        vertical: 16),
+                                                    padding:
+                                                        EdgeInsets.symmetric(
+                                                            horizontal: 12,
+                                                            vertical: 16),
                                                     decoration: BoxDecoration(
                                                       color: data[index][
-                                                      'residentid'] ==
-                                                          controller
-                                                              .user.userId
+                                                                  'residentid'] ==
+                                                              controller
+                                                                  .user.userId
                                                           ? primaryColor
                                                           : Colors.black,
                                                       borderRadius:
-                                                      BorderRadius.circular(
-                                                          4),
+                                                          BorderRadius.circular(
+                                                              4),
                                                     ),
-                                                    child: data![index]
-                                                    ['residentid'] ==
-                                                        controller.user.userId
+                                                    child: data![index][
+                                                                'residentid'] ==
+                                                            controller
+                                                                .user.userId
                                                         ? Text(
-                                                      data![index]
-                                                      ['message']
-                                                          .toString(),
-                                                      style: TextStyle(
-                                                          color:
-                                                          Colors.white),
-                                                    )
+                                                            data![index]
+                                                                    ['message']
+                                                                .toString(),
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .white),
+                                                          )
                                                         : Column(
-                                                      crossAxisAlignment:
-                                                      CrossAxisAlignment
-                                                          .start,
-                                                      children: [
-                                                        // Text(
-                                                        //   data![index]
-                                                        //   ['user']['firstname']
-                                                        //       .toString(),
-                                                        //   style: TextStyle(
-                                                        //       color:
-                                                        //       primaryColor),
-                                                        // ),
-                                                        Text(
-                                                          data![index][
-                                                          'message']
-                                                              .toString(),
-                                                          style: TextStyle(
-                                                              color: Colors
-                                                                  .white),
-                                                        ),
-                                                      ],
-                                                    )),
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .start,
+                                                            children: [
+                                                              // Text(
+                                                              //   data![index]
+                                                              //   ['user']['firstname']
+                                                              //       .toString(),
+                                                              //   style: TextStyle(
+                                                              //       color:
+                                                              //       primaryColor),
+                                                              // ),
+                                                              Text(
+                                                                data![index][
+                                                                        'message']
+                                                                    .toString(),
+                                                                style: TextStyle(
+                                                                    color: Colors
+                                                                        .white),
+                                                              ),
+                                                            ],
+                                                          )),
                                               ),
                                             ),
                                           ],
                                         );
                                       },
                                     );
-                                  }
-
-                                  else if (snapshot.hasError) {
-
+                                  } else if (snapshot.hasError) {
                                     return Text("Something Went Wrong ");
+                                  } else {
+                                    return Loader();
                                   }
-else {
-
-  return Loader();
-                                  }
-
                                 }))),
                     Container(
                       color: Colors.white,
@@ -237,16 +218,14 @@ else {
                                       .instance
                                       .collection('chats');
 
-
                                   // Add a new document with a generated ID
                                   chats.add({
-                                    'residentid': controller.resident.residentid!,
+                                    'residentid':
+                                        controller.resident.residentid!,
                                     'message': controller.msg.text,
                                     'chatroomid': controller.chatRoomId,
                                     'createdat': FieldValue.serverTimestamp(),
-
                                   });
-
 
                                   controller.msg.clear();
                                   print('Data added successfully');
@@ -267,11 +246,7 @@ else {
             ),
           );
         });
-
-
   }
 
   // Example function to get a Firestore collection stream with a condition
-
-
 }

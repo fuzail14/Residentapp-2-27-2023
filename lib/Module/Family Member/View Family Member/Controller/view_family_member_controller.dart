@@ -30,7 +30,7 @@ class ViewFamilyMemberController extends GetxController{
     print(token);
 
     final response = await Http.get(
-      Uri.parse(Api.viewfamilymember + "/" +subadminiid.toString()+"/"+residentid.toString()),
+      Uri.parse(Api.viewFamilyMember + "/" +subadminiid.toString()+"/"+residentid.toString()),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': "Bearer $token"

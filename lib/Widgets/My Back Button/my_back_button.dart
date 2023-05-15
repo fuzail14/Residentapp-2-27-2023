@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:hexcolor/hexcolor.dart';
 
 class MyBackButton extends StatelessWidget {
 
@@ -15,7 +16,7 @@ class MyBackButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return  Padding(
-      padding: EdgeInsets.only(left: 38, top: 20,bottom: 20),
+      padding: EdgeInsets.only(left: 38.w, top: 40.h),
       child: Row(
         children: [
           GestureDetector(
@@ -36,11 +37,11 @@ class MyBackButton extends StatelessWidget {
           ),
           Text(
             text!,
-            style: TextStyle(
+            style: GoogleFonts.ubuntu(
                 fontStyle: FontStyle.normal,
                 fontWeight: FontWeight.w500,
                 fontSize: 16,
-                color: Colors.black),
+                color: HexColor('#4D4D4D')),
           ),
           Container(child: widget,)
 

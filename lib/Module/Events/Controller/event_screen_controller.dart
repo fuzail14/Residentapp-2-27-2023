@@ -34,7 +34,7 @@ class EventScreenController extends GetxController {
     print(token);
 
     final response = await Http.get(
-      Uri.parse(Api.viewevent + "/" + userid.toString()),
+      Uri.parse(Api.viewEvents + "/" + userid.toString()),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': "Bearer $token"

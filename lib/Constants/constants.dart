@@ -216,3 +216,10 @@ String getFormattedTime2({required String time}) {
 
   return '${hourZero.toString()}${hour.toString()}:${minute.toString()}:00 $isAmOrPm';
 }
+ extension MySizedBox on num{
+
+  SizedBox  get ph => SizedBox(height: toDouble());
+  SizedBox  get pw => SizedBox(width: toDouble());
+
+
+}

@@ -103,7 +103,7 @@ class AddFamilyMemberController extends GetxController
     Map<String, String> headers = {"Authorization": "Bearer $bearerToken"};
 
 
-    var request = Http.MultipartRequest('POST', Uri.parse(Api.addfamilymember));
+    var request = Http.MultipartRequest('POST', Uri.parse(Api.addFamilyMember));
     request.headers.addAll(headers);
     if (file != null) {
       request.files.add(await Http.MultipartFile.fromPath('image', file.path));
