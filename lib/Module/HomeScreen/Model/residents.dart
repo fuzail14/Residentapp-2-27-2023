@@ -2,8 +2,10 @@ class Residents {
   int? id;
   int? residentid;
   int? subadminid;
-  int? superadminid;
+
   int? societyid;
+  int? superadminid;
+
   String? country;
   String? state;
   String? city;
@@ -21,9 +23,8 @@ class Residents {
     required this.id,
     required this.residentid,
     required this.subadminid,
-    required this.superadminid,
     required this.societyid,
-    
+    required this.superadminid,
     required this.country,
     required this.state,
     required this.city,

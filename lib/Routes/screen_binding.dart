@@ -13,10 +13,12 @@ import '../Module/Chat Screens/Neighbour Chat Screen/View/neighbour_chat_screen.
 import '../Module/Guest History/View/guests_history_screen.dart';
 import '../Module/HomeScreen/View/home_screen.dart';
 import '../Module/Login/View/login_screen.dart';
+import '../Module/Market Place/View/market_place_screen.dart';
 import '../Module/NoticeBoard/View/notice_board_screen.dart';
 import '../Module/Pre Approve Entry/View/pre_approve_entry_screen.dart';
 import '../Module/Report to Sub Admin/View/Report to Admin/report_to_admin.dart';
 import '../Module/ReportsHistory/View/admin_reports_history_screen.dart';
+import '../Module/Sell Products/View/sell_products_screen.dart';
 import '../Module/Signup/Resident Address Detail/View/resident_address_detail.dart';
 import '../Module/Signup/Resident Personal Detail/View/resident_personal_detail.dart';
 
@@ -44,5 +46,9 @@ class ScreenBindings extends Bindings {
     Get.lazyPut(() => ViewFamilyMember());
     Get.lazyPut(() => DiscussionForm());
     Get.lazyPut(() => MonthlyBills());
+    Get.lazyPut(() => MarketPlaceScreen());
+    Get.lazyPut(() => SellProductsScreen());
+    
+  
   }
 }

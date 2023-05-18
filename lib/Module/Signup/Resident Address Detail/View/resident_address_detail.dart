@@ -322,7 +322,7 @@ class ResidentAddressDetail extends GetView {
                                                 controller
                                                         .houseaddressdetailController
                                                         .text =
-                                                    "${controller.societies!.name}${','}${controller.streets!.address}${','}${house!.address.toString()}";
+                                                    "${controller.societies!.name}${' '}${controller.streets!.address}${' '}${house!.address.toString()}";
 
                                                 controller
                                                     .isPropertyHouseApartment();
@@ -523,7 +523,7 @@ class ResidentAddressDetail extends GetView {
                                                 controller
                                                         .houseaddressdetailController
                                                         .text =
-                                                    "${controller.societies!.name}${','}${controller.building!.societybuildingname.toString()}${','} ${controller.floor!.name.toString()}${','}${apartment!.name.toString()}";
+                                                    "${controller.societies!.name}${' '}${controller.building!.societybuildingname.toString()}${' '} ${controller.floor!.name.toString()}${' '}${apartment!.name.toString()}";
                                               },
                                               selectedItem:
                                                   controller.apartment,
@@ -750,7 +750,7 @@ class ResidentAddressDetail extends GetView {
                                                 controller
                                                         .houseaddressdetailController
                                                         .text =
-                                                    "${controller.societies!.name}${','}${controller.blocks!.address}${','}${controller.streets!.address.toString()}${','}${house!.address.toString()}";
+                                                    "${controller.societies!.name}${' '}${controller.blocks!.address}${' '}${controller.streets!.address.toString()}${' '}${house!.address.toString()}";
 
                                                 controller
                                                     .isPropertyHouseApartment();
@@ -951,7 +951,7 @@ class ResidentAddressDetail extends GetView {
                                                 controller
                                                         .houseaddressdetailController
                                                         .text =
-                                                    "${controller.societies!.name}${','}${controller.building!.societybuildingname.toString()}${','} ${controller.floor!.name.toString()}${','}${apartment!.name.toString()}";
+                                                    "${controller.societies!.name}${' '}${controller.building!.societybuildingname.toString()}${' '} ${controller.floor!.name.toString()}${' '}${apartment!.name.toString()}";
                                               },
                                               selectedItem:
                                                   controller.apartment,
@@ -1217,7 +1217,7 @@ class ResidentAddressDetail extends GetView {
                                                 controller
                                                         .houseaddressdetailController
                                                         .text =
-                                                    "${controller.societies!.name}${','}${controller.phases!.address.toString()}${','}${controller.blocks!.address.toString()}${','}${controller.streets!.address.toString()}${','}${house!.address.toString()}";
+                                                    "${controller.societies!.name}${' '}${controller.phases!.address.toString()}${' '}${controller.blocks!.address.toString()}${' '}${controller.streets!.address.toString()}${' '}${house!.address.toString()}";
                                                 ;
 
                                                 controller
@@ -1418,7 +1418,7 @@ class ResidentAddressDetail extends GetView {
                                                 controller
                                                         .houseaddressdetailController
                                                         .text =
-                                                    "${controller.societies!.name}${','}${controller.building!.societybuildingname.toString()}${','} ${controller.floor!.name.toString()}${','}${apartment!.name.toString()}";
+                                                    "${controller.societies!.name}${' '}${controller.building!.societybuildingname.toString()}${' '} ${controller.floor!.name.toString()}${' '}${apartment!.name.toString()}";
                                               },
                                               selectedItem:
                                                   controller.apartment,
@@ -1562,7 +1562,7 @@ class ResidentAddressDetail extends GetView {
                                                 controller
                                                         .houseaddressdetailController
                                                         .text =
-                                                    "${controller.societies!.name}${','} ${house!.address.toString()}";
+                                                    "${controller.societies!.name}${' '} ${house!.address.toString()}";
                                                 controller
                                                     .isPropertyHouseApartment();
                                               },
@@ -1740,7 +1740,7 @@ class ResidentAddressDetail extends GetView {
                                                 controller
                                                         .houseaddressdetailController
                                                         .text =
-                                                    "${controller.societies!.name}${','}${controller.building!.societybuildingname.toString()}${','} ${controller.floor!.name.toString()}${','}${apartment!.name.toString()}";
+                                                    "${controller.societies!.name}${' '}${controller.building!.societybuildingname.toString()}${' '} ${controller.floor!.name.toString()}${' '}${apartment!.name.toString()}";
                                               },
                                               selectedItem:
                                                   controller.apartment,
@@ -1795,7 +1795,6 @@ class ResidentAddressDetail extends GetView {
                                               },
                                             ),
                                           )
-                                       
                                         ]
                                       ]
                                     ],
@@ -1837,7 +1836,6 @@ class ResidentAddressDetail extends GetView {
                                           },
                                         ),
                                       ),
-
                                       Padding(
                                         padding: const EdgeInsets.fromLTRB(
                                             8, 0, 0, 0),
@@ -1875,7 +1873,6 @@ class ResidentAddressDetail extends GetView {
                                           },
                                         ),
                                       ),
-
                                       Padding(
                                         padding: const EdgeInsets.fromLTRB(
                                             8, 0, 0, 0),
@@ -1892,81 +1889,74 @@ class ResidentAddressDetail extends GetView {
                                       Padding(
                                         padding: const EdgeInsets.all(8.0),
                                         child: DropdownSearch<Apartment>(
-                                          validator: (value) =>
-                                          value == null
+                                          validator: (value) => value == null
                                               ? 'field required'
                                               : null,
-                                          asyncItems:
-                                              (String filter) async {
+                                          asyncItems: (String filter) async {
                                             print(filter);
                                             return controller
                                                 .viewAllLocalBuildingApartmentApi(
-                                                bearerToken: controller
-                                                    .user!.bearerToken!,
-                                                floorid: controller
-                                                    .floor?.id);
+                                                    bearerToken: controller
+                                                        .user!.bearerToken!,
+                                                    floorid:
+                                                        controller.floor?.id);
                                           },
                                           onChanged: (Apartment? apartment) {
                                             controller.SelectedApartment(
                                                 apartment);
-                                            controller. houseaddressdetailController.text ="${controller.societies!.name}${','} ${controller.floor!.name.toString()}${','}${apartment!.name.toString()}";
-
+                                            controller
+                                                    .houseaddressdetailController
+                                                    .text =
+                                                "${controller.societies!.name}${' '} ${controller.floor!.name.toString()}${' '}${apartment!.name.toString()}";
                                           },
-                                          selectedItem:
-                                          controller.apartment,
+                                          selectedItem: controller.apartment,
                                           itemAsString: (Apartment p) {
                                             return p.name.toString();
                                           },
                                         ),
                                       ),
                                       Padding(
-                                            padding: const EdgeInsets.fromLTRB(
-                                                8, 0, 0, 0),
-                                            child: Text(
-                                              "Select Area Type",
-                                              style: GoogleFonts.ubuntu(
-                                                  fontStyle: FontStyle.normal,
-                                                  // color: secondaryColor,
-                                                  fontWeight: FontWeight.w400,
-                                                  fontSize: 14,
-                                                  color: HexColor('#4D4D4D')),
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: DropdownSearch<Measurement>(
-                                              validator: (value) =>
-                                                  value == null
-                                                      ? 'field required'
-                                                      : null,
-                                              asyncItems:
-                                                  (String filter) async {
-                                                print(filter);
-                                                return controller
-                                                    .housesApartmentsModelApi(
-                                                        subadminid: controller
-                                                            .societies!
-                                                            .subAdminId!,
-                                                        token: controller
-                                                            .user!.bearerToken!,
-                                                        type: 'apartment');
-                                              },
-                                              onChanged: (Measurement? data) {
-                                                controller
-                                                    .SelectedHousesApartments(
-                                                        data);
-                                              },
-                                              selectedItem: controller
-                                                  .housesApartmentsModel,
-                                              itemAsString: (Measurement p) {
-                                                return p.area.toString() +
-                                                    ' ' +
-                                                    p.unit.toString();
-                                              },
-                                            ),
-                                          )
-                                       
-                                   
+                                        padding: const EdgeInsets.fromLTRB(
+                                            8, 0, 0, 0),
+                                        child: Text(
+                                          "Select Area Type",
+                                          style: GoogleFonts.ubuntu(
+                                              fontStyle: FontStyle.normal,
+                                              // color: secondaryColor,
+                                              fontWeight: FontWeight.w400,
+                                              fontSize: 14,
+                                              color: HexColor('#4D4D4D')),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: DropdownSearch<Measurement>(
+                                          validator: (value) => value == null
+                                              ? 'field required'
+                                              : null,
+                                          asyncItems: (String filter) async {
+                                            print(filter);
+                                            return controller
+                                                .housesApartmentsModelApi(
+                                                    subadminid: controller
+                                                        .societies!.subAdminId!,
+                                                    token: controller
+                                                        .user!.bearerToken!,
+                                                    type: 'apartment');
+                                          },
+                                          onChanged: (Measurement? data) {
+                                            controller.SelectedHousesApartments(
+                                                data);
+                                          },
+                                          selectedItem:
+                                              controller.housesApartmentsModel,
+                                          itemAsString: (Measurement p) {
+                                            return p.area.toString() +
+                                                ' ' +
+                                                p.unit.toString();
+                                          },
+                                        ),
+                                      )
                                     ],
                                   ),
                           ],
@@ -2100,17 +2090,18 @@ class ResidentAddressDetail extends GetView {
                                       buildingid: controller.building?.id,
                                       floorid: controller.floor?.id,
                                     );
-                                 
                                   } else {
                                     print('local building');
-                                       controller.addResidentApi(
-                                      subadminid: controller.societies!.subAdminId!,
+                                    controller.addResidentApi(
+                                      subadminid:
+                                          controller.societies!.subAdminId!,
                                       residentid: controller.user!.userId!,
                                       country: controller.country,
                                       state: controller.state,
                                       city: controller.city,
                                       societyid: controller.societies?.id,
-                                         houseaddress: controller.houseaddressdetailController.text,
+                                      houseaddress: controller
+                                          .houseaddressdetailController.text,
                                       residentalType: controller.rentalorowner,
                                       propertyType: 'localbuildingapartment',
                                       vechileno:
@@ -2124,12 +2115,8 @@ class ResidentAddressDetail extends GetView {
                                       measurementid:
                                           controller.housesApartmentsModel?.id,
                                       apartmentid: controller.apartment?.id,
-                                      
                                       floorid: controller.floor?.id,
                                     );
-                                 
-
-                                    
                                   }
                                 }
                               },

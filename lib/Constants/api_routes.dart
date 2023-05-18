@@ -71,4 +71,12 @@ class Api {
   static const String monthlyBillUpdateOverDueDateStatus =
       baseUrl + "monthlybillupdateoverduedatestatus";
   static const String searchPreapproveEntry = baseUrl + "searchpreapproventry";
+  static const String viewProducts = baseUrl + "viewProducts";
+  static const String viewSellProductsResidnet = baseUrl + "viewSellProductsResidnet";
+  static const String addProduct = baseUrl + "addProduct";
+
+  
+
+
+  
 }

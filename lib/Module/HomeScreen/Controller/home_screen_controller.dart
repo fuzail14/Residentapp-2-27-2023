@@ -149,19 +149,22 @@ class HomeScreenController extends GetxController {
     var data = jsonDecode(response.body.toString());
 
     var e = data['data'];
-    print('resident data $data');
 
-    var societyDetail = data['data']['societydata'];
-    print('societyDetail ${societyDetail}')
+    var societyData = data['data']['societydata'];
 
-    print('societyDetail ${societyDetail}');
+    var societyId = societyData[0]['societyid'];
+    var superAdminId = societyData[0]['superadminid'];
+
+    //print(societyId);
+    //print('superAdminId $superAdminId');
+
 
     final Residents residents = Residents(
         id: e['id'],
         residentid: e['residentid'],
         subadminid: e['subadminid'],
-        superadminid: societyDetail['superadminid'],
-        societyid: societyDetail['societyid'],
+        superadminid: superAdminId,
+        societyid: societyId,
         country: e["country"],
         state: e["state"],
         city: e["city"],
@@ -173,8 +176,6 @@ class HomeScreenController extends GetxController {
         status: e["status"],
         createdAt: e["createdAt"],
         updatedAt: e["updatedAt"]);
-
-    print('model binded ${residents.societyid}');
 
     if (response.statusCode == 200) {
       return residents;

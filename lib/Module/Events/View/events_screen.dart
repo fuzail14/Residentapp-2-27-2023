@@ -362,6 +362,7 @@ class EventsScreen extends GetView {
                                             ),
                                           ),
                                         ),
+                                     
                                       );
                                     },
                                     itemCount: snapshot.data!.data!.length);
