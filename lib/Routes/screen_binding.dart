@@ -10,6 +10,7 @@ import 'package:userapp/Widgets/image_show.dart';
 import '../Module/Add PreApprove Entry/View/add_pre_aprove_entry.dart';
 import '../Module/Chat Availbility/View/chat_availbility_screen.dart';
 import '../Module/Chat Screens/Neighbour Chat Screen/View/neighbour_chat_screen.dart';
+import '../Module/Emergency/View/emergency_screen.dart';
 import '../Module/Guest History/View/guests_history_screen.dart';
 import '../Module/HomeScreen/View/home_screen.dart';
 import '../Module/Login/View/login_screen.dart';
@@ -48,6 +49,7 @@ class ScreenBindings extends Bindings {
     Get.lazyPut(() => MonthlyBills());
     Get.lazyPut(() => MarketPlaceScreen());
     Get.lazyPut(() => SellProductsScreen());
+    Get.lazyPut(() => AddEmergencyScreen());
     
   
   }

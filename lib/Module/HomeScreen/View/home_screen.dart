@@ -1251,9 +1251,87 @@ class HomeScreen extends GetView {
                                               ),
                                             ),
                                           ),
+                                        
                                           SizedBox(
                                             width: 21,
                                           ),
+                                            SizedBox(
+                                            width: 140,
+                                            height: 65,
+                                            child: GestureDetector(
+                                              onTap: () {
+                                                
+                                                
+                                                Get.offNamed(addEmergencyScreen,
+                                                    arguments: [
+                                                      _homeScreenController
+                                                          .user,
+                                                      snapshot.data
+                                                    ]);
+                                              },
+                                              child: Card(
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Padding(
+                                                      padding: const EdgeInsets
+                                                              .fromLTRB(
+                                                          13, 1, 0, 0),
+                                                      child: Image.asset(
+                                                          'assets/file 3.png',
+                                                          height: 25,
+                                                          width: 25),
+                                                    ),
+                                                    Padding(
+                                                      padding: const EdgeInsets
+                                                              .fromLTRB(
+                                                          13, 4, 0, 4),
+                                                      child: Text(
+                                                        'Emergency ',
+                                                        style:
+                                                            GoogleFonts.ubuntu(
+                                                                fontStyle:
+                                                                    FontStyle
+                                                                        .normal,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w400,
+                                                                fontSize: 10,
+                                                                color: HexColor(
+                                                                    '#585353')),
+                                                      ),
+                                                    ),
+                                                    Padding(
+                                                      padding: const EdgeInsets
+                                                              .fromLTRB(
+                                                          13, 0, 0, 0),
+                                                      child: Text(
+                                                        'Report Your Emergency',
+                                                        style:
+                                                            GoogleFonts.ubuntu(
+                                                                fontStyle:
+                                                                    FontStyle
+                                                                        .normal,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w400,
+                                                                fontSize: 7,
+                                                                color: HexColor(
+                                                                    '#8A8A8A')),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                elevation: 1.6,
+                                                shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            12)),
+                                              ),
+                                            ),
+                                          ),
+                                        
                                         ],
                                       ),
                                     ),

@@ -74,6 +74,7 @@ class Api {
   static const String viewProducts = baseUrl + "viewProducts";
   static const String viewSellProductsResidnet = baseUrl + "viewSellProductsResidnet";
   static const String addProduct = baseUrl + "addProduct";
+  static const String addEmergency = baseUrl + "addEmergency";
 
   
 

@@ -4,6 +4,8 @@ import 'package:http/http.dart' as Http;
 import 'package:get/get.dart';
 
 import 'package:userapp/Constants/api_routes.dart';
+import '../../Chat Availbility/Model/ChatRoomModel.dart';
+import '../../Chat Availbility/Model/ChatRoomUsers.dart';
 import '../../Login/Model/User.dart';
 import '../Model/MarketPlace.dart';
 
@@ -69,5 +71,62 @@ class MarketPlaceController extends GetxController {
   makeACall(String MobileNo) async {
     String number = MobileNo; //set the number here
     bool? res = await FlutterPhoneDirectCaller.callNumber(number);
+  }
+
+  Future<ChatRoomUsers> fetchchatroomusers(
+      {required int userid,
+      required int chatuserid,
+      required String token}) async {
+    print('idds');
+    print(userid);
+    print(chatuserid);
+
+    final response = await Http.get(
+      Uri.parse(Api.fetchChatroomUsers +
+          "/" +
+          userid.toString() +
+          "/" +
+          chatuserid.toString()),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': "Bearer $token"
+      },
+    );
+    var data = jsonDecode(response.body.toString());
+    print('response ${response.statusCode}');
+
+    if (response.statusCode == 200) {
+      print(data);
+
+      return ChatRoomUsers.fromJson(data);
+    }
+    return ChatRoomUsers.fromJson(data);
+  }
+
+  Future<ChatRoomModel> createChatRoomApi({
+    required String token,
+    required int userid,
+    required int chatuserid,
+  }) async {
+    final response = await Http.post(
+      Uri.parse(Api.createChatRoom),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': "Bearer $token"
+      },
+      body: jsonEncode(<String, dynamic>{
+        "loginuserid": userid,
+        "chatuserid": chatuserid,
+      }),
+    );
+    print(response.body);
+
+    if (response.statusCode == 200) {
+      var data = jsonDecode(response.body);
+
+      return ChatRoomModel.fromJson(data);
+    } else {
+      return ChatRoomModel.fromJson(data);
+    }
   }
 }

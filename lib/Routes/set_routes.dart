@@ -24,6 +24,7 @@ const String discussion_form = '/DiscussionForm';
 const String monthly_bill = '/MonthlyBill';
 const String marketPlaceScreen = '/MarketPlaceScreen';
 const String sellProductsScreen = '/SellProductsScreen';
+const String addEmergencyScreen = '/AddEmergencyScreen';
 
 
 

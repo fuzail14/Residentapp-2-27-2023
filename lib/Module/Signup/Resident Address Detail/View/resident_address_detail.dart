@@ -159,6 +159,7 @@ class ResidentAddressDetail extends GetView {
                                 },
                               ),
                             ),
+                           
                             (controller.societyorbuildingval == 'society')
                                 ? Column(
                                     crossAxisAlignment:
