@@ -1,5 +1,6 @@
+
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
@@ -11,6 +12,7 @@ import '../../../Widgets/My Back Button/my_back_button.dart';
 import '../../../Widgets/My Floating Action Button/my_floating_action_button.dart';
 import '../../Chat Availbility/Model/ChatRoomUsers.dart';
 import '../Controller/market_place_controller.dart';
+
 
 class MarketPlaceScreen extends StatelessWidget {
   @override
@@ -273,12 +275,16 @@ class MarketPlaceScreen extends StatelessWidget {
                                                                             .userdata
                                                                             .bearerToken!,
                                                                       );
+                                                                      
+
+
                                                                       Get.offNamed(
                                                                           neighbourchatscreen,
                                                                           arguments: [
                                                                             controller.userdata,
                                                                             controller.resident,
-                                                                            snapshot.data.data[index],
+                                                                            controller.snapshotData.resident,
+                                                                            //snapshot.data.data[index],
                                                                             chatRoomUsers.data!.chatroomid
                                                                             // Chat User
                                                                           ]);

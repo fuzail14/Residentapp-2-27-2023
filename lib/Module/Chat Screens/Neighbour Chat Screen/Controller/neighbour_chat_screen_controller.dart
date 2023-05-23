@@ -8,7 +8,7 @@ import '../../../Chat Availbility/Model/ChatNeighbours.dart' as ChatNeighbours;
 import '../../../Chat Availbility/Model/ChatRoomModel.dart';
 import '../../../HomeScreen/Model/residents.dart';
 import '../../../Login/Model/User.dart';
-
+import '../../../Market Place/Model/MarketPlace.dart' as MarketPlace;
 
 class NeighbourChatScreenController extends GetxController {
   var data = Get.arguments;
@@ -17,6 +17,8 @@ class NeighbourChatScreenController extends GetxController {
   late int chatRoomId;
   late final Residents resident;
   late final ChatNeighbours.Data chatNeighbours;
+  late final MarketPlace.Resident sellerResident;
+
   final TextEditingController msg = TextEditingController();
 
   // bool isChat = false;
@@ -29,8 +31,6 @@ class NeighbourChatScreenController extends GetxController {
   // List<ViewConversationNeighbours> v = [];
   //
 
-
-
   @override
   void onInit() {
     // TODO: implement onInit
@@ -38,30 +38,22 @@ class NeighbourChatScreenController extends GetxController {
 
     user = data[0];
     resident = data[1];
-    chatNeighbours = data[2];
-    chatRoomId=data[3];
+    //chatNeighbours = data[2]; it came from Chat Availabilty screen
+    sellerResident = data[2]; //it came from Market Place screen
 
+    chatRoomId = data[3];
 
     // _initiatePusherSocketForMessaging();
     //
     //
     //
     // update();
-
-
-
-
-
-
   }
 
   Future<ChatRoomModel> createChatRoomApi({
     required String token,
     required int userid,
     required int chatuserid,
-
-
-
   }) async {
     final response = await Http.post(
       Uri.parse(Api.createChatRoom),
@@ -69,28 +61,20 @@ class NeighbourChatScreenController extends GetxController {
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': "Bearer $token"
       },
-      body: jsonEncode(<String, dynamic>
-      {
+      body: jsonEncode(<String, dynamic>{
         "loginuserid": userid,
         "chatuserid": chatuserid,
-
-
-      }
-
-      ),
+      }),
     );
 
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body);
 
-
       return ChatRoomModel.fromJson(data);
-
     } else {
       return ChatRoomModel.fromJson(data);
     }
   }
-
 
   // Future<List<ViewConversationNeighbours>> ViewConversationNeighboursApi(
   //     {required int chatroomid,
@@ -192,8 +176,6 @@ class NeighbourChatScreenController extends GetxController {
   // }
   //
 
-
-
   //
   // Future ZegoCallApi({
   //   required String token,
@@ -221,7 +203,6 @@ class NeighbourChatScreenController extends GetxController {
   //     Get.snackbar("Failed to send msg", "");
   //   }
   // }
-
 
   // Stream<QuerySnapshot<Map<String, dynamic>>> getUsersChats({required chatroomids}) {
   //   // Reference to the Firestore collection
@@ -286,7 +267,4 @@ class NeighbourChatScreenController extends GetxController {
   //     update();
   //   });
   // }
-
-
-
 }
