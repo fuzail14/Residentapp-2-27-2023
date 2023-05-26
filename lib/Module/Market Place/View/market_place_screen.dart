@@ -1,9 +1,9 @@
-
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:userapp/Module/Market%20Place/Model/MarketPlace.dart';
 
 import '../../../Constants/api_routes.dart';
 import '../../../Constants/constants.dart';
@@ -12,7 +12,7 @@ import '../../../Widgets/My Back Button/my_back_button.dart';
 import '../../../Widgets/My Floating Action Button/my_floating_action_button.dart';
 import '../../Chat Availbility/Model/ChatRoomUsers.dart';
 import '../Controller/market_place_controller.dart';
-
+import '../Model/Residentdata.dart';
 
 class MarketPlaceScreen extends StatelessWidget {
   @override
@@ -93,6 +93,8 @@ class MarketPlaceScreen extends StatelessWidget {
                                                       alignment:
                                                           Alignment.centerRight,
                                                       child: Image(
+                                                        width: 150,
+                                                        fit: BoxFit.cover,
                                                         image: NetworkImage(Api
                                                                 .imageBaseUrl +
                                                             controller
@@ -182,117 +184,109 @@ class MarketPlaceScreen extends StatelessWidget {
                                                           itemBuilder: (context,
                                                               resIndex) {
                                                             controller
-                                                                    .residentData =
+                                                                    .userresidentData =
                                                                 controller
                                                                         .snapshotData
                                                                         .resident[
                                                                     resIndex];
                                                             return Row(
                                                               children: [
-                                                                GestureDetector(
-                                                                  onTap:
-                                                                      () async {
-                                                                    print(
-                                                                        'idsssss');
-                                                                    print(snapshot
-                                                                        .data
-                                                                        .data[
-                                                                            index]
-                                                                        .residentid);
-                                                                    print(
+                                                                Expanded(
+                                                                  child: ListView
+                                                                      .builder(
+                                                                    shrinkWrap:
+                                                                        true,
+                                                                    physics:
+                                                                        NeverScrollableScrollPhysics(),
+                                                                    itemCount: controller
+                                                                        .snapshotData
+                                                                        .residentdata
+                                                                        .length,
+                                                                    itemBuilder:
+                                                                        (context,
+                                                                            resTableIndex) {
                                                                       controller
-                                                                          .userdata
-                                                                          .userId!,
-                                                                    );
-                                                                    final ChatRoomUsers
-                                                                        chatRoomUsers =
-                                                                        await controller
-                                                                            .fetchchatroomusers(
-                                                                      userid: controller
-                                                                          .userdata
-                                                                          .userId!,
-                                                                      chatuserid: snapshot
-                                                                          .data
-                                                                          .data[
-                                                                              index]
-                                                                          .residentid,
-                                                                      token: controller
-                                                                          .userdata
-                                                                          .bearerToken!,
-                                                                    );
+                                                                          .residentData = controller
+                                                                              .snapshotData
+                                                                              .residentdata[
+                                                                          resTableIndex];
 
-                                                                    if (chatRoomUsers
-                                                                            .data ==
-                                                                        null) {
-                                                                      await controller.createChatRoomApi(
-                                                                          token: controller
-                                                                              .userdata
-                                                                              .bearerToken!,
-                                                                          userid: controller
-                                                                              .userdata
-                                                                              .userId!,
-                                                                          chatuserid: snapshot
+
+
+                                                                      return GestureDetector(
+                                                                        onTap:
+                                                                            () async {
+                                                                          print(
+                                                                              'idsssss');
+                                                                          print(snapshot
                                                                               .data
                                                                               .data[index]
                                                                               .residentid);
+                                                                          print(
+                                                                            controller.userdata.userId!,
+                                                                          );
+                                                                          final ChatRoomUsers
+                                                                              chatRoomUsers =
+                                                                              await controller.fetchchatroomusers(
+                                                                            userid:
+                                                                                controller.userdata.userId!,
+                                                                            chatuserid:
+                                                                                snapshot.data.data[index].residentid,
+                                                                            token:
+                                                                                controller.userdata.bearerToken!,
+                                                                          );
 
-                                                                      final ChatRoomUsers
-                                                                          chatRoomUsers =
-                                                                          await controller
-                                                                              .fetchchatroomusers(
-                                                                        userid: controller
-                                                                            .userdata
-                                                                            .userId!,
-                                                                        chatuserid: snapshot
-                                                                            .data
-                                                                            .data[index]
-                                                                            .residentid,
-                                                                        token: controller
-                                                                            .userdata
-                                                                            .bearerToken!,
+                                                                          if (chatRoomUsers.data ==
+                                                                              null) {
+                                                                            await controller.createChatRoomApi(
+                                                                                token: controller.userdata.bearerToken!,
+                                                                                userid: controller.userdata.userId!,
+                                                                                chatuserid: snapshot.data.data[index].residentid);
+
+                                                                            final ChatRoomUsers
+                                                                                chatRoomUsers =
+                                                                                await controller.fetchchatroomusers(
+                                                                              userid: controller.userdata.userId!,
+                                                                              chatuserid: snapshot.data.data[index].residentid,
+                                                                              token: controller.userdata.bearerToken!,
+                                                                            );
+                                                                            // Get.offNamed(
+                                                                            //     neighbourchatscreen,
+                                                                            //     arguments: [
+                                                                            //       controller.userdata, //Login User
+                                                                            //       controller.resident,
+                                                                            //       snapshot.data.data[index],
+                                                                            //       chatRoomUsers.data!.chatroomid // Chat User
+                                                                            //     ]);
+                                                                          } else {
+                                                                            final ChatRoomUsers
+                                                                                chatRoomUsers =
+                                                                                await controller.fetchchatroomusers(
+                                                                              userid: controller.userdata.userId!,
+                                                                              chatuserid: snapshot.data.data[index].residentid,
+                                                                              token: controller.userdata.bearerToken!,
+                                                                            );
+
+                                                                            Get.offNamed(neighbourchatscreen, arguments: [
+                                                                              controller.userdata,
+                                                                              controller.resident,
+                                                                             // residentDataObject,
+                                                                              controller
+                                                                          .residentData,
+
+                                                                              //snapshot.data.data[index],
+                                                                              chatRoomUsers.data!.chatroomid
+                                                                              // Chat User
+                                                                            ]);
+                                                                          }
+                                                                        },
+                                                                        child: Icon(
+                                                                            Icons
+                                                                                .chat,
+                                                                            size:
+                                                                                18),
                                                                       );
-                                                                      // Get.offNamed(
-                                                                      //     neighbourchatscreen,
-                                                                      //     arguments: [
-                                                                      //       controller.userdata, //Login User
-                                                                      //       controller.resident,
-                                                                      //       snapshot.data.data[index],
-                                                                      //       chatRoomUsers.data!.chatroomid // Chat User
-                                                                      //     ]);
-                                                                    } else {
-                                                                      final ChatRoomUsers
-                                                                          chatRoomUsers =
-                                                                          await controller
-                                                                              .fetchchatroomusers(
-                                                                        userid: controller
-                                                                            .userdata
-                                                                            .userId!,
-                                                                        chatuserid: snapshot
-                                                                            .data
-                                                                            .data[index]
-                                                                            .residentid,
-                                                                        token: controller
-                                                                            .userdata
-                                                                            .bearerToken!,
-                                                                      );
-                                                                      
-
-
-                                                                      Get.offNamed(
-                                                                          neighbourchatscreen,
-                                                                          arguments: [
-                                                                            controller.userdata,
-                                                                            controller.resident,
-                                                                            controller.snapshotData.resident,
-                                                                            //snapshot.data.data[index],
-                                                                            chatRoomUsers.data!.chatroomid
-                                                                            // Chat User
-                                                                          ]);
-                                                                    }
-                                                                  },
-                                                                  child: Icon(
-                                                                    Icons.chat,
-                                                                    size: 16,
+                                                                    },
                                                                   ),
                                                                 ),
                                                                 SizedBox(
@@ -301,7 +295,7 @@ class MarketPlaceScreen extends StatelessWidget {
                                                                 GestureDetector(
                                                                   onTap: () {
                                                                     controller.makeACall(controller
-                                                                        .residentData
+                                                                        .userresidentData
                                                                         .mobileno);
                                                                   },
                                                                   child: Icon(
@@ -313,7 +307,7 @@ class MarketPlaceScreen extends StatelessWidget {
                                                                     width: 5),
                                                                 Text(
                                                                   controller
-                                                                      .residentData
+                                                                      .userresidentData
                                                                       .mobileno,
                                                                   style: GoogleFonts.ubuntu(
                                                                       color: HexColor(

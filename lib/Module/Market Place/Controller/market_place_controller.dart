@@ -14,6 +14,7 @@ class MarketPlaceController extends GetxController {
   var resident;
   dynamic snapshotData;
 
+  dynamic userresidentData;
   dynamic residentData;
 
   var data = Get.arguments;
@@ -37,8 +38,11 @@ class MarketPlaceController extends GetxController {
         'Authorization': "Bearer $token"
       },
     );
-    print(response.body);
+
     var data = jsonDecode(response.body.toString());
+
+    print('data');
+    print(data['resident']);
 
     if (response.statusCode == 200) {
       return MarketPlace.fromJson(data);

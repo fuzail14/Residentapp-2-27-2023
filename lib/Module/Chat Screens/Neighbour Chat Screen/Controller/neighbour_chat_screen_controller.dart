@@ -9,6 +9,8 @@ import '../../../Chat Availbility/Model/ChatRoomModel.dart';
 import '../../../HomeScreen/Model/residents.dart';
 import '../../../Login/Model/User.dart';
 import '../../../Market Place/Model/MarketPlace.dart' as MarketPlace;
+import '../../../Market Place/Model/MarketPlace.dart';
+import '../../../Market Place/Model/Residentdata.dart';
 
 class NeighbourChatScreenController extends GetxController {
   var data = Get.arguments;
@@ -17,7 +19,7 @@ class NeighbourChatScreenController extends GetxController {
   late int chatRoomId;
   late final Residents resident;
   late final ChatNeighbours.Data chatNeighbours;
-  late final MarketPlace.Resident sellerResident;
+  late final MarketPlace.Residentdata sellerResident;
 
   final TextEditingController msg = TextEditingController();
 
@@ -38,7 +40,7 @@ class NeighbourChatScreenController extends GetxController {
 
     user = data[0];
     resident = data[1];
-    //chatNeighbours = data[2]; it came from Chat Availabilty screen
+    //chatNeighbours = data[2]; //it came from Chat Availabilty screen
     sellerResident = data[2]; //it came from Market Place screen
 
     chatRoomId = data[3];
