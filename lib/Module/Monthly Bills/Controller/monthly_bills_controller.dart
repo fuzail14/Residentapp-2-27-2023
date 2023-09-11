@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:get/get.dart';
 import 'package:http/http.dart' as Http;
+import 'package:userapp/Constants/constants.dart';
 
 import '../../../Constants/api_routes.dart';
 import '../../HomeScreen/Model/residents.dart';
@@ -10,11 +11,13 @@ import '../Model/BillModel.dart';
 
 class MonthlyBillsController extends GetxController {
   late DateTime dueDate;
-  var isBillLate = false;
+  RxBool isLoading = false.obs;
+  var snapShot = BillModel().obs;
 
   var data = Get.arguments;
   late final User userdata;
   late final Residents resident;
+  late Future<BillModel> futureData;
 
   @override
   void onInit() {
@@ -22,21 +25,14 @@ class MonthlyBillsController extends GetxController {
     super.onInit();
     userdata = data[0];
     resident = data[1];
+
+    futureData = monthlyBillsApi(
+        userid: resident.residentid!, token: userdata.bearerToken!);
   }
 
   @override
   void dispose() {
     super.dispose();
-  }
-
-  isBillLateStatus({required isBillLates}) {
-    isBillLate = isBillLates;
-    update();
-  }
-
-  apiHits({required userid, required token}) async {
-    await monthlyBillsApi(userid: userid, token: token);
-    update();
   }
 
   Future<BillModel> monthlyBillsApi(
@@ -58,58 +54,33 @@ class MonthlyBillsController extends GetxController {
     }
   }
 
-  payBillApi({required int id, required String token}) async {
-    print("${id.toString()}");
-    print(token);
-
-    final response = await Http.get(
-      Uri.parse(Api.payBill + "/" + id.toString()),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        'Authorization': "Bearer $token"
-      },
-    );
-    print(response.body);
-    var data = jsonDecode(response.body.toString());
-
-    if (response.statusCode == 200) {
-      Get.snackbar('Success', data['message']);
-      update();
-    } else if (response.statusCode == 500) {
-      Get.snackbar('Warning', 'Something went Wrong');
-      update();
-    }
-  }
-
-  toDateFormat({required dateString}) {
-    DateTime date = DateTime.parse(dateString.toString());
-
-    return date;
-  }
-
-  Future monthlyBillUpdateOverDueDateStatusApi(
-      {required String token, required id}) async {
+  payBillApi(
+      {required int id,
+      required String token,
+      required totalPaidAmount}) async {
+    isLoading.value = true;
     final response = await Http.post(
-      Uri.parse(Api.monthlyBillUpdateOverDueDateStatus),
+      Uri.parse(Api.payBill),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': "Bearer $token"
       },
       body: jsonEncode(<String, dynamic>{
         "id": id,
+        "paymenttype": 'Through App',
+        "totalpaidamount": totalPaidAmount
       }),
     );
+    print(response.body);
 
     if (response.statusCode == 200) {
-      var data = jsonDecode(response.body);
-
-      print(response.statusCode);
-
-      // await monthlyBillsApi(
-      //     userid: resident.residentid!, token: userdata.bearerToken!);
-      // update();
+      futureData = monthlyBillsApi(
+          userid: resident.residentid!, token: userdata.bearerToken!);
+      isLoading.value = false;
+      myToast(msg: "Bill Paid Successfully");
     } else {
-      Get.snackbar("Failed to Update Bill", "");
+      isLoading.value = false;
+      myToast(msg: "Failed to Pay bill", isNegative: true);
     }
   }
 }

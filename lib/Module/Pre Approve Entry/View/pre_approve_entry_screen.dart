@@ -1,720 +1,364 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:userapp/Module/Pre%20Approve%20Entry/Model/PreApproveEntry.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:userapp/Routes/set_routes.dart';
-import 'package:userapp/Widgets/Empty%20List/empty_list.dart';
-import 'package:userapp/Widgets/Loader/loader.dart';
-import 'package:userapp/Widgets/My%20Back%20Button/my_back_button.dart';
+import 'package:userapp/Widgets/Dialog%20Box%20Elipse%20Heading/dialog_box_elipse_heading.dart';
 import 'package:userapp/Widgets/My%20Floating%20Action%20Button/my_floating_action_button.dart';
 
 import '../../../Constants/constants.dart';
-import '../../../Widgets/My Button/my_button.dart';
+import '../../../Widgets/My Back Button/my_back_button.dart';
 import '../Controller/pre_approve_entry_controller.dart';
+import '../Model/PreApproveEntry.dart';
 
-class GatekeeperReports extends GetView {
+class PreApproveEntryScreen extends GetView {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<PreApproveEntryController>(
         init: PreApproveEntryController(),
         builder: (controller) {
-          print('build');
           return WillPopScope(
-            onWillPop: () async {
-              Get.offNamed(homescreen, arguments: controller.userdata);
+              onWillPop: () async {
+                Get.offNamed(homescreen, arguments: controller.userdata);
 
-              return true;
-            },
-            child: SafeArea(
-              child: Scaffold(
-                  backgroundColor: Colors.white,
-                  floatingActionButton: MyFloatingActionButton(
-                    onPressed: () {
-                      Get.offNamed(addpreapproveentryscreen, arguments: [
-                        controller.userdata,
-                        controller.resident
-                      ]);
-                    },
-                  ),
-                  body: Column(
-                    children: [
-                      MyBackButton(
-                        text: 'Pre Approve Entry',
-                        onTap: () {
-                          Get.offNamed(homescreen,
-                              arguments: controller.userdata);
+                return true;
+              },
+              child: SafeArea(
+                  child: Scaffold(
+                      backgroundColor: Colors.white,
+                      floatingActionButton: MyFloatingActionButton(
+                        onPressed: () {
+                          Get.offNamed(addpreapproveentryscreen, arguments: [
+                            controller.userdata,
+                            controller.resident,
+                            0
+                          ]);
                         },
                       ),
-                      // Padding(
-                      //   padding: EdgeInsets.fromLTRB(44.w, 16.h, 45.w, 0),
-                      //   child: SizedBox(
-                      //     width: 286.w,
-                      //     child: TextFormField(
-                      //       controller: controller.searchController,
-                      //       onChanged: (value) => controller.debounce(
-                      //         () async {
-                      //           controller.query = value.toString();
-                      //
-                      //           controller.searchData(
-                      //               token: controller.userdata.bearerToken!,
-                      //               userId: controller.resident.residentid,
-                      //               query: controller.query);
-                      //
-                      //           if (controller.query == '') {
-                      //             controller.refreshApi(
-                      //               token: controller.userdata.bearerToken!,
-                      //               userId: controller.resident.residentid,
-                      //             );
-                      //           }
-                      //         },
-                      //       ),
-                      //       decoration: InputDecoration(
-                      //         hintText: 'Search',
-                      //         prefixIcon: Icon(Icons.search),
-                      //         suffixIcon: GestureDetector(
-                      //             child: Icon(Icons.clear),
-                      //             onTap: () => controller.debounce(
-                      //                   () async {
-                      //                     controller.searchController.clear();
-                      //
-                      //                     controller.refreshApi(
-                      //                         userId:
-                      //                             controller.userdata.userId!,
-                      //                         token: controller
-                      //                             .userdata.bearerToken!);
-                      //                   },
-                      //                 )),
-                      //         suffixIconColor: HexColor('#B5B3B6'),
-                      //         prefixIconColor: HexColor('#B5B3B6'),
-                      //         hintStyle: GoogleFonts.ubuntu(
-                      //             fontStyle: FontStyle.normal,
-                      //             fontWeight: FontWeight.w400,
-                      //             fontSize: 14,
-                      //             color: HexColor('#B5B3B6')),
-                      //         fillColor: HexColor('#F6F7FB'),
-                      //         focusedBorder: OutlineInputBorder(
-                      //           borderRadius: BorderRadius.circular(7.0),
-                      //           borderSide: BorderSide(style: BorderStyle.none),
-                      //         ),
-                      //         enabledBorder: OutlineInputBorder(
-                      //           borderSide: BorderSide(
-                      //               color: HexColor('#B5B3B6'),
-                      //               width: 0,
-                      //               style: BorderStyle.none),
-                      //           borderRadius: BorderRadius.circular(7.0),
-                      //         ),
-                      //       ),
-                      //     ),
-                      //   ),
-                      // ),
-                      Expanded(
-                        child: FutureBuilder<PreApproveEntry>(
-                            future: controller.apiData,
-                            builder: (BuildContext context, snapshot) {
-                              if (snapshot.hasData) {
-                                if (snapshot.data!.data != null &&
-                                    snapshot.data!.data!.length != 0) {
-                                  return ListView.builder(
-                                      itemBuilder: (context, index) {
-                                        return GestureDetector(
-                                          onTap: () {
-                                            showDialog(
-                                                context: context,
-                                                builder:
-                                                    (BuildContext context) =>
-                                                        AlertDialog(
-                                                          content:
-                                                              SingleChildScrollView(
-                                                            child: Column(
-                                                              crossAxisAlignment:
-                                                                  CrossAxisAlignment
-                                                                      .start,
-                                                              children: [
-                                                                Center(
-                                                                    child: Text(
-                                                                  snapshot
-                                                                      .data!
-                                                                      .data![
-                                                                          index]
-                                                                      .name
-                                                                      .toString(),
-                                                                  style: GoogleFonts.ubuntu(
-                                                                      color: HexColor(
-                                                                          '#4D4D4D'),
-                                                                      fontSize:
-                                                                          18,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .w700),
-                                                                )),
-                                                                SizedBox(
-                                                                  height: 37,
-                                                                ),
-                                                                Row(
-                                                                  children: [
-                                                                    CircleAvatar(
-                                                                        maxRadius:
-                                                                            10,
-                                                                        backgroundColor: Color.fromRGBO(
-                                                                            255,
-                                                                            153,
-                                                                            0,
-                                                                            0.35),
-                                                                        child: SvgPicture.asset(
-                                                                            'assets/ellipse_icon.svg')),
-                                                                    SizedBox(
-                                                                      width: 8,
-                                                                    ),
-                                                                    Text(
-                                                                      'Description',
-                                                                      style: GoogleFonts.ubuntu(
-                                                                          color: HexColor(
-                                                                              '#4D4D4D'),
-                                                                          fontSize:
-                                                                              14,
-                                                                          fontWeight:
-                                                                              FontWeight.w500),
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                                Padding(
-                                                                  padding: EdgeInsets
-                                                                      .only(
-                                                                          left:
-                                                                              30),
-                                                                  child: Text(
-                                                                    snapshot
-                                                                        .data!
-                                                                        .data![
-                                                                            index]
-                                                                        .description
-                                                                        .toString(),
-                                                                    style: GoogleFonts.ubuntu(
-                                                                        color: HexColor(
-                                                                            '#4D4D4D'),
-                                                                        fontSize:
-                                                                            12,
-                                                                        fontWeight:
-                                                                            FontWeight.w400),
-                                                                  ),
-                                                                ),
-                                                                SizedBox(
-                                                                  height: 30,
-                                                                ),
-                                                                Row(
-                                                                  children: [
-                                                                    CircleAvatar(
-                                                                        maxRadius:
-                                                                            10,
-                                                                        backgroundColor: Color.fromRGBO(
-                                                                            255,
-                                                                            153,
-                                                                            0,
-                                                                            0.35),
-                                                                        child: SvgPicture.asset(
-                                                                            'assets/ellipse_icon.svg')),
-                                                                    SizedBox(
-                                                                      width: 8,
-                                                                    ),
-                                                                    Text(
-                                                                      'Date',
-                                                                      style: GoogleFonts.ubuntu(
-                                                                          color: HexColor(
-                                                                              '#4D4D4D'),
-                                                                          fontSize:
-                                                                              14,
-                                                                          fontWeight:
-                                                                              FontWeight.w500),
-                                                                    ),
-                                                                    SizedBox(
-                                                                      width: 70,
-                                                                    ),
-                                                                    CircleAvatar(
-                                                                        maxRadius:
-                                                                            10,
-                                                                        backgroundColor: Color.fromRGBO(
-                                                                            255,
-                                                                            153,
-                                                                            0,
-                                                                            0.35),
-                                                                        child: SvgPicture.asset(
-                                                                            'assets/ellipse_icon.svg')),
-                                                                    SizedBox(
-                                                                      width: 8,
-                                                                    ),
-                                                                    Text(
-                                                                      'Vehicle No',
-                                                                      style: GoogleFonts.ubuntu(
-                                                                          color: HexColor(
-                                                                              '#4D4D4D'),
-                                                                          fontSize:
-                                                                              14,
-                                                                          fontWeight:
-                                                                              FontWeight.w500),
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                                SizedBox(
-                                                                  height: 11,
-                                                                ),
-                                                                Padding(
-                                                                  padding: EdgeInsets
-                                                                      .only(
-                                                                          left:
-                                                                              30),
-                                                                  child: Row(
-                                                                    children: [
-                                                                      Text(
-                                                                        snapshot
-                                                                            .data!
-                                                                            .data![index]
-                                                                            .arrivaldate
-                                                                            .toString(),
-                                                                        style: GoogleFonts.ubuntu(
-                                                                            color: HexColor(
-                                                                                '#4D4D4D'),
-                                                                            fontSize:
-                                                                                12,
-                                                                            fontWeight:
-                                                                                FontWeight.w400),
-                                                                      ),
-                                                                      SizedBox(
-                                                                        width:
-                                                                            70,
-                                                                      ),
-                                                                      Flexible(
-                                                                        child:
-                                                                            Text(
-                                                                          snapshot
-                                                                              .data!
-                                                                              .data![index]
-                                                                              .vechileno
-                                                                              .toString(),
-                                                                          overflow:
-                                                                              TextOverflow.ellipsis,
-                                                                          style: GoogleFonts.ubuntu(
-                                                                              color: HexColor('#4D4D4D'),
-                                                                              fontSize: 12,
-                                                                              fontWeight: FontWeight.w400),
-                                                                        ),
-                                                                      ),
-                                                                    ],
-                                                                  ),
-                                                                ),
-                                                                SizedBox(
-                                                                  height: 30,
-                                                                ),
-                                                                Row(
-                                                                  children: [
-                                                                    CircleAvatar(
-                                                                        maxRadius:
-                                                                            10,
-                                                                        backgroundColor: Color.fromRGBO(
-                                                                            255,
-                                                                            153,
-                                                                            0,
-                                                                            0.35),
-                                                                        child: SvgPicture.asset(
-                                                                            'assets/ellipse_icon.svg')),
-                                                                    SizedBox(
-                                                                      width: 8,
-                                                                    ),
-                                                                    Text(
-                                                                      'Expected Arrival Time',
-                                                                      style: GoogleFonts.ubuntu(
-                                                                          color: HexColor(
-                                                                              '#4D4D4D'),
-                                                                          fontSize:
-                                                                              14,
-                                                                          fontWeight:
-                                                                              FontWeight.w500),
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                                SizedBox(
-                                                                  height: 11,
-                                                                ),
-                                                                Padding(
-                                                                  padding: EdgeInsets
-                                                                      .only(
-                                                                          left:
-                                                                              30),
-                                                                  child: Text(
-                                                                    snapshot
-                                                                        .data!
-                                                                        .data![
-                                                                            index]
-                                                                        .arrivaltime
-                                                                        .toString(),
-                                                                    style: GoogleFonts.ubuntu(
-                                                                        color: HexColor(
-                                                                            '#4D4D4D'),
-                                                                        fontSize:
-                                                                            12,
-                                                                        fontWeight:
-                                                                            FontWeight.w400),
-                                                                  ),
-                                                                ),
-                                                                SizedBox(
-                                                                  height: 30,
-                                                                ),
-                                                                Row(
-                                                                  children: [
-                                                                    CircleAvatar(
-                                                                        maxRadius:
-                                                                            10,
-                                                                        backgroundColor: Color.fromRGBO(
-                                                                            255,
-                                                                            153,
-                                                                            0,
-                                                                            0.35),
-                                                                        child: SvgPicture.asset(
-                                                                            'assets/ellipse_icon.svg')),
-                                                                    SizedBox(
-                                                                      width: 8,
-                                                                    ),
-                                                                    Text(
-                                                                      'Visitor Type',
-                                                                      style: GoogleFonts.ubuntu(
-                                                                          color: HexColor(
-                                                                              '#4D4D4D'),
-                                                                          fontSize:
-                                                                              14,
-                                                                          fontWeight:
-                                                                              FontWeight.w500),
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                                SizedBox(
-                                                                  height: 11,
-                                                                ),
-                                                                Padding(
-                                                                  padding: EdgeInsets
-                                                                      .only(
-                                                                          left:
-                                                                              30),
-                                                                  child: Text(
-                                                                    snapshot
-                                                                        .data!
-                                                                        .data![
-                                                                            index]
-                                                                        .visitortype
-                                                                        .toString(),
-                                                                    style: GoogleFonts.ubuntu(
-                                                                        color: HexColor(
-                                                                            '#4D4D4D'),
-                                                                        fontSize:
-                                                                            12,
-                                                                        fontWeight:
-                                                                            FontWeight.w400),
-                                                                  ),
-                                                                ),
-                                                                SizedBox(
-                                                                  height: 34,
-                                                                ),
-                                                                Center(
-                                                                  child:
-                                                                      MyButton(
-                                                                    fontSize:
-                                                                        12,
-                                                                    name: 'Ok',
-                                                                    width: 67,
-                                                                    height: 22,
-                                                                    onPressed:
-                                                                        () {
-                                                                      Get.back();
-                                                                    },
-                                                                  ),
-                                                                ),
-                                                                20.h.ph
-                                                              ],
-                                                            ),
-                                                          ),
-                                                        ));
-                                          },
-                                          child: Padding(
-                                            padding: EdgeInsets.fromLTRB(
-                                                10.w, 13.h, 22.w, 0),
-                                            child: SizedBox(
-                                              width: 343.w,
-                                              height: 100,
-                                              child: Card(
-                                                shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          4.0.r),
-                                                ),
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceBetween,
-                                                      children: [
-                                                        Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                      .fromLTRB(
-                                                                  13, 0, 0, 0),
-                                                          child: Text(
-                                                              snapshot
-                                                                  .data!
-                                                                  .data![index]
-                                                                  .name
-                                                                  .toString(),
-                                                              style: GoogleFonts
-                                                                  .ubuntu(
-                                                                color: HexColor(
-                                                                    '#606470'),
-                                                                fontSize: 14,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w500,
-                                                                fontStyle:
-                                                                    FontStyle
-                                                                        .normal,
-                                                              )),
-                                                        ),
-                                                        Container(
-                                                            width: 105,
-                                                            height: 27,
-                                                            decoration:
-                                                                BoxDecoration(
-                                                              border: Border.all(
-                                                                  color: HexColor(
-                                                                      '#E8E8E8')),
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                4,
-                                                              ),
-                                                              color: HexColor(
-                                                                  '#F6F6F6'),
-                                                            ),
-                                                            child: Row(
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .spaceEvenly,
-                                                              children: [
-                                                                Icon(
-                                                                  Icons
-                                                                      .calendar_month,
-                                                                  size: 15,
-                                                                  color: HexColor(
-                                                                      '#A7A7A7'),
-                                                                ),
-                                                                SizedBox(
-                                                                  width: 8,
-                                                                ),
-                                                                Text(
-                                                                  formatDate(snapshot
-                                                                      .data!
-                                                                      .data![
-                                                                          index]
-                                                                      .arrivaldate
-                                                                      .toString()),
-                                                                  style: GoogleFonts.ubuntu(
-                                                                      color: HexColor(
-                                                                          '#A5AAB7'),
-                                                                      fontSize:
-                                                                          12,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .w500),
-                                                                ),
-                                                              ],
-                                                            )),
-                                                      ],
-                                                    ),
-                                                    6.h.ph,
-                                                    Padding(
-                                                      padding: const EdgeInsets
-                                                              .fromLTRB(
-                                                          13, 0, 0, 0),
-                                                      child: Text.rich(
-                                                          TextSpan(children: [
-                                                        TextSpan(
-                                                          text: 'Vehicle No :',
-                                                          style: GoogleFonts
-                                                              .ubuntu(
-                                                            color: HexColor(
-                                                                '#A5AAB7'),
-                                                            fontSize: 12,
-                                                            fontWeight:
-                                                                FontWeight.w500,
-                                                            fontStyle: FontStyle
-                                                                .normal,
-                                                          ),
-                                                        ),
-                                                        TextSpan(
-                                                          text: snapshot
-                                                              .data!
-                                                              .data![index]
-                                                              .vechileno
-                                                              .toString(),
-                                                          style: GoogleFonts
-                                                              .ubuntu(
-                                                            color: HexColor(
-                                                                '#606470'),
-                                                            fontSize: 12,
-                                                            fontWeight:
-                                                                FontWeight.w500,
-                                                            fontStyle: FontStyle
-                                                                .normal,
-                                                          ),
-                                                        ),
-                                                      ])),
-                                                    ),
-                                                    if (snapshot
-                                                            .data!
-                                                            .data![index]
-                                                            .status ==
-                                                        0) ...[
-                                                      MyStatusWidget(
-                                                          text: snapshot
-                                                              .data!
-                                                              .data![index]
-                                                              .arrivaltime
-                                                              .toString(),
-                                                          status: snapshot
-                                                              .data!
-                                                              .data![index]
-                                                              .statusdescription
-                                                              .toString(),
-                                                          color: HexColor(
-                                                              '#E85C5C'))
-                                                    ] else if (snapshot
-                                                            .data!
-                                                            .data![index]
-                                                            .status ==
-                                                        1) ...[
-                                                      MyStatusWidget(
-                                                          status: snapshot
-                                                              .data!
-                                                              .data![index]
-                                                              .statusdescription
-                                                              .toString(),
-                                                          color: HexColor(
-                                                              '#48CA46'),
-                                                          text: snapshot
-                                                              .data!
-                                                              .data![index]
-                                                              .arrivaltime
-                                                              .toString())
-                                                    ] else if (snapshot
-                                                            .data!
-                                                            .data![index]
-                                                            .status ==
-                                                        2) ...[
-                                                      MyStatusWidget(
-                                                          text: snapshot
-                                                              .data!
-                                                              .data![index]
-                                                              .arrivaltime
-                                                              .toString(),
-                                                          status: snapshot
-                                                              .data!
-                                                              .data![index]
-                                                              .statusdescription
-                                                              .toString(),
-                                                          color: HexColor(
-                                                              '#5DD4B1'))
-                                                    ] else ...[
-                                                      MyStatusWidget(
-                                                          status: snapshot
-                                                              .data!
-                                                              .data![index]
-                                                              .statusdescription
-                                                              .toString(),
-                                                          color: HexColor(
-                                                              '#5A8CED'),
-                                                          text: snapshot
-                                                              .data!
-                                                              .data![index]
-                                                              .arrivaltime
-                                                              .toString())
-                                                    ],
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        );
-                                      },
-                                      itemCount: snapshot.data!.data!.length);
-                                } else {
-                                  return EmptyList(name: 'No PreApprove Entry');
-                                }
-                              } else if (snapshot.hasError) {
-                                return Icon(Icons.error_outline);
-                              } else {
-                                return Loader();
-                              }
-                            }),
-                      ),
-                    ],
-                  )),
-            ),
-          );
+                      body: Column(
+                        children: [
+                          MyBackButton(
+                            text: 'Pre Approve Entry',
+                            onTap: () {
+                              Get.offNamed(homescreen,
+                                  arguments: controller.userdata);
+                            },
+                          ),
+                          19.h.ph,
+                          Expanded(
+                            child: PagedListView(
+                              shrinkWrap: true,
+                              primary: false,
+                              pagingController: controller.pagingController,
+                              addAutomaticKeepAlives: false,
+                              builderDelegate: PagedChildBuilderDelegate(
+                                noItemsFoundIndicatorBuilder: (context) {
+                                  return const Padding(
+                                    padding: EdgeInsets.symmetric(
+                                      vertical: 25,
+                                      horizontal: 15,
+                                    ),
+                                    child: Center(
+                                        child: Text(
+                                      'No Entry Yet',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold),
+                                    )),
+                                  );
+                                },
+                                itemBuilder: (context, item, index) {
+                                  final PreApproveEntry p =
+                                      item as PreApproveEntry;
+                                  return GestureDetector(
+                                    onTap: () {
+                                      showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) =>
+                                              AlertDialog(
+                                                  content:
+                                                      PreApproveEntryDialog(
+                                                name: p.name,
+                                                description: p.description,
+                                                arrivaldate: p.arrivaldate,
+                                                arrivaltime: p.arrivaltime,
+                                                cnic: p.cnic,
+                                                mobileno: p.mobileno,
+                                                vechileno: p.vechileno,
+                                                visitortype: p.visitortype,
+                                              )));
+                                    },
+                                    child: PreApproveEntryCard(
+                                        name: p.name,
+                                        status: p.status,
+                                        arrivalDate: p.arrivaldate,
+                                        arrivalTime: p.arrivaltime,
+                                        statusDescription: p.statusdescription,
+                                        vechileNo: p.vechileno),
+                                  );
+                                },
+                              ),
+                            ),
+                          ),
+                        ],
+                      ))));
         });
   }
 
   Widget MyStatusWidget(
       {required status,
       required color,
-      required text,
-      Color? textColor,
+      textColor,
       double? width,
       double? height}) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Padding(
-          padding: const EdgeInsets.fromLTRB(13, 7, 0, 0),
-          child: Row(
-            children: [
-              SvgPicture.asset(
-                'assets/clock.svg',
-                width: 15,
-              ),
-              SizedBox(
-                width: 6,
-              ),
-              Text(
-                text,
-                style: GoogleFonts.ubuntu(
-                    color: HexColor('#A5AAB7'),
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500),
-              ),
-            ],
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.fromLTRB(0, 0, 14, 0),
-          child: Container(
-            width: width ?? 64,
-            height: height ?? 18,
-            decoration: BoxDecoration(
-                color: color, borderRadius: BorderRadius.circular(4)),
-            child: Center(
-              child: Text(
-                status,
-                style: TextStyle(
-                  fontSize: 10,
-                  color: textColor ?? HexColor('#FFFFFF'),
-                  fontWeight: FontWeight.w400,
-                ),
-              ),
+    return Padding(
+      padding: EdgeInsets.only(right: 14.w),
+      child: Container(
+        width: width ?? 64.w,
+        height: height ?? 18.w,
+        decoration: BoxDecoration(
+            color: color, borderRadius: BorderRadius.circular(4.r)),
+        child: Center(
+          child: Text(
+            status,
+            style: TextStyle(
+              fontSize: 10.sp,
+              color: textColor ?? HexColor('#FFFFFF'),
+              fontWeight: FontWeight.w400,
             ),
           ),
         ),
-      ],
+      ),
+    );
+  }
+
+  Widget PreApproveEntryCard(
+      {required name,
+      required arrivalTime,
+      required arrivalDate,
+      required vechileNo,
+      required status,
+      required statusDescription}) {
+    return Padding(
+      padding: EdgeInsets.fromLTRB(10.w, 13.h, 22.2.w, 0),
+      child: SizedBox(
+        width: 343.w,
+        height: 100.w,
+        child: Card(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(4.0.r),
+          ),
+          child: Padding(
+            padding: EdgeInsets.only(left: 13.w),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(top: 11.h),
+                      child: Text(name,
+                          style: GoogleFonts.ubuntu(
+                            color: HexColor('#606470'),
+                            fontSize: 14.sp,
+                            fontWeight: FontWeight.w500,
+                            fontStyle: FontStyle.normal,
+                          )),
+                    ),
+                    Container(
+                        width: 105.w,
+                        height: 27.w,
+                        decoration: BoxDecoration(
+                          border: Border.all(color: HexColor('#E8E8E8')),
+                          borderRadius: BorderRadius.circular(
+                            4.r,
+                          ),
+                          color: HexColor('#F6F6F6'),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Icon(
+                              Icons.calendar_month,
+                              size: 15.w,
+                              color: HexColor('#A7A7A7'),
+                            ),
+                            Text(
+                              arrivalDate,
+                              style: GoogleFonts.ubuntu(
+                                  color: HexColor('#A5AAB7'),
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500),
+                            ),
+                          ],
+                        )),
+                  ],
+                ),
+                6.h.ph,
+                PreApproveEntryCardText(
+                    heading: 'Vehicle No : ', text: vechileNo),
+                7.h.ph,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    PreApproveEntryCardText(
+                        heading: 'Expected Arrival Time : ',
+                        text: convert24HourFormatTo12HourTime(arrivalTime)),
+                    if (status == 0) ...[
+                      MyStatusWidget(
+                          status: statusDescription, color: HexColor('#E85C5C'))
+                    ] else if (status == 1) ...[
+                      MyStatusWidget(
+                        status: statusDescription,
+                        color: HexColor('#48CA46'),
+                      )
+                    ] else if (status == 2) ...[
+                      MyStatusWidget(
+                          status: statusDescription, color: HexColor('#5DD4B1'))
+                    ] else ...[
+                      MyStatusWidget(
+                        status: statusDescription,
+                        color: HexColor('#5A8CED'),
+                      )
+                    ],
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class PreApproveEntryDialog extends StatelessWidget {
+  final String? name;
+  final String? description;
+  final String? visitortype;
+  final String? vechileno;
+  final String? mobileno;
+  final String? arrivaldate;
+  final String? arrivaltime;
+  final String? cnic;
+
+  const PreApproveEntryDialog(
+      {super.key,
+      required this.name,
+      required this.description,
+      required this.visitortype,
+      required this.vechileno,
+      required this.mobileno,
+      required this.arrivaldate,
+      required this.arrivaltime,
+      required this.cnic});
+
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Center(
+            child: Text(name ?? "",
+                style: GoogleFonts.montserrat(
+                  color: HexColor("#4D4D4D"),
+                  fontSize: 18.sp,
+                  fontWeight: FontWeight.w700,
+                )),
+          ),
+          Center(
+            child: Text(description ?? "",
+                style: GoogleFonts.ubuntu(
+                  color: HexColor("#4D4D4D"),
+                  fontSize: 14.sp,
+                  fontWeight: FontWeight.w400,
+                )),
+          ),
+          23.33.h.ph,
+          DialogBoxElipseHeading(text: 'Visitor Type'),
+          DialogBoxText(
+            text: visitortype ?? "",
+          ),
+          23.33.h.ph,
+          DialogBoxElipseHeading(text: 'Vechile No'),
+          DialogBoxText(
+            text: vechileno ?? "",
+          ),
+          23.33.h.ph,
+          DialogBoxElipseHeading(text: 'Mobile No'),
+          DialogBoxText(
+            text: mobileno ?? "",
+          ),
+          23.33.h.ph,
+          DialogBoxElipseHeading(text: 'Expected Arrival Time'),
+          DialogBoxText(
+            text: arrivaltime ?? "",
+          ),
+          23.33.h.ph,
+          DialogBoxElipseHeading(text: 'CNIC'),
+          DialogBoxText(
+            text: cnic ?? "",
+          ),
+          23.33.h.ph,
+          DialogBoxElipseHeading(text: 'Expected Arrival Date'),
+          DialogBoxText(text: arrivaldate ?? ""),
+        ],
+      ),
+    );
+  }
+}
+
+class DialogBoxText extends StatelessWidget {
+  final String? text;
+
+  const DialogBoxText({super.key, required this.text});
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(left: 30.w),
+      child: Text(
+        text ?? "",
+        style: GoogleFonts.ubuntu(
+            fontWeight: FontWeight.w300,
+            fontSize: 16.sp,
+            color: HexColor('#1A1A1A')),
+      ),
+    );
+  }
+}
+
+class PreApproveEntryCardText extends StatelessWidget {
+  final String? heading;
+  final String? text;
+
+  const PreApproveEntryCardText(
+      {super.key, required this.heading, required this.text});
+
+  @override
+  Widget build(BuildContext context) {
+    return Text.rich(
+      TextSpan(children: [
+        TextSpan(
+          text: heading,
+          style: GoogleFonts.ubuntu(
+            color: HexColor('#A5AAB7'),
+            fontSize: 12.sp,
+            fontWeight: FontWeight.w500,
+            fontStyle: FontStyle.normal,
+          ),
+        ),
+        TextSpan(
+          text: text,
+          style: GoogleFonts.ubuntu(
+            color: HexColor('#606470'),
+            fontSize: 12.sp,
+            fontWeight: FontWeight.w500,
+            fontStyle: FontStyle.normal,
+          ),
+        ),
+      ]),
     );
   }
 }

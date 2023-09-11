@@ -12,23 +12,34 @@ class AddEmergencyController extends GetxController {
   var user = Get.arguments;
   late final User userdata;
   var resident;
+
+  EmergencyTypes emergencyGroup = EmergencyTypes.Fire;
+
   bool isLoading = false;
-  String emergencyValue = 'Fire';
-  List emergencyList = ['Fire', 'Thief', 'Medical Emergencies', 'Other'];
+  List<EmergencyTypeModel> emergencies = [
+    EmergencyTypeModel(title: 'Fire', emergencyTypes: EmergencyTypes.Fire),
+    EmergencyTypeModel(
+        title: 'Short Circuit', emergencyTypes: EmergencyTypes.ShortCircuit),
+    EmergencyTypeModel(
+        title: 'Medical Issue', emergencyTypes: EmergencyTypes.MedicalIssue),
+    EmergencyTypeModel(title: 'Theft', emergencyTypes: EmergencyTypes.Theft),
+    EmergencyTypeModel(title: 'Other', emergencyTypes: EmergencyTypes.Other),
+  ];
 
   @override
   void onInit() {
     super.onInit();
     userdata = this.user[0];
     resident = this.user[1];
+    problemController.text = emergencyGroup.name;
   }
 
-  final formKey = new GlobalKey<FormState>();
   TextEditingController problemController = TextEditingController();
-  TextEditingController DescriptionController = TextEditingController();
+  TextEditingController descriptionController = TextEditingController();
 
-  EmergencyDropDownVlaue(val) {
-    emergencyValue = val;
+  setEmergency(vale) {
+    emergencyGroup = vale;
+    problemController.text = emergencyGroup.name;
     update();
   }
 
@@ -38,7 +49,7 @@ class AddEmergencyController extends GetxController {
     required int subadminid,
     required String token,
     required String problem,
-    required String Description,
+    required String description,
   }) async {
     print(token);
 
@@ -56,14 +67,15 @@ class AddEmergencyController extends GetxController {
         "societyid": societyid,
         "subadminid": subadminid,
         "problem": problem,
-        "description": Description,
+        "description": description,
         "status": "0",
       }),
     );
     print(response.body);
+    print(response.statusCode);
 
     if (response.statusCode == 200) {
-      // isLoading=false;
+      isLoading = false;
       update();
       var data = jsonDecode(response.body);
       print(data);
@@ -88,7 +100,20 @@ class AddEmergencyController extends GetxController {
               ))
           .toList();
     } else {
+      print("snjd");
+
+      isLoading = false;
+
       Get.snackbar("Failed to Report Emergency Problem", "");
     }
   }
+}
+
+enum EmergencyTypes { Fire, ShortCircuit, Theft, MedicalIssue, Other }
+
+class EmergencyTypeModel {
+  EmergencyTypes emergencyTypes;
+  final String? title;
+
+  EmergencyTypeModel({required this.title, required this.emergencyTypes});
 }

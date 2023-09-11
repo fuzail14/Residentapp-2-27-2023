@@ -1,14 +1,13 @@
-import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as Http;
 import 'package:image_picker/image_picker.dart';
-
+import 'package:userapp/Constants/constants.dart';
 
 import '../../../Constants/api_routes.dart';
-
 import '../../../Routes/set_routes.dart';
 import '../../Login/Model/User.dart';
 
@@ -17,9 +16,46 @@ class SellProductsController extends GetxController {
   TextEditingController productNameController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
   TextEditingController productPriceController = TextEditingController();
-
+  TextEditingController contactController = TextEditingController();
+  TextEditingController categoryController = TextEditingController();
+  TextEditingController conditionController = TextEditingController();
+  bool isLoading = false;
   File? imageFile;
-
+  List<String> conditionTypeList = [
+    'New',
+    'Used-like new',
+    'Used-good',
+    'Used-fair'
+  ];
+  List<String> categoryTypeList = [
+    "Antiques",
+    "Appliances",
+    "Arts & Crafts",
+    "Auto Parts",
+    "Baby & Kids",
+    "Beauty & Personal Care",
+    "Bicycles",
+    "Books",
+    "Cell Phones",
+    "Clothing & Accessories",
+    "Collectibles",
+    "Computers & Accessories",
+    "Electronics",
+    "Furniture",
+    "Games & Toys",
+    "Home & Garden",
+    "Jewelry & Watches",
+    "Musical Instruments",
+    "Outdoor & Camping",
+    "Pet Supplies",
+    "Sporting Goods",
+    "Tickets",
+    "Tools & Machinery",
+    "Video Games & Consoles",
+    "Other"
+  ];
+  String? conditionTypeDropDownValue;
+  String? categoryTypeDropDownValue;
   var data = Get.arguments;
   late final User userdata;
   var resident;
@@ -68,6 +104,16 @@ class SellProductsController extends GetxController {
     }
   }
 
+  setCategoryTypeDropDownValue(val) {
+    categoryTypeDropDownValue = val;
+    update();
+  }
+
+  setConditionTypeDropDownValue(val) {
+    conditionTypeDropDownValue = val;
+    update();
+  }
+
   addProductDetailApi({
     required File file,
     required String token,
@@ -77,7 +123,11 @@ class SellProductsController extends GetxController {
     required String productname,
     required String productprice,
     required String description,
+    String? contact,
+    String? category,
+    String? condition,
   }) async {
+    isLoading = true;
     update();
 
     Map<String, String> headers = {"Authorization": "Bearer $token"};
@@ -89,36 +139,37 @@ class SellProductsController extends GetxController {
     request.fields['productname'] = productname;
     request.fields['description'] = description;
     request.fields['productprice'] = productprice;
-
     request.fields['subadminid'] = subadminid.toString();
     request.fields['societyid'] = societyid.toString();
     request.fields['residentid'] = residentid.toString();
+    request.fields['contact'] = contact.toString();
+    request.fields['category'] = category.toString();
+    request.fields['condition'] = condition.toString();
 
     var responsed = await request.send();
     var response = await Http.Response.fromStream(responsed);
 
-    print(response.body);
+    try {
+      if (response.statusCode == 200) {
+        isLoading = false;
+        update();
 
-    if (response.statusCode == 200) {
-      var data = jsonDecode(response.body.toString());
-      print(data);
-      print(response.body);
-      Get.snackbar("Product Added Successfully", "");
-      Get.offAndToNamed(marketPlaceScreen, arguments: [userdata, resident]);
-    } else if (response.statusCode == 403) {
-      update();
-      var data = jsonDecode(response.body.toString());
+        Get.offAndToNamed(marketPlaceScreen, arguments: [userdata, resident]);
 
-      Get.snackbar(
-        "Error",
-        data.toString(),
-      );
-    } else {
-      update();
+        myToast(msg: 'Item Uploaded Successfully');
+      } else if (response.statusCode == 403) {
+        isLoading = false;
+        update();
+        var data = jsonDecode(response.body.toString());
 
-      Get.snackbar("Failed to Save", "");
+        myToast(msg: "Error: ${data}", isNegative: true);
+      } else {
+        isLoading = false;
+        update();
+        myToast(msg: "Operation Failed", isNegative: true);
+      }
+    } catch (e) {
+      myToast(msg: "Something went wrong ${e.toString()}", isNegative: true);
     }
   }
-
-
 }

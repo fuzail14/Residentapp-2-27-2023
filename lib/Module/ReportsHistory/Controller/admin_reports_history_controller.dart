@@ -1,70 +1,80 @@
-import 'dart:convert';
-
 import 'package:get/get.dart';
-import 'package:userapp/Module/ReportsHistory/Model/admin_reports_model.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:userapp/Constants/constants.dart';
 
-import '../../../Constants/api_routes.dart';
+import '../../../Repo/Report Repository/report_repository.dart';
 import '../../HomeScreen/Model/residents.dart';
 import '../../Login/Model/User.dart';
-import 'package:http/http.dart' as Http;
+import '../../Report to Sub Admin/Model/Reports.dart';
 
-class AdmoinReportsHistotryController extends GetxController {
+class ReportHistoryController extends GetxController {
+  static const pageSize = 6;
+  final PagingController pagingController = PagingController(firstPageKey: 1);
+  List<Reports> reportsLi = [];
+  List<Reports> dataList = [];
+
   var arguments = Get.arguments;
   late final User user;
   late final Residents resident;
 
-  List<AdminReportHistory> li = [];
   @override
   void onInit() {
     // TODO: implement onInit
-    super.onInit();
 
+    super.onInit();
+    pagingController.addPageRequestListener((pageKey) {
+      _fetchPage(pageKey);
+    });
     user = arguments[0];
     resident = arguments[1];
-
-    print('oninit $user');
   }
 
-  Future<List<AdminReportHistory>> ViewAdminReportsHistoryApi(
-      int subadminid, int residentid, String token) async {
+  ViewAdminReportsHistoryApi(
+      {required int subAdminId,
+      required int userId,
+      required String token,
+      required int pageKey}) async {
+    ReportRepository reportRepository = ReportRepository();
 
-    print(subadminid);
-    print(residentid);
-    print(token);
-
-    final response = await Http.get(
-      Uri.parse(Api.historyReports +
-          "/" +
-          subadminid.toString() +
-          "/" +
-          residentid.toString()),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        'Authorization': "Bearer $token"
-      },
-    );
-    print(response.body);
-    var data = jsonDecode(response.body.toString());
-
-    if (response.statusCode == 200) {
-      print('data $data');
-
-      li = (data['data'] as List)
-          .map((e) => AdminReportHistory(
-              id: e['id'],
-              subadminid: e['subadminid'],
-              userid: e['userid'],
+    await reportRepository.ViewAdminReportsHistoryApi(
+            userId: userId,
+            token: token,
+            pageKey: pageKey,
+            subAdminId: subAdminId)
+        .then((val) {
+      reportsLi = (val['data']['data'] as List)
+          .map((e) => Reports(
               title: e['title'],
+              id: e['id'],
+              userid: e['userid'],
               description: e['description'],
-              date: e['date'],
               status: e['status'],
               statusdescription: e['statusdescription'],
-              created_at: e['created_at'],
-              updated_at: e['updated_at']))
+              createdAt: e['created_at'],
+              updatedAt: e['updated_at'],
+              subadminid: e['subadminid']))
           .toList();
-      return li;
-    }
+    }).onError((error, stackTrace) {
+      myToast(msg: error.toString(), isNegative: true);
+      throw Exception(error);
+    });
 
-    return li;
+    return reportsLi;
+  }
+
+  Future<void> _fetchPage(int pageKey) async {
+    dataList = await ViewAdminReportsHistoryApi(
+        userId: user.userId!,
+        token: user.bearerToken!,
+        pageKey: pageKey,
+        subAdminId: resident.subadminid!);
+
+    final isLastPage = dataList!.length < pageSize;
+    if (isLastPage) {
+      pagingController.appendLastPage(dataList);
+    } else {
+      final nextPageKey = pageKey + 1;
+      pagingController.appendPage(dataList, nextPageKey);
+    }
   }
 }

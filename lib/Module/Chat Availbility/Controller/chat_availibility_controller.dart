@@ -1,17 +1,21 @@
 import 'dart:convert';
-import 'package:http/http.dart' as Http;
+
 import 'package:get/get.dart';
+import 'package:http/http.dart' as Http;
 import 'package:userapp/Constants/api_routes.dart';
+
 import '../../Login/Model/User.dart';
 import '../Model/ChatNeighbours.dart';
 import '../Model/ChatRoomModel.dart';
-import '../Model/ChatRoomUsers.dart';
 
 class ChatAvailbilityController extends GetxController {
+  var data = Get.arguments;
   late final User userdata;
   var resident;
 
-  var data = Get.arguments;
+  late Future<ChatRoomModel> futureChatRoomData;
+  late Future<ChatNeighbours> futureChatNeighboursData;
+
   @override
   void onInit() {
     // TODO: implement onInit
@@ -19,15 +23,13 @@ class ChatAvailbilityController extends GetxController {
 
     userdata = data[0];
     resident = data[1];
+
+    futureChatNeighboursData = viewChatNeighbours(
+        subadminid: resident.subadminid!, token: userdata.bearerToken!);
   }
-
-
 
   Future<ChatNeighbours> viewChatNeighbours(
       {required int subadminid, required String token}) async {
-
-    print(token);
-
     final response = await Http.get(
       Uri.parse(Api.chatNeighbours + "/" + subadminid.toString()),
       headers: <String, String>{
@@ -38,7 +40,24 @@ class ChatAvailbilityController extends GetxController {
     print(response.body);
     var data = jsonDecode(response.body.toString());
 
-    ;
+    if (response.statusCode == 200) {
+      return ChatNeighbours.fromJson(data);
+    }
+
+    return ChatNeighbours.fromJson(data);
+  }
+
+  Future<ChatNeighbours> viewChatNeighbours2(
+      {required int subadminid, required String token}) async {
+    final response = await Http.get(
+      Uri.parse(Api.chatNeighbours + "/" + subadminid.toString()),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': "Bearer $token"
+      },
+    );
+    print(response.body);
+    var data = jsonDecode(response.body.toString());
 
     if (response.statusCode == 200) {
       return ChatNeighbours.fromJson(data);
@@ -47,16 +66,10 @@ class ChatAvailbilityController extends GetxController {
     return ChatNeighbours.fromJson(data);
   }
 
-
-
-
   Future<ChatRoomModel> createChatRoomApi({
     required String token,
     required int userid,
-    required int chatuserid,
-
-
-
+    required int chatUserId,
   }) async {
     final response = await Http.post(
       Uri.parse(Api.createChatRoom),
@@ -64,55 +77,19 @@ class ChatAvailbilityController extends GetxController {
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': "Bearer $token"
       },
-      body: jsonEncode(<String, dynamic>
-      {
-        "loginuserid": userid,
-        "chatuserid": chatuserid,
-
-
-      }
-
-      ),
+      body: jsonEncode(<String, dynamic>{
+        "sender": userid,
+        "receiver": chatUserId,
+      }),
     );
     print(response.body);
 
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body);
 
-
       return ChatRoomModel.fromJson(data);
-
     } else {
       return ChatRoomModel.fromJson(data);
     }
   }
-
-  Future<ChatRoomUsers> fetchchatroomusers(
-      {
-        required int userid,
-        required int chatuserid,
-        required String token}) async {
-
-
-    final response = await Http.get(
-      Uri.parse(Api.fetchChatroomUsers + "/" +userid.toString()+ "/" +chatuserid.toString()),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        'Authorization': "Bearer $token"
-      },
-    );
-    var data = jsonDecode(response.body.toString());
-
-    if (response.statusCode == 200) {
-
-print(data);
-
-
-      return ChatRoomUsers.fromJson(data);
-
-    }
-    return  ChatRoomUsers.fromJson(data);
-  }
-
-
 }

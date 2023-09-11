@@ -1,5 +1,5 @@
 /// success : true
-/// data : {"id":19,"charges":"5000.00","chargesafterduedate":"6100.00","latecharges":"250.00","appcharges":"100.00","tax":"750.00","balance":"5850.00","payableamount":"5850.00","subadminid":2,"residentid":3,"propertyid":1,"measurementid":1,"duedate":"2023-06-15","billstartdate":"2023-05-01","billenddate":"2023-05-31","month":"May 2023","status":0,"isbilllate":0,"noofappusers":1,"created_at":"2023-05-13T07:19:39.000000Z","updated_at":"2023-05-13T07:19:39.000000Z"}
+/// data : {"id":26,"charges":"5000.00","latecharges":"150.00","appcharges":"50.00","tax":"0.00","balance":"5050.00","payableamount":"5050.00","totalpaidamount":"0.00","subadminid":2,"residentid":13,"propertyid":3,"measurementid":1,"duedate":"2023-07-15","billstartdate":"2023-06-01","billenddate":"2023-06-30","month":"June 2023","billtype":"house","paymenttype":"NA","status":"unpaid","isbilllate":0,"noofappusers":1,"created_at":"2023-06-15T11:40:43.000000Z","updated_at":"2023-06-15T11:40:43.000000Z"}
 
 class BillModel {
   BillModel({
@@ -31,38 +31,40 @@ class BillModel {
   }
 }
 
-/// id : 19
+/// id : 26
 /// charges : "5000.00"
-/// chargesafterduedate : "6100.00"
-/// latecharges : "250.00"
-/// appcharges : "100.00"
-/// tax : "750.00"
-/// balance : "5850.00"
-/// payableamount : "5850.00"
+/// latecharges : "150.00"
+/// appcharges : "50.00"
+/// tax : "0.00"
+/// balance : "5050.00"
+/// payableamount : "5050.00"
+/// totalpaidamount : "0.00"
 /// subadminid : 2
-/// residentid : 3
-/// propertyid : 1
+/// residentid : 13
+/// propertyid : 3
 /// measurementid : 1
-/// duedate : "2023-06-15"
-/// billstartdate : "2023-05-01"
-/// billenddate : "2023-05-31"
-/// month : "May 2023"
-/// status : 0
+/// duedate : "2023-07-15"
+/// billstartdate : "2023-06-01"
+/// billenddate : "2023-06-30"
+/// month : "June 2023"
+/// billtype : "house"
+/// paymenttype : "NA"
+/// status : "unpaid"
 /// isbilllate : 0
 /// noofappusers : 1
-/// created_at : "2023-05-13T07:19:39.000000Z"
-/// updated_at : "2023-05-13T07:19:39.000000Z"
+/// created_at : "2023-06-15T11:40:43.000000Z"
+/// updated_at : "2023-06-15T11:40:43.000000Z"
 
 class Data {
   Data({
     this.id,
     this.charges,
-    this.chargesafterduedate,
     this.latecharges,
     this.appcharges,
     this.tax,
     this.balance,
     this.payableamount,
+    this.totalpaidamount,
     this.subadminid,
     this.residentid,
     this.propertyid,
@@ -71,6 +73,8 @@ class Data {
     this.billstartdate,
     this.billenddate,
     this.month,
+    this.billtype,
+    this.paymenttype,
     this.status,
     this.isbilllate,
     this.noofappusers,
@@ -81,12 +85,12 @@ class Data {
   Data.fromJson(dynamic json) {
     id = json['id'];
     charges = json['charges'];
-    chargesafterduedate = json['chargesafterduedate'];
     latecharges = json['latecharges'];
     appcharges = json['appcharges'];
     tax = json['tax'];
     balance = json['balance'];
     payableamount = json['payableamount'];
+    totalpaidamount = json['totalpaidamount'];
     subadminid = json['subadminid'];
     residentid = json['residentid'];
     propertyid = json['propertyid'];
@@ -95,6 +99,8 @@ class Data {
     billstartdate = json['billstartdate'];
     billenddate = json['billenddate'];
     month = json['month'];
+    billtype = json['billtype'];
+    paymenttype = json['paymenttype'];
     status = json['status'];
     isbilllate = json['isbilllate'];
     noofappusers = json['noofappusers'];
@@ -103,12 +109,12 @@ class Data {
   }
   int? id;
   String? charges;
-  String? chargesafterduedate;
   String? latecharges;
   String? appcharges;
   String? tax;
   String? balance;
   String? payableamount;
+  String? totalpaidamount;
   int? subadminid;
   int? residentid;
   int? propertyid;
@@ -117,7 +123,9 @@ class Data {
   String? billstartdate;
   String? billenddate;
   String? month;
-  int? status;
+  String? billtype;
+  String? paymenttype;
+  String? status;
   int? isbilllate;
   int? noofappusers;
   String? createdAt;
@@ -125,12 +133,12 @@ class Data {
   Data copyWith({
     int? id,
     String? charges,
-    String? chargesafterduedate,
     String? latecharges,
     String? appcharges,
     String? tax,
     String? balance,
     String? payableamount,
+    String? totalpaidamount,
     int? subadminid,
     int? residentid,
     int? propertyid,
@@ -139,7 +147,9 @@ class Data {
     String? billstartdate,
     String? billenddate,
     String? month,
-    int? status,
+    String? billtype,
+    String? paymenttype,
+    String? status,
     int? isbilllate,
     int? noofappusers,
     String? createdAt,
@@ -148,12 +158,12 @@ class Data {
       Data(
         id: id ?? this.id,
         charges: charges ?? this.charges,
-        chargesafterduedate: chargesafterduedate ?? this.chargesafterduedate,
         latecharges: latecharges ?? this.latecharges,
         appcharges: appcharges ?? this.appcharges,
         tax: tax ?? this.tax,
         balance: balance ?? this.balance,
         payableamount: payableamount ?? this.payableamount,
+        totalpaidamount: totalpaidamount ?? this.totalpaidamount,
         subadminid: subadminid ?? this.subadminid,
         residentid: residentid ?? this.residentid,
         propertyid: propertyid ?? this.propertyid,
@@ -162,6 +172,8 @@ class Data {
         billstartdate: billstartdate ?? this.billstartdate,
         billenddate: billenddate ?? this.billenddate,
         month: month ?? this.month,
+        billtype: billtype ?? this.billtype,
+        paymenttype: paymenttype ?? this.paymenttype,
         status: status ?? this.status,
         isbilllate: isbilllate ?? this.isbilllate,
         noofappusers: noofappusers ?? this.noofappusers,
@@ -172,12 +184,12 @@ class Data {
     final map = <String, dynamic>{};
     map['id'] = id;
     map['charges'] = charges;
-    map['chargesafterduedate'] = chargesafterduedate;
     map['latecharges'] = latecharges;
     map['appcharges'] = appcharges;
     map['tax'] = tax;
     map['balance'] = balance;
     map['payableamount'] = payableamount;
+    map['totalpaidamount'] = totalpaidamount;
     map['subadminid'] = subadminid;
     map['residentid'] = residentid;
     map['propertyid'] = propertyid;
@@ -186,6 +198,8 @@ class Data {
     map['billstartdate'] = billstartdate;
     map['billenddate'] = billenddate;
     map['month'] = month;
+    map['billtype'] = billtype;
+    map['paymenttype'] = paymenttype;
     map['status'] = status;
     map['isbilllate'] = isbilllate;
     map['noofappusers'] = noofappusers;

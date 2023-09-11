@@ -1,92 +1,89 @@
-import 'dart:convert';
-/// data : {"id":1,"loginuserid":4,"created_at":"2023-01-22T06:58:33.000000Z","updated_at":"2023-01-22T06:58:33.000000Z"}
-/// success : true
+/// data : [{"id":157,"sender":4,"receiver":5,"status":"default","created_at":"2023-07-28T12:19:12.000000Z","updated_at":"2023-07-29T07:05:55.000000Z"}]
 
-ChatRoomModel chatRoomModelFromJson(String str) => ChatRoomModel.fromJson(json.decode(str));
-String chatRoomModelToJson(ChatRoomModel data) => json.encode(data.toJson());
 class ChatRoomModel {
   ChatRoomModel({
-      Data? data, 
-      bool? success,}){
-    _data = data;
-    _success = success;
-}
+    this.data,
+  });
 
   ChatRoomModel.fromJson(dynamic json) {
-    _data = json['data'] != null ? Data.fromJson(json['data']) : null;
-    _success = json['success'];
+    if (json['data'] != null) {
+      data = [];
+      json['data'].forEach((v) {
+        data?.add(Data.fromJson(v));
+      });
+    }
   }
-  Data? _data;
-  bool? _success;
-ChatRoomModel copyWith({  Data? data,
-  bool? success,
-}) => ChatRoomModel(  data: data ?? _data,
-  success: success ?? _success,
-);
-  Data? get data => _data;
-  bool? get success => _success;
-
+  List<Data>? data;
+  ChatRoomModel copyWith({
+    List<Data>? data,
+  }) =>
+      ChatRoomModel(
+        data: data ?? this.data,
+      );
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
-    if (_data != null) {
-      map['data'] = _data?.toJson();
+    if (data != null) {
+      map['data'] = data?.map((v) => v.toJson()).toList();
     }
-    map['success'] = _success;
     return map;
   }
-
 }
 
-/// id : 1
-/// loginuserid : 4
-/// created_at : "2023-01-22T06:58:33.000000Z"
-/// updated_at : "2023-01-22T06:58:33.000000Z"
+/// id : 157
+/// sender : 4
+/// receiver : 5
+/// status : "default"
+/// created_at : "2023-07-28T12:19:12.000000Z"
+/// updated_at : "2023-07-29T07:05:55.000000Z"
 
-Data dataFromJson(String str) => Data.fromJson(json.decode(str));
-String dataToJson(Data data) => json.encode(data.toJson());
 class Data {
   Data({
-      int? id, 
-      int? loginuserid, 
-      String? createdAt, 
-      String? updatedAt,}){
-    _id = id;
-    _loginuserid = loginuserid;
-    _createdAt = createdAt;
-    _updatedAt = updatedAt;
-}
+    this.id,
+    this.sender,
+    this.receiver,
+    this.status,
+    this.createdAt,
+    this.updatedAt,
+  });
 
   Data.fromJson(dynamic json) {
-    _id = json['id'];
-    _loginuserid = json['loginuserid'];
-    _createdAt = json['created_at'];
-    _updatedAt = json['updated_at'];
+    id = json['id'];
+    sender = json['sender'];
+    receiver = json['receiver'];
+    status = json['status'];
+    createdAt = json['created_at'];
+    updatedAt = json['updated_at'];
   }
-  int? _id;
-  int? _loginuserid;
-  String? _createdAt;
-  String? _updatedAt;
-Data copyWith({  int? id,
-  int? loginuserid,
-  String? createdAt,
-  String? updatedAt,
-}) => Data(  id: id ?? _id,
-  loginuserid: loginuserid ?? _loginuserid,
-  createdAt: createdAt ?? _createdAt,
-  updatedAt: updatedAt ?? _updatedAt,
-);
-  int? get id => _id;
-  int? get loginuserid => _loginuserid;
-  String? get createdAt => _createdAt;
-  String? get updatedAt => _updatedAt;
-
+  int? id;
+  int? sender;
+  int? receiver;
+  String? status;
+  String? createdAt;
+  String? updatedAt;
+  Data copyWith({
+    int? id,
+    int? sender,
+    int? receiver,
+    String? status,
+    String? createdAt,
+    String? updatedAt,
+  }) =>
+      Data(
+        id: id ?? this.id,
+        sender: sender ?? this.sender,
+        receiver: receiver ?? this.receiver,
+        status: status ?? this.status,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+      );
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
-    map['id'] = _id;
-    map['loginuserid'] = _loginuserid;
-    map['created_at'] = _createdAt;
-    map['updated_at'] = _updatedAt;
+    map['id'] = id;
+    map['sender'] = sender;
+    map['receiver'] = receiver;
+    map['status'] = status;
+    map['created_at'] = createdAt;
+    map['updated_at'] = updatedAt;
     return map;
   }
-
 }

@@ -1,12 +1,16 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:crypto/crypto.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as Http;
 import 'package:image_picker/image_picker.dart';
-import 'package:intl/intl.dart';
+import 'package:userapp/App%20Exceptions/app_exception.dart';
 import 'package:userapp/Constants/api_routes.dart';
+import 'package:userapp/Constants/constants.dart';
+import 'package:userapp/Repo/Home%20Repository/home_repository.dart';
 
 import '../../../Routes/set_routes.dart';
 import '../../../Services/Notification Services/notification_services.dart';
@@ -14,87 +18,124 @@ import '../../../Services/Shared Preferences/MySharedPreferences.dart';
 import '../../Login/Model/User.dart';
 import '../Model/DiscussionRoomModel.dart';
 import '../Model/residents.dart';
-import '../View/home_screen.dart';
 
 class HomeScreenController extends GetxController {
-  // var scaffoldKey = GlobalKey<ScaffoldState>();
-  var imageFile;
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    userNameController.dispose();
+    pageController.dispose();
+  }
 
+  late Future<Residents> future;
+
+  final _repository = HomeRepository();
+  var imageFile;
   var data = Get.arguments;
   late final User user;
+  final pageController = PageController();
+  var snapShot;
+  int selectedIndex = 0;
+  var isLoading = false;
 
-  List<HomeScreenCard> servicesLi = [
-    HomeScreenCard(
+  final userNameController = TextEditingController();
+  void onItemTapped(int index) {
+    selectedIndex = index;
+    update();
+  }
+
+  List<QuickActions> quickActions = [];
+
+  List<HomeScreenCardModel> servicesLi = [
+    HomeScreenCardModel(
       heading: 'Complaint',
       description:
           'Resolve issues. Empower residents. Strengthen community bonds',
-      iconPath: 'assets/file 3.png',
-      type: 'services',
+      iconPath: 'assets/home_complaint.png',
+      type: 'Complaints',
     ),
-    HomeScreenCard(
+    HomeScreenCardModel(
       heading: 'Pre Approve Entry',
       description:
           'Seamless access. Secure entry. Hassle-free resident approvals.',
-      iconPath: 'assets/noticeboard_icon.png',
-      type: 'services',
+      iconPath: 'assets/home_preapprove_entry.png',
+      type: 'PreApproveEntry',
     ),
-    HomeScreenCard(
+    HomeScreenCardModel(
       heading: 'Family Members',
       description:
           'Inclusive communities. Easy family additions. Strengthening bonds',
-      iconPath: 'assets/team 1.png',
-      type: 'services',
+      iconPath: 'assets/home_family_members.png',
+      type: 'FamilyMembers',
+    ),
+    HomeScreenCardModel(
+      heading: 'Market Place',
+      description: 'Buy and Sell',
+      iconPath: 'assets/home_market_place.png',
+      type: 'MarketPlace',
     ),
   ];
-  List<HomeScreenCard> eventsLi = [
-    HomeScreenCard(
+  List<HomeScreenCardModel> eventsLi = [
+    HomeScreenCardModel(
       heading: 'Society Events',
       description: 'Unforgettable gatherings. Engaging community events.',
-      iconPath: 'assets/icons/event.svg',
-      type: 'events',
+      iconPath: 'assets/home_event.png',
+      type: 'Events',
     ),
-    HomeScreenCard(
+    HomeScreenCardModel(
       heading: 'Notice Board',
       description:
           'Stay informed. Important updates. Community notices at fingertips',
-      iconPath: 'assets/icons/noticeboard.svg',
-      type: 'events',
+      iconPath: 'assets/home_noticeboard.png',
+      type: 'NoticeBoard',
     ),
   ];
-  List<HomeScreenCard> chatsLi = [
-    HomeScreenCard(
+  List<HomeScreenCardModel> conversationLi = [
+    HomeScreenCardModel(
       heading: 'Neighbours',
       description: 'Connect with neighbors. Instant community communication',
-      iconPath: 'assets/icons/chat.svg',
-      type: 'chats',
+      iconPath: 'assets/home_chat.png',
+      type: 'NeighboursChats',
     ),
-    HomeScreenCard(
+    HomeScreenCardModel(
       heading: 'Discussion Forum',
       description: 'Engage. Discuss. Share. Community forum platform',
-      iconPath: 'assets/icons/discussion_forum.svg',
-      type: 'chats',
+      iconPath: 'assets/home_discussion_forum.png',
+      type: 'DiscussionForum',
     ),
   ];
-  List<HomeScreenCard> historyLi = [
-    HomeScreenCard(
+
+  List<HomeScreenCardModel> historyLi = [
+    HomeScreenCardModel(
       heading: 'Complaint History',
       description: 'Track. Resolve. Improve. Complaint history tracker',
-      iconPath: 'assets/icons/history.svg',
-      type: 'history',
+      iconPath: 'assets/home_history.png',
+      type: 'ComplaintHistory',
     ),
-    HomeScreenCard(
+    HomeScreenCardModel(
       heading: 'Guest History',
       description: 'Guest visits. History. Enhanced security.',
-      iconPath: 'assets/icons/history.svg',
-      type: 'history',
+      iconPath: 'assets/home_history.png',
+      type: 'GuestHistory',
     ),
   ];
-  List<HomeScreenCard> billsLi = [
-    HomeScreenCard(
+
+  List<HomeScreenCardModel> billsLi = [
+    HomeScreenCardModel(
       heading: 'Monthly Bills',
       description: 'Easy pay your Monthly Bills',
-      iconPath: 'assets/icons/history.svg',
-      type: 'bills',
+      iconPath: 'assets/home_monthly_bill.png',
+      type: 'MonthlyBills',
+    ),
+  ];
+
+  List<HomeScreenCardModel> safetyAssistanceLi = [
+    HomeScreenCardModel(
+      heading: 'Emergency',
+      description: 'Rapid distress alerts for resident safety',
+      iconPath: 'assets/home_emergency.png',
+      type: 'SafetyAssistance',
     ),
   ];
 
@@ -106,174 +147,92 @@ class HomeScreenController extends GetxController {
     );
     if (pickedFile != null) {
       print('file picked: $pickedFile');
-      // img = pickedFile as Image?;
 
       print('Assigning Image file');
       imageFile = File(pickedFile.path);
       update();
-    } else {}
+    }
   }
 
   @override
   void onInit() {
     // TODO: implement
-    //  onInit
 
     super.onInit();
 
+    quickActions.add(QuickActions(
+        text: 'Cab', iconPath: 'assets/icons/cab_icon.svg', width: 110.w));
+    quickActions.add(QuickActions(
+        text: 'Delivery',
+        iconPath: 'assets/icons/delivery_icon.svg',
+        width: 129.w));
+    quickActions.add(QuickActions(
+        text: 'Guest', iconPath: 'assets/icons/guest_icon.svg', width: 110.w));
+    quickActions.add(QuickActions(
+        text: 'Visiting Help',
+        iconPath: 'assets/icons/visiting_help_icon.svg',
+        width: 110.w));
     NotificationServices notificationServices = NotificationServices();
     notificationServices.requestNotification();
     notificationServices.fireBaseInit();
     notificationServices.setupInteractMessage();
     notificationServices.getDeviceToken();
 
-    print('Home Screen Controller Data');
     this.user = data;
     print(user.userId);
     print(user.bearerToken);
+
+    future = user.roleId == 5
+        ? loginResidentDetails(
+            userid: user.residentid!, token: user.bearerToken!)
+        : // Login user Resident
+        loginResidentDetails(userid: user.userId!, token: user.bearerToken!);
   }
 
   Future<Residents> loginResidentDetails(
       {required int userid, required String token}) async {
-    print("${userid.toString()}");
-    print(token);
+    try {
+      final response = await Http.get(
+        Uri.parse(Api.loginResidentDetails + "/" + userid.toString()),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': "Bearer $token"
+        },
+      );
+      print(response.statusCode);
+      var data = jsonDecode(response.body.toString());
+      print(data);
+      var e = data['data'];
+      var societyData = data['data']['societydata'];
+      var societyId = societyData[0]['societyid'];
+      var superAdminId = societyData[0]['superadminid'];
+      final Residents residents = Residents(
+          id: e['id'],
+          residentid: e['residentid'],
+          subadminid: e['subadminid'],
+          superadminid: superAdminId,
+          societyid: societyId,
+          country: e["country"],
+          state: e["state"],
+          city: e["city"],
+          houseaddress: e["houseaddress"],
+          vechileno: e["vechileno"],
+          residenttype: e["residenttype"],
+          propertytype: e["propertytype"],
+          committeemember: e["committeemember"],
+          status: e["status"],
+          username: e["username"],
+          createdAt: e["createdAt"],
+          updatedAt: e["updatedAt"]);
 
-    final response = await Http.get(
-      Uri.parse(Api.loginResidentDetails + "/" + userid.toString()),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        'Authorization': "Bearer $token"
-      },
-    );
-
-    var data = jsonDecode(response.body.toString());
-
-    var e = data['data'];
-
-    var societyData = data['data']['societydata'];
-
-    var societyId = societyData[0]['societyid'];
-    var superAdminId = societyData[0]['superadminid'];
-
-    //print(societyId);
-    //print('superAdminId $superAdminId');
-
-
-    final Residents residents = Residents(
-        id: e['id'],
-        residentid: e['residentid'],
-        subadminid: e['subadminid'],
-        superadminid: superAdminId,
-        societyid: societyId,
-        country: e["country"],
-        state: e["state"],
-        city: e["city"],
-        houseaddress: e["houseaddress"],
-        vechileno: e["vechileno"],
-        residenttype: e["residenttype"],
-        propertytype: e["propertytype"],
-        committeemember: e["committeemember"],
-        status: e["status"],
-        createdAt: e["createdAt"],
-        updatedAt: e["updatedAt"]);
-
-    if (response.statusCode == 200) {
-      return residents;
+      if (response.statusCode == 200) {
+        return residents;
+      } else {
+        throw UnKnownException();
+      }
+    } on SocketException catch (e) {
+      myToast(msg: throw InternetException(e));
     }
-
-    return residents;
-  }
-
-  payment() async {
-    // var digest;
-    String dateandtime = DateFormat("yyyyMMddHHmmss").format(DateTime.now());
-    String dexpiredate = DateFormat("yyyyMMddHHmmss")
-        .format(DateTime.now().add(Duration(days: 1)));
-    String tre = "T" + dateandtime;
-    String pp_Amount = "100000";
-    String pp_BillReference = "billRef";
-    String pp_Description = "Description";
-    String pp_Language = "EN";
-    String pp_MerchantID = "MC52072";
-    String pp_Password = "1zu282w8e3";
-
-    String pp_ReturnURL =
-        "https://sandbox.jazzcash.com.pk/ApplicationAPI/API/Payment/DoTransaction";
-    String pp_ver = "1.1";
-    String pp_TxnCurrency = "PKR";
-    String pp_TxnDateTime = dateandtime.toString();
-    String pp_TxnExpiryDateTime = dexpiredate.toString();
-    String pp_TxnRefNo = tre.toString();
-    String pp_TxnType = "MWALLET";
-    String ppmpf_1 = "4456733833993";
-    String IntegeritySalt = "s8v30w3y0x";
-    String and = '&';
-    String superdata = IntegeritySalt +
-        and +
-        pp_Amount +
-        and +
-        pp_BillReference +
-        and +
-        pp_Description +
-        and +
-        pp_Language +
-        and +
-        pp_MerchantID +
-        and +
-        pp_Password +
-        and +
-        pp_ReturnURL +
-        and +
-        pp_TxnCurrency +
-        and +
-        pp_TxnDateTime +
-        and +
-        pp_TxnExpiryDateTime +
-        and +
-        pp_TxnRefNo +
-        and +
-        pp_TxnType +
-        and +
-        pp_ver +
-        and +
-        ppmpf_1;
-
-    // var key = utf8.encode(IntegeritySalt);
-    // var bytes = utf8.encode(superdata);
-    // var hash2 = Hmac(sha256, key);
-    // var digest = hash2.convert(bytes);
-    // var hash = digest.toString();
-    // data["pp_SecureHash"] = hash;
-
-    var key = utf8.encode(IntegeritySalt);
-    var bytes = utf8.encode(superdata);
-    var hmacSha256 = new Hmac(sha256, key);
-    Digest sha256Result = hmacSha256.convert(bytes);
-
-    var url =
-        'https://sandbox.jazzcash.com.pk/ApplicationAPI/API/Payment/DoTransaction';
-
-    var response = await Http.post(Uri.parse(url), body: {
-      "pp_Version": pp_ver,
-      "pp_TxnType": pp_TxnType,
-      "pp_Language": pp_Language,
-      "pp_MerchantID": pp_MerchantID,
-      "pp_Password": pp_Password,
-      "pp_TxnRefNo": tre,
-      "pp_Amount": pp_Amount,
-      "pp_TxnCurrency": pp_TxnCurrency,
-      "pp_TxnDateTime": dateandtime,
-      "pp_BillReference": pp_BillReference,
-      "pp_Description": pp_Description,
-      "pp_TxnExpiryDateTime": dexpiredate,
-      "pp_ReturnURL": pp_ReturnURL,
-      "pp_SecureHash": sha256Result.toString(),
-      "ppmpf_1": "03075383136"
-    });
-
-    print("response=>");
-    print(response.body);
-    print(response.body);
   }
 
   logoutApi({required String token}) async {
@@ -289,13 +248,11 @@ class HomeScreenController extends GetxController {
     print(response.body);
     var data = jsonDecode(response.body.toString());
 
-    ;
-
     if (response.statusCode == 200) {
       print("logout successfully");
-      print(data);
+
       MySharedPreferences.deleteUserData();
-      // await FirebaseMessaging.instance.deleteToken();
+
       Get.offAllNamed(loginscreen);
     } else {
       print(data);
@@ -326,4 +283,66 @@ class HomeScreenController extends GetxController {
       return DiscussionRoomModel.fromJson(data);
     }
   }
+
+  Future<void> refreshScreen() async {
+    Future.delayed(Duration(seconds: 1));
+    future = await user.roleId == 5
+        ? loginResidentDetails(
+            userid: user.residentid!, token: user.bearerToken!)
+        : // Login user Resident
+        loginResidentDetails(userid: user.userId!, token: user.bearerToken!);
+
+    update();
+  }
+
+  updateUserNameApi() async {
+    isLoading = true;
+    update();
+
+    Map<String, String> data = <String, String>{
+      'residentid': user.userId.toString(),
+      'username': userNameController.text.toString()
+    };
+    _repository.updateUserNameApi(data, user.bearerToken).then((value) async {
+      myToast(msg: 'User Name Updated Successfully');
+      future = await user.roleId == 5
+          ? loginResidentDetails(
+              userid: user.residentid!, token: user.bearerToken!)
+          : // Login user Resident
+          loginResidentDetails(userid: user.userId!, token: user.bearerToken!);
+      update();
+      userNameController.clear();
+
+      isLoading = false;
+    }).onError((error, stackTrace) {
+      isLoading = false;
+
+      update();
+      print(stackTrace);
+      myToast(msg: error.toString(), isNegative: true);
+    });
+  }
+}
+
+class QuickActions {
+  final String? text;
+  final String? iconPath;
+  final double? width;
+
+  QuickActions(
+      {required this.text, required this.iconPath, required this.width});
+}
+
+class HomeScreenCardModel {
+  final String? heading;
+  final String? description;
+  final String? iconPath;
+  final String? type;
+
+  const HomeScreenCardModel({
+    required this.heading,
+    required this.description,
+    required this.iconPath,
+    required this.type,
+  });
 }

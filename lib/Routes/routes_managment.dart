@@ -3,8 +3,12 @@ import 'package:userapp/Module/Discussion%20Form/View/discussion_form.dart';
 import 'package:userapp/Module/Events/View/events_screen.dart';
 import 'package:userapp/Module/Family%20Member/Add%20Family%20Member/View/add_family_member.dart';
 import 'package:userapp/Module/Family%20Member/View%20Family%20Member/View/view_family_member.dart';
+import 'package:userapp/Module/Market%20Place/View/market_place_product_details.dart';
 import 'package:userapp/Module/Monthly%20Bills/View/monthly_bills.dart';
+import 'package:userapp/Module/Profile/View/profile.dart';
 import 'package:userapp/Module/Splash/View/splash_screen.dart';
+import 'package:userapp/Module/Verification/Change%20Password/View/change_password.dart';
+import 'package:userapp/Module/Verification/Verification%20Code/View/verification_code.dart';
 import 'package:userapp/Routes/screen_binding.dart';
 import 'package:userapp/Routes/set_routes.dart';
 import 'package:userapp/Widgets/image_show.dart';
@@ -25,6 +29,7 @@ import '../Module/ReportsHistory/View/admin_reports_history_screen.dart';
 import '../Module/Sell Products/View/sell_products_screen.dart';
 import '../Module/Signup/Resident Address Detail/View/resident_address_detail.dart';
 import '../Module/Signup/Resident Personal Detail/View/resident_personal_detail.dart';
+import '../Module/Verification/Register/View/register.dart';
 
 class RouteManagement {
   static List<GetPage> getPages() {
@@ -33,6 +38,7 @@ class RouteManagement {
         name: splashscreen,
         page: () => SplashScreen(),
         binding: ScreenBindings(),
+        
       ),
       GetPage(
         name: loginscreen,
@@ -71,7 +77,7 @@ class RouteManagement {
       ),
       GetPage(
         name: preapproveentryscreen,
-        page: () => GatekeeperReports(),
+        page: () => PreApproveEntryScreen(),
         binding: ScreenBindings(),
       ),
       GetPage(
@@ -101,7 +107,7 @@ class RouteManagement {
       ),
       GetPage(
         name: gatekeeperreports,
-        page: () => GatekeeperReports(),
+        page: () => PreApproveEntryScreen(),
         binding: ScreenBindings(),
       ),
       GetPage(
@@ -147,6 +153,31 @@ class RouteManagement {
       GetPage(
         name: addEmergencyScreen,
         page: () => AddEmergencyScreen(),
+        binding: ScreenBindings(),
+      ),
+      GetPage(
+        name: verificationCode,
+        page: () => VerificationCode(),
+        binding: ScreenBindings(),
+      ),
+      GetPage(
+        name: changePassword,
+        page: () => ChangePassword(),
+        binding: ScreenBindings(),
+      ),
+      GetPage(
+        name: marketPlaceProductDetails,
+        page: () => MarketPlaceProductDetails(),
+        binding: ScreenBindings(),
+      ),
+      GetPage(
+        name: register,
+        page: () => Register(),
+        binding: ScreenBindings(),
+      ),
+      GetPage(
+        name: profile,
+        page: () => Profile(),
         binding: ScreenBindings(),
       ),
     ];

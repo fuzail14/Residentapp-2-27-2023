@@ -1,12 +1,14 @@
-
-
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+
 import 'package:hexcolor/hexcolor.dart';
 import 'package:intl/intl.dart';
 
 final Color primaryColor = HexColor("#FF9900");
 const String assetsBaseUrl = "assets/";
 const String logo = '${assetsBaseUrl}mia.png';
+var whiteColor = HexColor("FAFFFD");
 
 //
 // getFile() async {
@@ -33,7 +35,6 @@ const String logo = '${assetsBaseUrl}mia.png';
 //     // View Users canceled the picker
 //   }
 // }
-
 
 Future<String> getDate(BuildContext context) async {
   DateTime date = new DateTime(2022, 12, 24);
@@ -138,26 +139,16 @@ String? cnicValidator(String? v) {
   } else {
     return null;
   }
-
-
-
-
-
 }
 
-
-String  formatDate (String date)
-
-{
+String formatDate(String date) {
   DateFormat formatter = DateFormat('yyyy-MM-dd');
 
   DateTime myDate = DateTime.parse(date);
-   formatter.format(myDate);
- var  formattedDate=   myDate.toString().split(' ')[0];
+  formatter.format(myDate);
+  var formattedDate = myDate.toString().split(' ')[0];
 
   return formattedDate;
-
-
 }
 
 String getFormattedTime({required String time}) {
@@ -173,7 +164,7 @@ String getFormattedTime({required String time}) {
     isAmOrPm = 'PM';
   } else if (hour == 00) {
     hour = 12;
-  } else if(hour == 12){
+  } else if (hour == 12) {
     isAmOrPm = 'PM';
   }
 
@@ -188,7 +179,6 @@ String getFormattedTime({required String time}) {
   return '${hourZero.toString()}${hour.toString()}:${minute.toString()} $isAmOrPm';
 }
 
-
 String getFormattedTime2({required String time}) {
   int hour = int.parse(time.split(':')[0].toString());
   String hourZero = '';
@@ -202,7 +192,7 @@ String getFormattedTime2({required String time}) {
     isAmOrPm = 'PM';
   } else if (hour == 00) {
     hour = 12;
-  } else if(hour == 12){
+  } else if (hour == 12) {
     isAmOrPm = 'PM';
   }
 
@@ -216,10 +206,131 @@ String getFormattedTime2({required String time}) {
 
   return '${hourZero.toString()}${hour.toString()}:${minute.toString()}:00 $isAmOrPm';
 }
- extension MySizedBox on num{
 
-  SizedBox  get ph => SizedBox(height: toDouble());
-  SizedBox  get pw => SizedBox(width: toDouble());
+extension MySizedBox on num {
+  SizedBox get ph => SizedBox(height: toDouble());
+  SizedBox get pw => SizedBox(width: toDouble());
+}
 
+Future<bool?> myToast(
+    {required msg,
+    Color? backgroundColor,
+    bool isNegative = false,
+    ToastGravity? gravity}) async {
+  bool? toast = await Fluttertoast.showToast(
+      msg: msg,
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: gravity ?? ToastGravity.BOTTOM,
+      backgroundColor: isNegative ? Colors.red : Colors.black,
+      textColor: Colors.white,
+      fontSize: 16.0.sp);
+  return toast;
+}
 
+String convertDateFormat(String originalDate) {
+  DateTime dateTime = DateTime.parse(originalDate).add(Duration(hours: 5));
+  DateFormat dateFormat = DateFormat.yMMMMd('en_US');
+  return dateFormat.format(dateTime);
+}
+
+String convertTo12HourFormatFromTimeStamp(String timestamp) {
+  DateTime dateTime = DateTime.parse(timestamp).add(Duration(hours: 5));
+  String formattedTime = DateFormat('h:mm a').format(dateTime);
+
+  return formattedTime;
+}
+
+String convert24HourFormatTo12HourTime(String time) {
+  DateTime parsedTime = DateFormat("HH:mm:ss").parse(time);
+  String formattedTime = DateFormat("hh:mm:ss a").format(parsedTime);
+  return formattedTime;
+}
+
+String convertServerTimestampToLocalTime(int serverTimestampInSeconds) {
+  DateTime serverDateTime =
+      DateTime.fromMillisecondsSinceEpoch(serverTimestampInSeconds * 1000);
+  DateTime localDateTime = serverDateTime.toLocal();
+  String formattedTime = DateFormat('h:mm a').format(localDateTime);
+  return formattedTime;
+}
+
+String convertTimestampDayMonth(String timestamp) {
+  DateTime dateTime = DateTime.parse(timestamp);
+  DateFormat formatter = DateFormat('d MMM');
+  return formatter.format(dateTime);
+}
+
+String? validateMobileNumber(String? value) {
+// Check if the value is empty
+  if (value!.isEmpty) {
+    return 'Mobile number is required';
+  }
+
+// Remove any whitespace or special characters from the value
+  value = value.replaceAll(RegExp(r'\s|\D'), '');
+
+// Check if the value contains only digits
+  if (!RegExp(r'^[0-9]+$').hasMatch(value)) {
+    return 'Invalid mobile number';
+  }
+
+// Check the length of the value
+  if (value.length < 11 || value.length > 12) {
+    return 'Mobile number must be between 10 and 12 digits';
+  }
+
+// If all checks pass, return null (no error)
+  return null;
+}
+
+String? validatePhoneNumber(String? phoneNumber) {
+  // Remove any non-digit characters from the phone number
+  String cleanedPhoneNumber = phoneNumber!.replaceAll(RegExp(r'\D'), '');
+
+  // Check if the phone number has a valid length
+  int phoneNumberLength = cleanedPhoneNumber.length;
+  if (phoneNumberLength == 0) {
+    return 'Please Enter Phone Number';
+  } else if (phoneNumberLength != 10 && phoneNumberLength != 11) {
+    return 'Invalid Phone Number !';
+  }
+
+  return null; // Return null if the phone number is valid
+}
+
+String? otpValidator(String? value) {
+  if (value!.isEmpty) {
+    return 'Please enter the OTP';
+  }
+
+// Create a regular expression pattern for exactly 6 digits
+  RegExp regex = RegExp(r'^[0-9]{6}$');
+
+  if (!regex.hasMatch(value)) {
+    return 'Please enter a valid 6-digit OTP';
+  }
+
+  return null; // Return null if the value is valid
+}
+
+String laravelDateToFormattedDate(String laravelDate) {
+  // Parse the Laravel date string to a DateTime object
+  DateTime date = DateTime.parse(laravelDate);
+
+  // Define the date format you want
+  String formattedDate = DateFormat('d MMM y').format(date);
+
+  return formattedDate;
+}
+
+String convertLaravelDateFormatToDayMonthYearDateFormat(String inputDate) {
+  DateTime dateTime = DateTime.parse(inputDate);
+  String formattedDate = DateFormat('d MMM y').format(dateTime);
+  return formattedDate;
+}
+
+String convertDateFormatToDayMonthYearDateFormat(String inputDate) {
+  DateTime parsedDate = DateTime.parse(inputDate);
+  String formattedDate = DateFormat("MMM, d, yyyy").format(parsedDate);
+  return formattedDate;
 }

@@ -28,9 +28,9 @@ class ResidentAddressDetailController extends GetxController {
   var isLoading = false;
   var isProperty = false;
   String address = '---';
-  String country = '';
-  String state = '';
-  String city = '';
+  String? country;
+  String? state;
+  String? city;
   TextEditingController firstnameController = TextEditingController();
   TextEditingController lastnameController = TextEditingController();
   TextEditingController cnicController = TextEditingController();

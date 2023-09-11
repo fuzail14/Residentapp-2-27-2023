@@ -1,7 +1,10 @@
 class Api {
-  static const String imageBaseUrl = 'http://192.168.2.45:8080/storage/';
-  static const String baseUrl = 'http://192.168.2.45:8080/api/';
-  static const String login = baseUrl + "login";
+  static const String imageBaseUrl = 'http://192.168.2.48:8080/storage/';
+  static const String baseUrl = 'http://192.168.2.48:8080/api/';
+  // static const String imageBaseUrl = 'http://192.168.18.136:8000/storage/';
+  // static const String baseUrl = 'http://192.168.18.136:8000/api/';
+  static const String login = baseUrl + "login/mobilenumber";
+  static const String updateUserName = baseUrl + "updateusername";
   static const String logout = baseUrl + "logout";
   static const String reportToAdmin = baseUrl + "reporttoadmin";
   static const String adminReports = baseUrl + "adminreports";
@@ -44,7 +47,12 @@ class Api {
       baseUrl + "viewconversationsneighbours";
   static const String conversations = baseUrl + "conversations";
   static const String createChatRoom = baseUrl + "createchatroom";
+  static const String chatRoomStatus = baseUrl + "chatroom/status";
+  static const String sendChatRequest =
+      baseUrl + "chatroom/status/chat-request";
+
   static const String fetchChatroomUsers = baseUrl + "fetchchatroomusers";
+  static const String fetchChatRoom = baseUrl + "fetch-chat-room";
   static const String housesApartmentMeasurements =
       baseUrl + "housesapartmentmeasurements";
 
@@ -72,12 +80,10 @@ class Api {
       baseUrl + "monthlybillupdateoverduedatestatus";
   static const String searchPreapproveEntry = baseUrl + "searchpreapproventry";
   static const String viewProducts = baseUrl + "viewProducts";
-  static const String viewSellProductsResidnet = baseUrl + "viewSellProductsResidnet";
+  static const String productStatus = baseUrl + "product-status";
+  static const String viewSellProductsResidnet =
+      baseUrl + "viewSellProductsResidnet";
   static const String addProduct = baseUrl + "addProduct";
   static const String addEmergency = baseUrl + "addEmergency";
-
-  
-
-
-  
+  static const String productSellerInfo = baseUrl + "product-seller-info";
 }

@@ -1,1494 +1,822 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:iconly/iconly.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:userapp/Constants/constants.dart';
 import 'package:userapp/Module/HomeScreen/Controller/home_screen_controller.dart';
 
-import '../../../Constants/constants.dart';
 import '../../../Routes/set_routes.dart';
+import '../../../Widgets/Empty List/empty_list.dart';
 import '../../../Widgets/Loader/loader.dart';
+import '../../../Widgets/My Button/my_button.dart';
+import '../../../Widgets/My TextForm Field/my_textform_field.dart';
+import '../Home Widgets/first_card.dart';
+import '../Home Widgets/home_bottom_app_bar_icon.dart';
+import '../Home Widgets/home_screen_text_heading.dart';
+import '../Home Widgets/services_cards.dart';
+import '../Home Widgets/small_card.dart';
 import '../Model/DiscussionRoomModel.dart';
-// import 'package:jazzcash_flutter/jazzcash_flutter.dart';
+
+var _scaffoldKey = GlobalKey<ScaffoldState>();
+final _key = GlobalKey<FormState>();
 
 class HomeScreen extends GetView {
-  final HomeScreenController _homeScreenController =
-      Get.put(HomeScreenController());
-  var _scaffoldKey = GlobalKey<ScaffoldState>();
+  Connectivity connectivity = Connectivity();
+  @override
+  Widget build(BuildContext context) {
+    return GetBuilder<HomeScreenController>(
+        init: HomeScreenController(),
+        builder: (homeScreenController) {
+          return SafeArea(
+              child: Scaffold(
+            endDrawer: MyDrawer(),
+            key: _scaffoldKey,
+            body: RefreshIndicator(
+              onRefresh: () {
+                return homeScreenController.refreshScreen();
+              },
+              child: FutureBuilder(
+                  future: homeScreenController.future,
+                  builder: (BuildContext context, AsyncSnapshot snapshot) {
+                    if (snapshot.hasData) {
+                      homeScreenController.snapShot = snapshot.data;
+                      print(homeScreenController.snapShot.username);
+
+                      if (homeScreenController.snapShot.username == null) {
+                        return Form(
+                          key: _key,
+                          child: Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                10.h.ph,
+                                Text('Your Identity on Smart Gate',
+                                    style: GoogleFonts.ubuntu(
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 32,
+                                        color: HexColor('#4D4D4D'))),
+                                20.h.ph,
+                                Text('Create Your Unique Username',
+                                    style: GoogleFonts.ubuntu(
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 28,
+                                        color: HexColor('#717171'))),
+                                MyTextFormField(
+                                  hintText: 'User Name',
+                                  labelText: 'User Name',
+                                  controller:
+                                      homeScreenController.userNameController,
+                                  validator: emptyStringValidator,
+                                ),
+                                20.h.ph,
+                                MyButton(
+                                  loading: homeScreenController.isLoading,
+                                  name: 'Create',
+                                  onPressed: () {
+                                    if (_key.currentState!.validate()) {
+                                      if (!homeScreenController.isLoading) {
+                                        homeScreenController
+                                            .updateUserNameApi();
+                                      }
+                                    }
+                                  },
+                                ),
+                                20.h.ph,
+                              ],
+                            ),
+                          ),
+                        );
+                      } else if (homeScreenController.snapShot.username !=
+                              null &&
+                          homeScreenController.snapShot.status == 0) {
+                        return HomeVerificationCard();
+                      } else if (homeScreenController.snapShot.username !=
+                              null &&
+                          homeScreenController.snapShot.status == 1) {
+                        return SingleChildScrollView(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              8.h.ph,
+                              HomeAppBar(controller: homeScreenController),
+                              16.h.ph,
+                              Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 16.w),
+                                child: SingleChildScrollView(
+                                  scrollDirection: Axis.horizontal,
+                                  controller:
+                                      homeScreenController.pageController,
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      FirstCard(),
+                                      8.w.pw,
+                                      FirstCard(),
+                                      8.w.pw,
+                                      FirstCard(),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              16.h.ph,
+                              Center(
+                                child: SmoothPageIndicator(
+                                  controller:
+                                      homeScreenController.pageController,
+                                  count: 3,
+                                  effect: ExpandingDotsEffect(
+                                      dotWidth: 7.w,
+                                      dotHeight: 7.w,
+                                      dotColor:
+                                          Color(0xffFF9900).withOpacity(0.3),
+                                      activeDotColor: Color(0xffFF9900)),
+                                ),
+                              ),
+                              16.h.ph,
+                              Column(
+                                children: [
+                                  SingleChildScrollView(
+                                    padding: EdgeInsets.only(
+                                        left: 30.w, bottom: 22.h),
+                                    scrollDirection: Axis.horizontal,
+                                    child: Row(children: [
+                                      for (int i = 0;
+                                          i <
+                                              homeScreenController
+                                                  .quickActions.length;
+                                          i++) ...[
+                                        SmallCard(
+                                          onTap: () {
+                                            switch (homeScreenController
+                                                .quickActions[i].text) {
+                                              case 'Guest':
+                                                Get.offNamed(
+                                                    addpreapproveentryscreen,
+                                                    arguments: [
+                                                      homeScreenController.user,
+                                                      homeScreenController
+                                                          .snapShot,
+                                                      0
+                                                    ]);
+
+                                                break;
+
+                                              case 'Delivery':
+                                                Get.offNamed(
+                                                    addpreapproveentryscreen,
+                                                    arguments: [
+                                                      homeScreenController.user,
+                                                      homeScreenController
+                                                          .snapShot,
+                                                      1
+                                                    ]);
+                                                break;
+                                              case 'Cab':
+                                                Get.offNamed(
+                                                    addpreapproveentryscreen,
+                                                    arguments: [
+                                                      homeScreenController.user,
+                                                      homeScreenController
+                                                          .snapShot,
+                                                      2
+                                                    ]);
+                                                break;
+
+                                              case 'Visiting Help':
+                                                Get.offNamed(
+                                                    addpreapproveentryscreen,
+                                                    arguments: [
+                                                      homeScreenController.user,
+                                                      homeScreenController
+                                                          .snapShot,
+                                                      3
+                                                    ]);
+                                                break;
+                                            }
+                                          },
+                                          text: homeScreenController
+                                              .quickActions[i].text,
+                                          iconPath: homeScreenController
+                                              .quickActions[i].iconPath,
+                                          iconWidth: homeScreenController
+                                              .quickActions[i].width,
+                                        ),
+                                        13.w.pw
+                                      ]
+                                    ]),
+                                  ),
+                                ],
+                              ),
+                              HomeHeading(text: 'Services'),
+                              SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: Padding(
+                                  padding: EdgeInsets.fromLTRB(28.w, 0, 0, 0),
+                                  child: Row(children: [
+                                    for (int i = 0;
+                                        i <
+                                            homeScreenController
+                                                .servicesLi.length;
+                                        i++) ...[
+                                      ServiceCards(
+                                          description: homeScreenController
+                                              .servicesLi[i].description,
+                                          heading: homeScreenController
+                                              .servicesLi[i].heading,
+                                          iconPath: homeScreenController
+                                              .servicesLi[i].iconPath,
+                                          onTap: () {
+                                            if (homeScreenController
+                                                    .servicesLi[i].type! ==
+                                                "Complaints") {
+                                              Get.offNamed(adminreports,
+                                                  arguments: [
+                                                    homeScreenController.user,
+                                                    homeScreenController
+                                                        .snapShot
+                                                  ]);
+                                            } else if (homeScreenController
+                                                    .servicesLi[i].type! ==
+                                                "PreApproveEntry") {
+                                              Get.offNamed(
+                                                  preapproveentryscreen,
+                                                  arguments: [
+                                                    homeScreenController.user,
+                                                    homeScreenController
+                                                        .snapShot
+                                                  ]);
+                                            } else if (homeScreenController
+                                                    .servicesLi[i].type! ==
+                                                "FamilyMembers") {
+                                              if (homeScreenController
+                                                      .user.roleId ==
+                                                  5) {
+                                                myToast(
+                                                    msg:
+                                                        'You have registered yourself as a family member, so you cannot add a new family member');
+                                              } else {
+                                                Get.offNamed(viewfamilymember,
+                                                    arguments: [
+                                                      homeScreenController.user,
+                                                      homeScreenController
+                                                          .snapShot
+                                                    ]);
+                                              }
+                                            } else if (homeScreenController
+                                                    .servicesLi[i].type! ==
+                                                "MarketPlace") {
+                                              Get.offNamed(marketPlaceScreen,
+                                                  arguments: [
+                                                    homeScreenController.user,
+                                                    homeScreenController
+                                                        .snapShot
+                                                  ]);
+                                            }
+                                          }),
+                                      28.w.pw
+                                    ]
+                                  ]),
+                                ),
+                              ),
+                              HomeHeading(text: 'Conversations'),
+                              SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: Padding(
+                                  padding: EdgeInsets.fromLTRB(28.w, 0, 0, 0),
+                                  child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        for (int i = 0;
+                                            i <
+                                                homeScreenController
+                                                    .conversationLi.length;
+                                            i++) ...[
+                                          ServiceCards(
+                                              description: homeScreenController
+                                                  .conversationLi[i]
+                                                  .description,
+                                              heading: homeScreenController
+                                                  .conversationLi[i].heading,
+                                              iconPath: homeScreenController
+                                                  .conversationLi[i].iconPath,
+                                              onTap: () async {
+                                                if (homeScreenController
+                                                        .conversationLi[i]
+                                                        .type ==
+                                                    'NeighboursChats') {
+                                                  Get.offNamed(
+                                                      chatavailbilityscreen,
+                                                      arguments: [
+                                                        homeScreenController
+                                                            .user,
+                                                        homeScreenController
+                                                            .snapShot
+                                                      ]);
+                                                } else if (homeScreenController
+                                                        .conversationLi[i]
+                                                        .type ==
+                                                    'DiscussionForum') {
+                                                  DiscussionRoomModel discussionRoomModel =
+                                                      await homeScreenController
+                                                          .createChatRoomApi(
+                                                              token: homeScreenController
+                                                                  .user
+                                                                  .bearerToken!,
+                                                              subadminid:
+                                                                  homeScreenController
+                                                                      .snapShot
+                                                                      .subadminid);
+                                                  Get.offNamed(discussion_form,
+                                                      arguments: [
+                                                        homeScreenController
+                                                            .user,
+                                                        homeScreenController
+                                                            .snapShot,
+                                                        discussionRoomModel
+                                                      ]);
+                                                }
+                                              }),
+                                          28.w.pw
+                                        ],
+                                      ]),
+                                ),
+                              ),
+                              HomeHeading(text: 'Events'),
+                              SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: Padding(
+                                  padding: EdgeInsets.fromLTRB(28.w, 0, 0, 0),
+                                  child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        for (int i = 0;
+                                            i <
+                                                homeScreenController
+                                                    .eventsLi.length;
+                                            i++) ...[
+                                          ServiceCards(
+                                              description: homeScreenController
+                                                  .eventsLi[i].description,
+                                              heading: homeScreenController
+                                                  .eventsLi[i].heading,
+                                              iconPath: homeScreenController
+                                                  .eventsLi[i].iconPath,
+                                              onTap: () {
+                                                if (homeScreenController
+                                                        .eventsLi[i].type ==
+                                                    'Events') {
+                                                  Get.offNamed(eventsscreen,
+                                                      arguments: [
+                                                        homeScreenController
+                                                            .user,
+                                                        homeScreenController
+                                                            .snapShot
+                                                      ]);
+                                                } else if (homeScreenController
+                                                        .eventsLi[i].type ==
+                                                    'NoticeBoard') {
+                                                  Get.offNamed(
+                                                      noticeboardscreen,
+                                                      arguments: [
+                                                        homeScreenController
+                                                            .user,
+                                                        homeScreenController
+                                                            .snapShot
+                                                      ]);
+                                                }
+                                              }),
+                                          28.w.pw
+                                        ],
+                                      ]),
+                                ),
+                              ),
+                              HomeHeading(text: 'Bills'),
+                              SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: Padding(
+                                  padding: EdgeInsets.fromLTRB(28.w, 0, 0, 0),
+                                  child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        for (int i = 0;
+                                            i <
+                                                homeScreenController
+                                                    .billsLi.length;
+                                            i++) ...[
+                                          ServiceCards(
+                                              description: homeScreenController
+                                                  .billsLi[i].description,
+                                              heading: homeScreenController
+                                                  .billsLi[i].heading,
+                                              iconPath: homeScreenController
+                                                  .billsLi[i].iconPath,
+                                              onTap: () {
+                                                if (homeScreenController
+                                                        .billsLi[i].type ==
+                                                    'MonthlyBills') {
+                                                  Get.offNamed(monthly_bill,
+                                                      arguments: [
+                                                        homeScreenController
+                                                            .user,
+                                                        homeScreenController
+                                                            .snapShot,
+                                                      ]);
+                                                }
+                                              }),
+                                        ],
+                                        28.w.pw
+                                      ]),
+                                ),
+                              ),
+                              HomeHeading(text: 'Histories'),
+                              SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: Padding(
+                                  padding: EdgeInsets.fromLTRB(28.w, 0, 0, 0),
+                                  child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        for (int i = 0;
+                                            i <
+                                                homeScreenController
+                                                    .historyLi.length;
+                                            i++) ...[
+                                          ServiceCards(
+                                              description: homeScreenController
+                                                  .historyLi[i].description,
+                                              heading: homeScreenController
+                                                  .historyLi[i].heading,
+                                              iconPath: homeScreenController
+                                                  .historyLi[i].iconPath,
+                                              onTap: () {
+                                                if (homeScreenController
+                                                        .historyLi[i].type ==
+                                                    'ComplaintHistory') {
+                                                  Get.offNamed(
+                                                      reportshistoryscreen,
+                                                      arguments: [
+                                                        homeScreenController
+                                                            .user,
+                                                        homeScreenController
+                                                            .snapShot
+                                                      ]);
+                                                } else if (homeScreenController
+                                                        .historyLi[i].type ==
+                                                    'GuestHistory') {
+                                                  Get.offNamed(
+                                                      guestshistoryscreen,
+                                                      arguments:
+                                                          homeScreenController
+                                                              .user);
+                                                }
+                                              }),
+                                          28.w.pw
+                                        ],
+                                      ]),
+                                ),
+                              ),
+                              HomeHeading(text: 'Safety Assistance'),
+                              SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: Padding(
+                                  padding: EdgeInsets.fromLTRB(28.w, 0, 0, 0),
+                                  child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        for (int i = 0;
+                                            i <
+                                                homeScreenController
+                                                    .safetyAssistanceLi.length;
+                                            i++) ...[
+                                          ServiceCards(
+                                              description: homeScreenController
+                                                  .safetyAssistanceLi[i]
+                                                  .description,
+                                              heading: homeScreenController
+                                                  .safetyAssistanceLi[i]
+                                                  .heading,
+                                              iconPath: homeScreenController
+                                                  .safetyAssistanceLi[i]
+                                                  .iconPath,
+                                              onTap: () {
+                                                if (homeScreenController
+                                                        .safetyAssistanceLi[i]
+                                                        .type ==
+                                                    'SafetyAssistance') {
+                                                  Get.offNamed(
+                                                      addEmergencyScreen,
+                                                      arguments: [
+                                                        homeScreenController
+                                                            .user,
+                                                        homeScreenController
+                                                            .snapShot
+                                                      ]);
+                                                }
+                                              }),
+                                          28.w.pw
+                                        ],
+                                      ]),
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      } else {
+                        return EmptyList(
+                          name: 'Something Went Wrong',
+                        );
+                      }
+                    } else if (snapshot.connectionState ==
+                        ConnectionState.waiting) {
+                      return Loader();
+                    } else if (snapshot.hasError) {
+                      return EmptyList(
+                        name: 'Something Went Wrong',
+                      );
+                    } else {
+                      return Loader();
+                    }
+                  }),
+            ),
+            floatingActionButton: SizedBox(
+              width: 53.w,
+              height: 53.w,
+              child: FloatingActionButton(
+                backgroundColor: Color(0xffFF9900),
+                onPressed: () {
+                  Get.offNamed(reporttoadmin, arguments: [
+                    homeScreenController.user,
+                    homeScreenController.snapShot
+                  ]);
+                },
+                child: SvgPicture.asset(
+                  'assets/Plus_ic.svg',
+                  width: 24.w,
+                  height: 24.w,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+            bottomNavigationBar: SizedBox(
+              width: 375.w,
+              height: 90.w,
+              child: BottomAppBar(
+                shape: CircularNotchedRectangle(),
+                notchMargin: 12.0,
+                child: Row(
+                  children: [
+                    20.w.pw,
+                    HomeBottomAppBarIcon(
+                      text: 'Home',
+                      icon: IconlyBold.home,
+                      color: homeScreenController.selectedIndex == 0
+                          ? primaryColor
+                          : Colors.grey,
+                      onPressed: () {
+                        homeScreenController.onItemTapped(0);
+                      },
+                    ),
+                    30.5.w.pw,
+                    HomeBottomAppBarIcon(
+                      text: 'Complaints',
+                      icon: IconlyBold.time_square,
+                      onPressed: () {
+                        homeScreenController.onItemTapped(1);
+                        Get.offNamed(adminreports, arguments: [
+                          homeScreenController.user,
+                          homeScreenController.snapShot
+                        ]);
+                      },
+                      color: homeScreenController.selectedIndex == 1
+                          ? primaryColor
+                          : Colors.grey,
+                    ),
+                    Spacer(),
+                    HomeBottomAppBarIcon(
+                      text: 'PreApprove\nEntry',
+                      icon: IconlyBold.document,
+                      onPressed: () {
+                        homeScreenController.onItemTapped(2);
+                        Get.offNamed(preapproveentryscreen, arguments: [
+                          homeScreenController.user,
+                          homeScreenController.snapShot
+                        ]);
+                      },
+                      color: homeScreenController.selectedIndex == 2
+                          ? primaryColor
+                          : Colors.grey,
+                    ),
+                    30.5.w.pw,
+                    HomeBottomAppBarIcon(
+                      text: 'Discussion\nForum',
+                      icon: IconlyBold.chat,
+                      onPressed: () async {
+                        homeScreenController.onItemTapped(3);
+                        DiscussionRoomModel discussionRoomModel =
+                            await homeScreenController.createChatRoomApi(
+                                token: homeScreenController.user.bearerToken!,
+                                subadminid:
+                                    homeScreenController.snapShot.subadminid);
+                        Get.offNamed(discussion_form, arguments: [
+                          homeScreenController.user,
+                          homeScreenController.snapShot,
+                          discussionRoomModel
+                        ]);
+                      },
+                      color: homeScreenController.selectedIndex == 3
+                          ? primaryColor
+                          : Colors.grey,
+                    ),
+                    20.w.pw,
+                  ],
+                ),
+              ),
+            ),
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.centerDocked,
+          ));
+        });
+  }
+}
+
+class MyDrawer extends StatelessWidget {
+  const MyDrawer({
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-          key: _scaffoldKey,
-          drawer: Drawer(
-            child: ListView(
-              padding: EdgeInsets.zero,
-              children: [
-                DrawerHeader(
-                    decoration: BoxDecoration(
-                        gradient: LinearGradient(colors: [
-                      HexColor('#FB7712'),
-                      HexColor('#FF9900'),
-                    ])),
-                    child: Stack(
-                      children: [
-                        Text(
-                          "Resident App",
-                          style: GoogleFonts.ubuntu(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w500,
-                              letterSpacing: 1.2,
-                              fontSize: 15),
-                        ),
-                      ],
-                    )),
-                ListTile(
-                  leading: Icon(
-                    Icons.logout,
-                    color: primaryColor,
-                  ),
-                  title: Text("Logout"),
-                  onTap: () {
-                    _homeScreenController.logoutApi(
-                        token: _homeScreenController.user.bearerToken!);
-                  },
-                ),
-              ],
-            ),
-          ),
-          body:
-              // GridView.builder(
-              //   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              //       crossAxisCount: 2, // Number of columns in the grid
-              //       childAspectRatio: 2.4,
-              //       crossAxisSpacing: 12,
-              //       mainAxisSpacing: 12
-              //
-              //       // Ensures a square grid item
-              //       ),
-              //   itemCount: _homeScreenController
-              //       .servicesLi.length, // Total number of grid items
-              //   itemBuilder: (BuildContext context, int index) {
-              //     return HomeScreenCard(
-              //         heading:
-              //             _homeScreenController.servicesLi[index].heading.toString(),
-              //         description: _homeScreenController.servicesLi[index].description,
-              //         iconPath: _homeScreenController.servicesLi[index].iconPath,
-              //         type: _homeScreenController.servicesLi[index].type);
-              //   },
-              // ),
-
-              SingleChildScrollView(
-            child: Center(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+    return Drawer(
+      child: ListView(
+        padding: EdgeInsets.zero,
+        children: [
+          DrawerHeader(
+              decoration: BoxDecoration(
+                  gradient: LinearGradient(colors: [
+                HexColor('#FB7712'),
+                HexColor('#FF9900'),
+              ])),
+              child: Stack(
                 children: [
-                  Padding(
-                    padding: EdgeInsets.only(
-                        left: MediaQuery.of(context).size.height * 0.038,
-                        top: MediaQuery.of(context).size.width * 0.078),
-                    child: Row(
-                      children: [
-                        IconButton(
-                            icon: SvgPicture.asset(
-                              'assets/drawer.svg',
-                            ),
-                            onPressed: () {
-                              _scaffoldKey.currentState!.openDrawer();
-                            }),
-                        Padding(
-                          padding: EdgeInsets.only(
-                              left: MediaQuery.of(context).size.width * 0.022,
-                              right: MediaQuery.of(context).size.width * 0.022),
-                          child: Text(
-                            'Home',
-                            style: TextStyle(
-                                fontStyle: FontStyle.normal,
-                                fontWeight: FontWeight.w500,
-                                fontSize: 16,
-                                color: primaryColor),
-                          ),
-                        ),
-                      ],
-                    ),
+                  Text(
+                    "Resident App",
+                    style: GoogleFonts.ubuntu(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w500,
+                        letterSpacing: 1.2,
+                        fontSize: 15),
                   ),
-                  FutureBuilder(
-                      future:
-                          //Family member Check
-                          _homeScreenController.user.roleId == 5
-                              ? _homeScreenController.loginResidentDetails(
-                                  userid:
-                                      _homeScreenController.user.residentid!,
-                                  token:
-                                      _homeScreenController.user.bearerToken!)
-                              : // Login user Resident
-                              _homeScreenController.loginResidentDetails(
-                                  userid: _homeScreenController.user.userId!,
-                                  token:
-                                      _homeScreenController.user.bearerToken!),
-                      builder: (BuildContext context, AsyncSnapshot snapshot) {
-                        if (snapshot.hasData) {
-                          return snapshot.data.status == 0
-                              ? SingleChildScrollView(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      SizedBox(
-                                        height: 100,
-                                      ),
-                                      Center(
-                                          child: SvgPicture.asset(
-                                        'assets/verification.svg',
-                                        width: 300,
-                                      )),
-                                      Text(
-                                        "please be patient !",
-                                        style: GoogleFonts.ubuntu(
-                                            color: HexColor('#A5AAB7'),
-                                            fontSize: 38,
-                                            fontWeight: FontWeight.w500),
-                                      ),
-                                      SizedBox(
-                                        height: 10,
-                                      ),
-                                      Text(
-                                        "You are under Verification Process!",
-                                        style: GoogleFonts.ubuntu(
-                                            color: HexColor('#A5AAB7'),
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.w500),
-                                      ),
-                                    ],
-                                  ),
-                                )
-                              : Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          35, 30, 27, 23),
-                                      child: SingleChildScrollView(
-                                        scrollDirection: Axis.horizontal,
-                                        child: Row(
-                                          children: [
-                                            Stack(
-                                              children: [
-                                                Container(
-                                                  width: 259,
-                                                  height: 99,
-                                                  decoration: BoxDecoration(
-                                                      color:
-                                                          HexColor('#FEFBF2')),
-                                                ),
-                                                Padding(
-                                                  padding:
-                                                      const EdgeInsets.fromLTRB(
-                                                          8, 10, 137, 23),
-                                                  child: Text(
-                                                    "For any sevice support",
-                                                    style: GoogleFonts.ubuntu(
-                                                        fontStyle:
-                                                            FontStyle.normal,
-                                                        fontWeight:
-                                                            FontWeight.w400,
-                                                        fontSize: 10,
-                                                        color: HexColor(
-                                                            '#B5B3B6')),
-                                                  ),
-                                                ),
-                                                Padding(
-                                                  padding:
-                                                      const EdgeInsets.fromLTRB(
-                                                          8, 20, 137, 23),
-                                                  child: Text(
-                                                    "call us on xxx-xxxxxx",
-                                                    style: GoogleFonts.ubuntu(
-                                                        fontStyle:
-                                                            FontStyle.normal,
-                                                        fontWeight:
-                                                            FontWeight.w400,
-                                                        fontSize: 12,
-                                                        color: HexColor(
-                                                            '#CF6058')),
-                                                  ),
-                                                ),
-                                                Padding(
-                                                  padding:
-                                                      const EdgeInsets.fromLTRB(
-                                                          8, 42, 237, 42),
-                                                  child: Text(
-                                                    "Or",
-                                                    style: GoogleFonts.inter(
-                                                        fontStyle:
-                                                            FontStyle.normal,
-                                                        fontWeight:
-                                                            FontWeight.w400,
-                                                        fontSize: 12,
-                                                        color: HexColor(
-                                                            '#000000')),
-                                                  ),
-                                                ),
-                                                Padding(
-                                                  padding:
-                                                      const EdgeInsets.fromLTRB(
-                                                          131, 20, 0, 0),
-                                                  child: SvgPicture.asset(
-                                                    "assets/home_vector.svg",
-                                                  ),
-                                                ),
-                                                Padding(
-                                                  padding:
-                                                      const EdgeInsets.fromLTRB(
-                                                          8, 63, 163, 10),
-                                                  child: Text(
-                                                    "Email usAbc@gmail.com",
-                                                    style: GoogleFonts.ubuntu(
-                                                        fontStyle:
-                                                            FontStyle.normal,
-                                                        fontWeight:
-                                                            FontWeight.w400,
-                                                        fontSize: 12,
-                                                        color: HexColor(
-                                                            '#CF6058')),
-                                                  ),
-                                                ),
-                                              ],
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                    HomeHeading(text: 'Services'),
-                                    Padding(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          35, 8, 21, 0),
-                                      child: Row(
-                                        children: [
-                                          SizedBox(
-                                            width: 140,
-                                            height: 65,
-                                            child: GestureDetector(
-                                              onTap: () {
-                                                Get.offNamed(adminreports,
-                                                    arguments: [
-                                                      _homeScreenController
-                                                          .user,
-                                                      snapshot.data
-                                                    ]);
-                                              },
-                                              child: Card(
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Padding(
-                                                      padding: const EdgeInsets
-                                                              .fromLTRB(
-                                                          13, 1, 0, 0),
-                                                      child: Image.asset(
-                                                          'assets/report_icon.png',
-                                                          height: 25,
-                                                          width: 25),
-                                                    ),
-                                                    Padding(
-                                                      padding: const EdgeInsets
-                                                              .fromLTRB(
-                                                          13, 4, 0, 4),
-                                                      child: Text(
-                                                        'Complaint',
-                                                        style:
-                                                            GoogleFonts.ubuntu(
-                                                                fontStyle:
-                                                                    FontStyle
-                                                                        .normal,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w400,
-                                                                fontSize: 10,
-                                                                color: HexColor(
-                                                                    '#585353')),
-                                                      ),
-                                                    ),
-                                                    Padding(
-                                                      padding: const EdgeInsets
-                                                              .fromLTRB(
-                                                          13, 0, 0, 0),
-                                                      child: Text(
-                                                        'Complaint for your Apartments',
-                                                        style:
-                                                            GoogleFonts.ubuntu(
-                                                                fontStyle:
-                                                                    FontStyle
-                                                                        .normal,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w400,
-                                                                fontSize: 7,
-                                                                color: HexColor(
-                                                                    '#8A8A8A')),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                                elevation: 1.6,
-                                                shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            12)),
-                                              ),
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            width: 21,
-                                          ),
-                                          SizedBox(
-                                            width: 140,
-                                            height: 65,
-                                            child: GestureDetector(
-                                              onTap: () {
-                                                Get.offNamed(
-                                                    preapproveentryscreen,
-                                                    arguments: [
-                                                      _homeScreenController
-                                                          .user,
-                                                      snapshot.data
-                                                    ]);
-                                              },
-                                              child: Card(
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Padding(
-                                                      padding: const EdgeInsets
-                                                              .fromLTRB(
-                                                          13, 1, 0, 0),
-                                                      child: Image.asset(
-                                                          'assets/team 1.png',
-                                                          height: 25,
-                                                          width: 25),
-                                                    ),
-                                                    Padding(
-                                                      padding: const EdgeInsets
-                                                              .fromLTRB(
-                                                          13, 4, 0, 4),
-                                                      child: Text(
-                                                        'Pre Approve Entry',
-                                                        style:
-                                                            GoogleFonts.ubuntu(
-                                                                fontStyle:
-                                                                    FontStyle
-                                                                        .normal,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w400,
-                                                                fontSize: 10,
-                                                                color: HexColor(
-                                                                    '#585353')),
-                                                      ),
-                                                    ),
-                                                    Padding(
-                                                      padding: const EdgeInsets
-                                                              .fromLTRB(
-                                                          13, 0, 10, 0),
-                                                      child: Text(
-                                                        'You can Pre approve your visitor',
-                                                        style:
-                                                            GoogleFonts.ubuntu(
-                                                                fontStyle:
-                                                                    FontStyle
-                                                                        .normal,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w400,
-                                                                fontSize: 7,
-                                                                color: HexColor(
-                                                                    '#8A8A8A')),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                                elevation: 1.6,
-                                                shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            12)),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    _homeScreenController.user.roleId == 5
-                                        ? Container()
-                                        : Padding(
-                                            padding: const EdgeInsets.fromLTRB(
-                                                35, 8, 21, 0),
-                                            child: Row(
-                                              children: [
-                                                SizedBox(
-                                                  width: 140,
-                                                  height: 65,
-                                                  child: GestureDetector(
-                                                    onTap: () {
-                                                      Get.offNamed(
-                                                          viewfamilymember,
-                                                          arguments: [
-                                                            _homeScreenController
-                                                                .user,
-                                                            snapshot.data
-                                                          ]);
-                                                    },
-                                                    child: Card(
-                                                      child: Column(
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                        children: [
-                                                          Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                        .fromLTRB(
-                                                                    13,
-                                                                    1,
-                                                                    0,
-                                                                    0),
-                                                            child: Image.asset(
-                                                                'assets/report_icon.png',
-                                                                height: 25,
-                                                                width: 25),
-                                                          ),
-                                                          Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                        .fromLTRB(
-                                                                    13,
-                                                                    4,
-                                                                    0,
-                                                                    4),
-                                                            child: Text(
-                                                              'Family Members',
-                                                              style: GoogleFonts.ubuntu(
-                                                                  fontStyle:
-                                                                      FontStyle
-                                                                          .normal,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w400,
-                                                                  fontSize: 10,
-                                                                  color: HexColor(
-                                                                      '#585353')),
-                                                            ),
-                                                          ),
-                                                          Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                        .fromLTRB(
-                                                                    13,
-                                                                    0,
-                                                                    0,
-                                                                    0),
-                                                            child: Text(
-                                                              'Add your family member',
-                                                              style: GoogleFonts.ubuntu(
-                                                                  fontStyle:
-                                                                      FontStyle
-                                                                          .normal,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w400,
-                                                                  fontSize: 7,
-                                                                  color: HexColor(
-                                                                      '#8A8A8A')),
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                      elevation: 1.6,
-                                                      shape:
-                                                          RoundedRectangleBorder(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          12)),
-                                                    ),
-                                                  ),
-                                                ),
-                                                SizedBox(
-                                                  width: 21,
-                                                ),
-                                                SizedBox(
-                                                  width: 140,
-                                                  height: 65,
-                                                  child: GestureDetector(
-                                                    onTap: () {
-                                                      print(snapshot.data);
-
-                                                      Get.offNamed(
-                                                          marketPlaceScreen,
-                                                          arguments: [
-                                                            _homeScreenController
-                                                                .user,
-                                                            snapshot.data
-                                                          ]);
-                                                    },
-                                                    child: Card(
-                                                      child: Column(
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                        children: [
-                                                          Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                        .fromLTRB(
-                                                                    13,
-                                                                    1,
-                                                                    0,
-                                                                    0),
-                                                            child: Image.asset(
-                                                                'assets/report_icon.png',
-                                                                height: 25,
-                                                                width: 25),
-                                                          ),
-                                                          Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                        .fromLTRB(
-                                                                    13,
-                                                                    4,
-                                                                    0,
-                                                                    4),
-                                                            child: Text(
-                                                              'Market Place',
-                                                              style: GoogleFonts.ubuntu(
-                                                                  fontStyle:
-                                                                      FontStyle
-                                                                          .normal,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w400,
-                                                                  fontSize: 10,
-                                                                  color: HexColor(
-                                                                      '#585353')),
-                                                            ),
-                                                          ),
-                                                          Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                        .fromLTRB(
-                                                                    13,
-                                                                    0,
-                                                                    0,
-                                                                    0),
-                                                            child: Text(
-                                                              'Market Place Buy And Sell',
-                                                              style: GoogleFonts.ubuntu(
-                                                                  fontStyle:
-                                                                      FontStyle
-                                                                          .normal,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w400,
-                                                                  fontSize: 7,
-                                                                  color: HexColor(
-                                                                      '#8A8A8A')),
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                      elevation: 1.6,
-                                                      shape:
-                                                          RoundedRectangleBorder(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          12)),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                    Padding(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          35, 23, 0, 8),
-                                      child: Text(
-                                        "Events",
-                                        style: GoogleFonts.ubuntu(
-                                            fontStyle: FontStyle.normal,
-                                            fontWeight: FontWeight.w600,
-                                            fontSize: 14,
-                                            color: HexColor('#585353')),
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          35, 8, 21, 0),
-                                      child: Row(
-                                        children: [
-                                          SizedBox(
-                                            width: 140,
-                                            height: 65,
-                                            child: GestureDetector(
-                                              onTap: () {
-                                                Get.offNamed(eventsscreen,
-                                                    arguments: [
-                                                      _homeScreenController
-                                                          .user,
-                                                      snapshot.data
-                                                    ]);
-                                              },
-                                              child: Card(
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Padding(
-                                                      padding: const EdgeInsets
-                                                              .fromLTRB(
-                                                          13, 1, 0, 0),
-                                                      child: Image.asset(
-                                                          'assets/event 1.png',
-                                                          height: 25,
-                                                          width: 25),
-                                                    ),
-                                                    Padding(
-                                                      padding: const EdgeInsets
-                                                              .fromLTRB(
-                                                          13, 4, 0, 4),
-                                                      child: Text(
-                                                        'Society Events',
-                                                        style:
-                                                            GoogleFonts.ubuntu(
-                                                                fontStyle:
-                                                                    FontStyle
-                                                                        .normal,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w400,
-                                                                fontSize: 10,
-                                                                color: HexColor(
-                                                                    '#585353')),
-                                                      ),
-                                                    ),
-                                                    Padding(
-                                                      padding: const EdgeInsets
-                                                              .fromLTRB(
-                                                          13, 0, 0, 0),
-                                                      child: Text(
-                                                        'You can view events',
-                                                        style:
-                                                            GoogleFonts.ubuntu(
-                                                                fontStyle:
-                                                                    FontStyle
-                                                                        .normal,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w400,
-                                                                fontSize: 7,
-                                                                color: HexColor(
-                                                                    '#8A8A8A')),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                                elevation: 1.6,
-                                                shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            12)),
-                                              ),
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            width: 21,
-                                          ),
-                                          SizedBox(
-                                            width: 140,
-                                            height: 65,
-                                            child: GestureDetector(
-                                              onTap: () {
-                                                Get.offNamed(noticeboardscreen,
-                                                    arguments: [
-                                                      _homeScreenController
-                                                          .user,
-                                                      snapshot.data
-                                                    ]);
-                                              },
-                                              child: Card(
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Padding(
-                                                      padding: const EdgeInsets
-                                                              .fromLTRB(
-                                                          13, 1, 0, 0),
-                                                      child: Image.asset(
-                                                          'assets/post-it 1.png',
-                                                          height: 25,
-                                                          width: 25),
-                                                    ),
-                                                    Padding(
-                                                      padding: const EdgeInsets
-                                                              .fromLTRB(
-                                                          13, 4, 0, 4),
-                                                      child: Text(
-                                                        'Notice Board',
-                                                        style:
-                                                            GoogleFonts.ubuntu(
-                                                                fontStyle:
-                                                                    FontStyle
-                                                                        .normal,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w400,
-                                                                fontSize: 10,
-                                                                color: HexColor(
-                                                                    '#585353')),
-                                                      ),
-                                                    ),
-                                                    Padding(
-                                                      padding: const EdgeInsets
-                                                              .fromLTRB(
-                                                          13, 0, 10, 0),
-                                                      child: Text(
-                                                        'Announcement from Admin',
-                                                        style:
-                                                            GoogleFonts.ubuntu(
-                                                                fontStyle:
-                                                                    FontStyle
-                                                                        .normal,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w400,
-                                                                fontSize: 7,
-                                                                color: HexColor(
-                                                                    '#8A8A8A')),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                                elevation: 1.6,
-                                                shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            12)),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-
-                                    Padding(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          35, 23, 0, 8),
-                                      child: Text(
-                                        "Conversations",
-                                        style: GoogleFonts.ubuntu(
-                                            fontStyle: FontStyle.normal,
-                                            fontWeight: FontWeight.w600,
-                                            fontSize: 14,
-                                            color: HexColor('#585353')),
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          35, 8, 21, 0),
-                                      child: Row(
-                                        children: [
-                                          SizedBox(
-                                            width: 140,
-                                            height: 65,
-                                            child: GestureDetector(
-                                              onTap: () {
-                                                print(
-                                                    snapshot.data.runtimeType);
-
-                                                Get.offNamed(
-                                                    chatavailbilityscreen,
-                                                    arguments: [
-                                                      _homeScreenController
-                                                          .user,
-                                                      snapshot.data
-                                                    ]);
-                                              },
-                                              child: Card(
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Padding(
-                                                      padding: const EdgeInsets
-                                                              .fromLTRB(
-                                                          13, 1, 0, 0),
-                                                      child: SvgPicture.asset(
-                                                          'assets/undraw_share_opinion_re_4qk7.svg',
-                                                          height: 25,
-                                                          width: 25),
-                                                    ),
-                                                    Padding(
-                                                      padding: const EdgeInsets
-                                                              .fromLTRB(
-                                                          13, 4, 0, 4),
-                                                      child: Text(
-                                                        'Chats',
-                                                        style:
-                                                            GoogleFonts.ubuntu(
-                                                                fontStyle:
-                                                                    FontStyle
-                                                                        .normal,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w400,
-                                                                fontSize: 10,
-                                                                color: HexColor(
-                                                                    '#585353')),
-                                                      ),
-                                                    ),
-                                                    Padding(
-                                                      padding: const EdgeInsets
-                                                              .fromLTRB(
-                                                          13, 0, 0, 0),
-                                                      child: Text(
-                                                        'Chat with Neighbours/Gatekeepers',
-                                                        style:
-                                                            GoogleFonts.ubuntu(
-                                                                fontStyle:
-                                                                    FontStyle
-                                                                        .normal,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w400,
-                                                                fontSize: 7,
-                                                                color: HexColor(
-                                                                    '#8A8A8A')),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                                elevation: 1.6,
-                                                shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            12)),
-                                              ),
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            width: 21,
-                                          ),
-                                          SizedBox(
-                                            width: 140,
-                                            height: 65,
-                                            child: GestureDetector(
-                                              onTap: () async {
-                                                DiscussionRoomModel discussionRoomModel =
-                                                    await _homeScreenController
-                                                        .createChatRoomApi(
-                                                            token:
-                                                                _homeScreenController
-                                                                    .user
-                                                                    .bearerToken!,
-                                                            subadminid: snapshot
-                                                                .data
-                                                                .subadminid);
-                                                Get.offNamed(discussion_form,
-                                                    arguments: [
-                                                      _homeScreenController
-                                                          .user,
-                                                      snapshot.data,
-                                                      discussionRoomModel
-                                                    ]);
-                                              },
-                                              child: Card(
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Padding(
-                                                      padding: const EdgeInsets
-                                                              .fromLTRB(
-                                                          13, 1, 0, 0),
-                                                      child: SvgPicture.asset(
-                                                          'assets/undraw_connected_re_lmq2.svg',
-                                                          height: 25,
-                                                          width: 25),
-                                                    ),
-                                                    Padding(
-                                                      padding: const EdgeInsets
-                                                              .fromLTRB(
-                                                          13, 4, 0, 4),
-                                                      child: Text(
-                                                        'Discussion Form',
-                                                        style:
-                                                            GoogleFonts.ubuntu(
-                                                                fontStyle:
-                                                                    FontStyle
-                                                                        .normal,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w400,
-                                                                fontSize: 10,
-                                                                color: HexColor(
-                                                                    '#585353')),
-                                                      ),
-                                                    ),
-                                                    Padding(
-                                                      padding: const EdgeInsets
-                                                              .fromLTRB(
-                                                          13, 0, 10, 0),
-                                                      child: Text(
-                                                        'Share your opinions here',
-                                                        style:
-                                                            GoogleFonts.ubuntu(
-                                                                fontStyle:
-                                                                    FontStyle
-                                                                        .normal,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w400,
-                                                                fontSize: 7,
-                                                                color: HexColor(
-                                                                    '#8A8A8A')),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                                elevation: 1.6,
-                                                shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            12)),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-
-                                    Padding(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          35, 23, 0, 8),
-                                      child: Text(
-                                        "History",
-                                        style: GoogleFonts.ubuntu(
-                                            fontStyle: FontStyle.normal,
-                                            fontWeight: FontWeight.w600,
-                                            fontSize: 14,
-                                            color: HexColor('#585353')),
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          35, 8, 21, 0),
-                                      child: Row(
-                                        children: [
-                                          SizedBox(
-                                            width: 140,
-                                            height: 65,
-                                            child: GestureDetector(
-                                              onTap: () {
-                                                // _homeScreenController.payment();
-                                                print(_homeScreenController
-                                                    .user.userId!);
-                                                print(_homeScreenController
-                                                    .user.firstName!);
-                                                print(snapshot.data.residentid);
-                                                Get.offNamed(
-                                                    reportshistoryscreen,
-                                                    arguments: [
-                                                      _homeScreenController
-                                                          .user,
-                                                      snapshot.data
-                                                    ]);
-                                              },
-                                              child: Card(
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Padding(
-                                                      padding: const EdgeInsets
-                                                              .fromLTRB(
-                                                          13, 1, 0, 0),
-                                                      child: Image.asset(
-                                                          'assets/file 3.png',
-                                                          height: 25,
-                                                          width: 25),
-                                                    ),
-                                                    Padding(
-                                                      padding: const EdgeInsets
-                                                              .fromLTRB(
-                                                          13, 4, 0, 4),
-                                                      child: Text(
-                                                        'Complain History',
-                                                        style:
-                                                            GoogleFonts.ubuntu(
-                                                                fontStyle:
-                                                                    FontStyle
-                                                                        .normal,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w400,
-                                                                fontSize: 10,
-                                                                color: HexColor(
-                                                                    '#585353')),
-                                                      ),
-                                                    ),
-                                                    Padding(
-                                                      padding: const EdgeInsets
-                                                              .fromLTRB(
-                                                          13, 0, 0, 0),
-                                                      child: Text(
-                                                        'Your Complaint History',
-                                                        style:
-                                                            GoogleFonts.ubuntu(
-                                                                fontStyle:
-                                                                    FontStyle
-                                                                        .normal,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w400,
-                                                                fontSize: 7,
-                                                                color: HexColor(
-                                                                    '#8A8A8A')),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                                elevation: 1.6,
-                                                shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            12)),
-                                              ),
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            width: 21,
-                                          ),
-                                          SizedBox(
-                                            width: 140,
-                                            height: 65,
-                                            child: GestureDetector(
-                                              onTap: () {
-                                                Get.offNamed(
-                                                    guestshistoryscreen,
-                                                    arguments:
-                                                        _homeScreenController
-                                                            .user);
-                                              },
-                                              child: Card(
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Padding(
-                                                      padding: const EdgeInsets
-                                                              .fromLTRB(
-                                                          13, 1, 0, 0),
-                                                      child: Image.asset(
-                                                          'assets/file 3.png',
-                                                          height: 25,
-                                                          width: 25),
-                                                    ),
-                                                    Padding(
-                                                      padding: const EdgeInsets
-                                                              .fromLTRB(
-                                                          13, 4, 0, 4),
-                                                      child: Text(
-                                                        'Guest History',
-                                                        style:
-                                                            GoogleFonts.ubuntu(
-                                                                fontStyle:
-                                                                    FontStyle
-                                                                        .normal,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w400,
-                                                                fontSize: 10,
-                                                                color: HexColor(
-                                                                    '#585353')),
-                                                      ),
-                                                    ),
-                                                    Padding(
-                                                      padding: const EdgeInsets
-                                                              .fromLTRB(
-                                                          13, 0, 10, 0),
-                                                      child: Text(
-                                                        'Your Guest History',
-                                                        style:
-                                                            GoogleFonts.ubuntu(
-                                                                fontStyle:
-                                                                    FontStyle
-                                                                        .normal,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w400,
-                                                                fontSize: 7,
-                                                                color: HexColor(
-                                                                    '#8A8A8A')),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                                elevation: 1.6,
-                                                shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            12)),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-
-                                    SizedBox(
-                                      height: 20,
-                                    ),
-
-                                    Padding(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          35, 23, 0, 8),
-                                      child: Text(
-                                        "Bills",
-                                        style: GoogleFonts.ubuntu(
-                                            fontStyle: FontStyle.normal,
-                                            fontWeight: FontWeight.w600,
-                                            fontSize: 14,
-                                            color: HexColor('#585353')),
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          35, 8, 21, 0),
-                                      child: Row(
-                                        children: [
-                                          SizedBox(
-                                            width: 140,
-                                            height: 65,
-                                            child: GestureDetector(
-                                              onTap: () {
-                                                // _homeScreenController.payment();
-                                                print(_homeScreenController
-                                                    .user.userId!);
-                                                print(_homeScreenController
-                                                    .user.firstName!);
-                                                print(snapshot.data.residentid);
-                                                Get.offNamed(monthly_bill,
-                                                    arguments: [
-                                                      _homeScreenController
-                                                          .user,
-                                                      snapshot.data
-                                                    ]);
-                                              },
-                                              child: Card(
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Padding(
-                                                      padding: const EdgeInsets
-                                                              .fromLTRB(
-                                                          13, 1, 0, 0),
-                                                      child: Image.asset(
-                                                          'assets/file 3.png',
-                                                          height: 25,
-                                                          width: 25),
-                                                    ),
-                                                    Padding(
-                                                      padding: const EdgeInsets
-                                                              .fromLTRB(
-                                                          13, 4, 0, 4),
-                                                      child: Text(
-                                                        'Monthly Bill ',
-                                                        style:
-                                                            GoogleFonts.ubuntu(
-                                                                fontStyle:
-                                                                    FontStyle
-                                                                        .normal,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w400,
-                                                                fontSize: 10,
-                                                                color: HexColor(
-                                                                    '#585353')),
-                                                      ),
-                                                    ),
-                                                    Padding(
-                                                      padding: const EdgeInsets
-                                                              .fromLTRB(
-                                                          13, 0, 0, 0),
-                                                      child: Text(
-                                                        'Easy Pay your Monthly Bills',
-                                                        style:
-                                                            GoogleFonts.ubuntu(
-                                                                fontStyle:
-                                                                    FontStyle
-                                                                        .normal,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w400,
-                                                                fontSize: 7,
-                                                                color: HexColor(
-                                                                    '#8A8A8A')),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                                elevation: 1.6,
-                                                shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            12)),
-                                              ),
-                                            ),
-                                          ),
-                                        
-                                          SizedBox(
-                                            width: 21,
-                                          ),
-                                            SizedBox(
-                                            width: 140,
-                                            height: 65,
-                                            child: GestureDetector(
-                                              onTap: () {
-                                                
-                                                
-                                                Get.offNamed(addEmergencyScreen,
-                                                    arguments: [
-                                                      _homeScreenController
-                                                          .user,
-                                                      snapshot.data
-                                                    ]);
-                                              },
-                                              child: Card(
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Padding(
-                                                      padding: const EdgeInsets
-                                                              .fromLTRB(
-                                                          13, 1, 0, 0),
-                                                      child: Image.asset(
-                                                          'assets/file 3.png',
-                                                          height: 25,
-                                                          width: 25),
-                                                    ),
-                                                    Padding(
-                                                      padding: const EdgeInsets
-                                                              .fromLTRB(
-                                                          13, 4, 0, 4),
-                                                      child: Text(
-                                                        'Emergency ',
-                                                        style:
-                                                            GoogleFonts.ubuntu(
-                                                                fontStyle:
-                                                                    FontStyle
-                                                                        .normal,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w400,
-                                                                fontSize: 10,
-                                                                color: HexColor(
-                                                                    '#585353')),
-                                                      ),
-                                                    ),
-                                                    Padding(
-                                                      padding: const EdgeInsets
-                                                              .fromLTRB(
-                                                          13, 0, 0, 0),
-                                                      child: Text(
-                                                        'Report Your Emergency',
-                                                        style:
-                                                            GoogleFonts.ubuntu(
-                                                                fontStyle:
-                                                                    FontStyle
-                                                                        .normal,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w400,
-                                                                fontSize: 7,
-                                                                color: HexColor(
-                                                                    '#8A8A8A')),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                                elevation: 1.6,
-                                                shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            12)),
-                                              ),
-                                            ),
-                                          ),
-                                        
-                                        ],
-                                      ),
-                                    ),
-                                    // MyButton(
-                                    //   name: 'Pay',
-                                    //   onPressed: () {
-                                    //     _payViaJazzCash(context);
-                                    //   },
-                                    // )
-                                  ],
-                                );
-                        } else if (snapshot.hasError) {
-                          return Icon(Icons.error_outline);
-                        } else {
-                          return Loader();
-                        }
-                      })
                 ],
-              ),
+              )),
+          ListTile(
+            leading: Icon(
+              Icons.logout,
+              color: primaryColor,
             ),
-          )),
+            title: Text("Logout"),
+            onTap: () async {
+              await FirebaseMessaging.instance.deleteToken();
+              final HomeScreenController _homeScreenController = Get.find();
+              _homeScreenController.logoutApi(
+                  token: _homeScreenController.user.bearerToken!);
+            },
+          ),
+        ],
+      ),
     );
   }
-
-// Future _payViaJazzCash(BuildContext context) async {
-//   try {
-//     JazzCashFlutter jazzCashFlutter = JazzCashFlutter(
-//       merchantId: "MC52072",
-//       merchantPassword: "1zu282w8e3",
-//       integritySalt: "s8v30w3y0x",
-//       isSandbox: true,
-//     );
-//
-//     DateTime date = DateTime.now();
-//
-//     JazzCashPaymentDataModelV1 paymentDataModelV1 =
-//         JazzCashPaymentDataModelV1(
-//       ppAmount: '10',
-//       ppBillReference:
-//           'refbill${date.year}${date.month}${date.day}${date.hour}${date.millisecond}',
-//       ppDescription: 'Product details ',
-//       ppMerchantID: jazzCashFlutter.merchantId,
-//       ppPassword: jazzCashFlutter.merchantPassword,
-//       ppReturnURL:
-//           "https://sandbox.jazzcash.com.pk/ApplicationAPI/API/Payment/DoTransaction",
-//     );
-//
-//     jazzCashFlutter
-//         .startPayment(
-//             paymentDataModelV1: paymentDataModelV1, context: context)
-//         .then((_response) {
-//       print(jsonDecode(_response));
-//     });
-//   } catch (err) {
-//     print("Error in payment $err");
-//
-//     return false;
-//   }
-// }
 }
 
-class HomeHeading extends StatelessWidget {
-  final String? text;
-
-  const HomeHeading({super.key, required this.text});
+class HomeAppBar extends StatelessWidget {
+  final HomeScreenController controller;
+  const HomeAppBar({required this.controller});
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(35, 23, 0, 8),
-      child: Text(
-        text!,
-        style: GoogleFonts.ubuntu(
-            fontStyle: FontStyle.normal,
-            fontWeight: FontWeight.w600,
-            fontSize: 14,
-            color: HexColor('#585353')),
+      padding: EdgeInsets.fromLTRB(24.w, 0, 26.w, 0),
+      child: SizedBox(
+        width: 375.w,
+        height: 72.w,
+        child: IntrinsicHeight(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Expanded(
+                child: Text(
+                    "Welcome Home, ${controller.user.firstName} ${controller.user.lastName} ",
+                    maxLines: 2,
+                    style: GoogleFonts.ubuntu(
+                        fontSize: 22.sp,
+                        fontWeight: FontWeight.w700,
+                        color: Color(0xff130F26))),
+              ),
+              20.w.pw,
+              GestureDetector(
+                onTap: () {
+                  _scaffoldKey.currentState!.openEndDrawer();
+                },
+                child: Stack(children: [
+                  Container(
+                    width: 54.w,
+                    height: 54.w,
+                    decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        image: DecorationImage(
+                            image: AssetImage(
+                          'assets/user.png',
+                        ))),
+                  ),
+                  Positioned(
+                    left: 40.w,
+                    top: 2.h,
+                    child: Container(
+                      height: 12.w,
+                      width: 12.w,
+                      decoration: BoxDecoration(
+                        color: primaryColor,
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                  )
+                ]),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
 }
 
-class HomeScreenCard extends StatelessWidget {
-  final String? heading;
-  final String? description;
-  final String? iconPath;
-  final String? type;
-  final void Function()? onTap;
+class HomeVerificationCard extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          SvgPicture.asset(
+            'assets/verification.svg',
+            width: 300,
+          ),
+          Text(
+            "please be patient !",
+            style: GoogleFonts.ubuntu(
+                color: HexColor('#A5AAB7'),
+                fontSize: 38.sp,
+                fontWeight: FontWeight.w600),
+          ),
+          10.h.ph,
+          Text(
+            "You are under Verification Process!",
+            style: GoogleFonts.ubuntu(
+                color: HexColor('#A5AAB7'),
+                fontSize: 20.sp,
+                fontWeight: FontWeight.w500),
+          ),
+        ],
+      ),
+    );
+  }
+}
 
-  const HomeScreenCard(
-      {super.key,
-      required this.heading,
-      required this.description,
-      required this.iconPath,
-      required this.type,
-      this.onTap});
+class CheckInternetConnectionWidget extends StatelessWidget {
+  final AsyncSnapshot<ConnectivityResult> snapshot;
+  final Widget widget;
+  const CheckInternetConnectionWidget(
+      {Key? key, required this.snapshot, required this.widget})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        decoration: BoxDecoration(
-            color: Colors.white,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.2),
-                // Customize the shadow color
-                offset: Offset(0, 2),
-                // Specify the offset of the shadow
-                blurRadius: 4.r,
-                // Adjust the blur radius to control the intensity of the shadow
-                spreadRadius: 0.3
-                    .r, // Adjust the spread radius to control the size of the shadow
-              ),
-            ],
-            borderRadius: BorderRadius.circular(8.r)), // Example color
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            6.h.ph,
-            IntrinsicHeight(
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  6.w.pw,
-                  Image.asset(iconPath!, width: 30.w),
-                  6.w.pw,
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
-                    child: Text(
-                      heading!,
-                      style: GoogleFonts.ubuntu(
-                          color: HexColor('#222741'),
-                          fontSize: 13.sp,
-                          fontWeight: FontWeight.w400),
-                      textAlign: TextAlign.start,
-                    ),
-                  )
-                ],
-              ),
-            ),
-            6.h.ph,
-            Padding(
-              padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
-              child: Text(
-                description!,
-                style: GoogleFonts.ubuntu(
-                    color: HexColor('#8A8A8A'),
-                    fontSize: 9.sp,
-                    fontWeight: FontWeight.w400),
-                textAlign: TextAlign.start,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
+    switch (snapshot.connectionState) {
+      case ConnectionState.active:
+        final state = snapshot.data!;
+        switch (state) {
+          case ConnectivityResult.none:
+            return Center(child: const Text('Not connected'));
+          default:
+            return widget;
+        }
+        break;
+      default:
+        return const Text('');
+    }
   }
 }

@@ -5,10 +5,11 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:userapp/Module/Signup/Resident%20Address%20Detail/Controller/resident_address_controller.dart';
+import 'package:userapp/Module/Signup/Resident%20Address%20Detail/Model/block.dart';
 import 'package:userapp/Module/Signup/Resident%20Address%20Detail/Model/measurement.dart';
 import 'package:userapp/Module/Signup/Resident%20Address%20Detail/Model/phase.dart';
 import 'package:userapp/Module/Signup/Resident%20Address%20Detail/Model/street.dart';
-import 'package:userapp/Module/Signup/Resident%20Address%20Detail/Model/block.dart';
+
 import '../../../../Constants/constants.dart';
 import '../../../../Routes/set_routes.dart';
 import '../../../../Services/Shared Preferences/MySharedPreferences.dart';
@@ -17,8 +18,8 @@ import '../../../../Widgets/My TextForm Field/my_textform_field.dart';
 import '../Model/apartment.dart';
 import '../Model/building.dart';
 import '../Model/floor.dart';
-import '../Model/society.dart';
 import '../Model/house.dart';
+import '../Model/society.dart';
 
 class ResidentAddressDetail extends GetView {
   @override
@@ -118,18 +119,7 @@ class ResidentAddressDetail extends GetView {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Padding(
-                              padding: const EdgeInsets.all(8),
-                              child: Text(
-                                "Select Type",
-                                style: GoogleFonts.ubuntu(
-                                    fontStyle: FontStyle.normal,
-                                    // color: secondaryColor,
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 14,
-                                    color: HexColor('#4D4D4D')),
-                              ),
-                            ),
+                            ResidentAddressDetailHeading(text: 'Select Type'),
                             Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: DropdownButtonFormField(
@@ -159,23 +149,13 @@ class ResidentAddressDetail extends GetView {
                                 },
                               ),
                             ),
-                           
                             (controller.societyorbuildingval == 'society')
                                 ? Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Padding(
-                                        padding: const EdgeInsets.all(8),
-                                        child: Text(
-                                          "Select Society",
-                                          style: GoogleFonts.ubuntu(
-                                              fontStyle: FontStyle.normal,
-                                              fontWeight: FontWeight.w400,
-                                              fontSize: 14,
-                                              color: HexColor('#4D4D4D')),
-                                        ),
-                                      ),
+                                      ResidentAddressDetailHeading(
+                                          text: 'Select Society'),
                                       Padding(
                                         padding: const EdgeInsets.all(8.0),
                                         child: DropdownSearch<Society>(
@@ -203,18 +183,8 @@ class ResidentAddressDetail extends GetView {
                                       /// For Type 1 => Society,Street, House
                                       if (controller.societies?.structureType ==
                                           1) ...[
-                                        Padding(
-                                          padding: const EdgeInsets.all(8),
-                                          child: Text(
-                                            "Select Property Type",
-                                            style: GoogleFonts.ubuntu(
-                                                fontStyle: FontStyle.normal,
-                                                // color: secondaryColor,
-                                                fontWeight: FontWeight.w400,
-                                                fontSize: 14,
-                                                color: HexColor('#4D4D4D')),
-                                          ),
-                                        ),
+                                        ResidentAddressDetailHeading(
+                                            text: 'Select Property Type'),
                                         Padding(
                                           padding: const EdgeInsets.all(8.0),
                                           child: DropdownButtonFormField(
@@ -1987,7 +1957,6 @@ class ResidentAddressDetail extends GetView {
                                   "Select Resident Type",
                                   style: GoogleFonts.ubuntu(
                                       fontStyle: FontStyle.normal,
-                                      // color: secondaryColor,
                                       fontWeight: FontWeight.w400,
                                       fontSize: 14,
                                       color: HexColor('#4D4D4D')),
@@ -2065,9 +2034,9 @@ class ResidentAddressDetail extends GetView {
                                       subadminid:
                                           controller.societies!.subAdminId!,
                                       residentid: controller.user!.userId!,
-                                      country: controller.country,
-                                      state: controller.state,
-                                      city: controller.city,
+                                      country: controller.country ?? "N/A",
+                                      state: controller.state ?? "N/A",
+                                      city: controller.city ?? "N/A",
                                       societyid: controller.societies?.id,
                                       phaseid: controller.phases?.id ?? 0,
                                       blockid: controller.blocks?.id ?? 0,
@@ -2097,9 +2066,9 @@ class ResidentAddressDetail extends GetView {
                                       subadminid:
                                           controller.societies!.subAdminId!,
                                       residentid: controller.user!.userId!,
-                                      country: controller.country,
-                                      state: controller.state,
-                                      city: controller.city,
+                                      country: controller.country ?? "N/A",
+                                      state: controller.state ?? "N/A",
+                                      city: controller.city ?? "N/A",
                                       societyid: controller.societies?.id,
                                       houseaddress: controller
                                           .houseaddressdetailController.text,
@@ -2133,6 +2102,27 @@ class ResidentAddressDetail extends GetView {
                 ),
               );
             }),
+      ),
+    );
+  }
+}
+
+class ResidentAddressDetailHeading extends StatelessWidget {
+  final String? text;
+
+  const ResidentAddressDetailHeading({super.key, required this.text});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
+      child: Text(
+        text!,
+        style: GoogleFonts.ubuntu(
+            fontStyle: FontStyle.normal,
+            fontWeight: FontWeight.w400,
+            fontSize: 14,
+            color: HexColor('#4D4D4D')),
       ),
     );
   }

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:country_picker/country_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as Http;
@@ -11,16 +12,30 @@ import '../../../Services/Shared Preferences/MySharedPreferences.dart';
 import '../Model/User.dart';
 
 class LoginController extends GetxController {
-  var isHidden = false;
-  var isLoading = false;
-  TextEditingController userCnicController = TextEditingController();
+  var isHidden = false.obs;
+  var isLoading = false.obs;
   TextEditingController userPasswordController = TextEditingController();
+  final phoneNumberController = TextEditingController();
+  RxString countryFlag = "".obs;
+  RxString countryCode = "".obs;
+  RxString phoneNumber = "".obs;
+  Country country = Country(
+      phoneCode: "92",
+      countryCode: "PK",
+      e164Sc: 0,
+      geographic: true,
+      level: 1,
+      name: 'Pakistan',
+      example: 'Pakistan',
+      displayName: 'Pakistan',
+      displayNameNoCountryCode: 'PK',
+      e164Key: "");
 
-  Future loginApi(String cnic, String password) async {
-    isLoading = true;
+  Future loginApi(String mobileNo, String password) async {
+    isLoading.value = true;
 
     update();
-    print(cnic);
+    print(mobileNo);
     print(password);
 
     final response = await Http.post(
@@ -29,7 +44,7 @@ class LoginController extends GetxController {
         'Content-Type': 'application/json; charset=UTF-8',
       },
       body: jsonEncode(<String, dynamic>{
-        'cnic': cnic,
+        'mobileno': mobileNo,
         'password': password,
       }),
     );
@@ -49,9 +64,9 @@ class LoginController extends GetxController {
           bearerToken: data['Bearer']);
 
       MySharedPreferences.setUserData(user: user);
-      // final NotificationServices notificationServices = NotificationServices();
-      // final String? token = await notificationServices.getDeviceToken();
-      // fcmtokenrefresh(user.userId!, token!, user.bearerToken!);
+      final NotificationServices notificationServices = NotificationServices();
+      final String? token = await notificationServices.getDeviceToken();
+      fcmtokenrefresh(user.userId!, token!, user.bearerToken!);
       if (user.address == "NA") {
         Get.offAndToNamed(residentaddressdetail, arguments: user);
       } else {
@@ -82,13 +97,13 @@ class LoginController extends GetxController {
         Get.offAndToNamed(homescreen, arguments: user);
       }
     } else if (response.statusCode == 401) {
-      isLoading = false;
+      isLoading.value = false;
       update();
       var data = jsonDecode(response.body.toString());
 
-      Get.snackbar(data['data'], 'Incorrect Cnic or Password!');
+      Get.snackbar(data['data'], 'Incorrect Mobile Number or Password!');
     } else if (response.statusCode == 403) {
-      isLoading = false;
+      isLoading.value = false;
       update();
       var data = jsonDecode(response.body.toString());
 
@@ -99,14 +114,14 @@ class LoginController extends GetxController {
               ))
           .toList();
     } else if (response.statusCode == 500) {
-      isLoading = false;
+      isLoading.value = false;
       update();
       Get.snackbar(
         "Error",
         'Server Error',
       );
     } else {
-      isLoading = false;
+      isLoading.value = false;
       update();
       Get.snackbar(
         "Error",
@@ -116,7 +131,7 @@ class LoginController extends GetxController {
   }
 
   void togglePasswordView() {
-    isHidden = !isHidden;
+    isHidden.value = !isHidden.value;
     update();
   }
 
@@ -158,5 +173,13 @@ class LoginController extends GetxController {
         return alert;
       },
     );
+  }
+
+  @override
+  void onInit() {
+    // TODO: implement onInit
+    super.onInit();
+    countryCode.value = country.phoneCode;
+    countryFlag.value = country.flagEmoji;
   }
 }

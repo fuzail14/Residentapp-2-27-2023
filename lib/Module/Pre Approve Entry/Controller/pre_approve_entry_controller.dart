@@ -1,20 +1,26 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:http/http.dart' as Http;
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:userapp/Constants/constants.dart';
+import 'package:userapp/Repo/PreApproveEntry%20Repository/preapproveentry_repository.dart';
 
-import '../../../Constants/api_routes.dart';
 import '../../HomeScreen/Model/residents.dart';
 import '../../Login/Model/User.dart';
 import '../Model/PreApproveEntry.dart';
 
 class PreApproveEntryController extends GetxController {
+  static const pageSize = 6;
+  final PagingController pagingController = PagingController(firstPageKey: 1);
+  List<PreApproveEntry> preApproveEntryLi = [];
+  List<PreApproveEntry> dataList = [];
+
   late final User userdata;
   late final Residents resident;
   var data = Get.arguments;
-  late Future<PreApproveEntry> apiData;
+
+  var snapShot;
   TextEditingController searchController = TextEditingController();
   String? query;
   Timer? debouncer;
@@ -40,64 +46,59 @@ class PreApproveEntryController extends GetxController {
   void onInit() {
     // TODO: implement onInit
     super.onInit();
+    pagingController.addPageRequestListener((pageKey) {
+      _fetchPage(pageKey);
+    });
 
     userdata = data[0];
     resident = data[1];
-    refreshApi(userId: userdata.userId!, token: userdata.bearerToken!);
   }
 
-  Future<PreApproveEntry> viewPreApproveEntryReportsApi(
-      int userid, String token) async {
-    print("token $token");
-
-    final response = await Http.get(
-      Uri.parse(Api.viewPreApproveEntryReports + "/" + userid.toString()),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        'Authorization': "Bearer $token"
-      },
-    );
-
-    if (response.statusCode == 200) {
-      var data = jsonDecode(response.body.toString());
-
-      return PreApproveEntry.fromJson(data);
-    }
-    return PreApproveEntry.fromJson(data);
-    ;
+  Future<List<PreApproveEntry>> viewPreApproveEntryReportsApi(
+      {required int userid, required String token, required pageKey}) async {
+    PreApproveEntryRepository preApproveEntryRepository =
+        PreApproveEntryRepository();
+    await preApproveEntryRepository
+        .viewPreApproveEntryReportsApi(
+            userid: userid, token: token, pageKey: pageKey)
+        .then((val) {
+      preApproveEntryLi = (val['data']['data'] as List)
+          .map((e) => PreApproveEntry(
+              id: e['id'],
+              gatekeeperid: e['gatekeeperid'],
+              userid: e['userid'],
+              visitortype: e['visitortype'],
+              name: e['name'],
+              description: e['description'],
+              cnic: e['cnic'],
+              mobileno: e['mobileno'],
+              vechileno: e['vechileno'],
+              arrivaldate: e['arrivaldate'],
+              arrivaltime: e['arrivaltime'],
+              status: e['status'],
+              statusdescription: e['statusdescription'],
+              createdAt: e['created_at'],
+              updatedAt: e['updated_at']))
+          .toList();
+    }).onError((error, stackTrace) {
+      myToast(msg: error.toString(), isNegative: true);
+      throw Exception(error);
+    });
+    return preApproveEntryLi;
   }
 
-  Future<PreApproveEntry> searchPreApproveEntry(
-      {required String? query, required String token, required userId}) async {
-    final response = await Http.post(
-      Uri.parse(Api.searchPreapproveEntry),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        'Authorization': "Bearer $token"
-      },
-      body:
-          jsonEncode(<String, dynamic>{"userid": userId, "searchquery": query}),
-    );
+  Future<void> _fetchPage(int pageKey) async {
+    dataList = await viewPreApproveEntryReportsApi(
+        userid: userdata.userId!,
+        token: userdata.bearerToken!,
+        pageKey: pageKey);
 
-    print(response.statusCode);
-    print(response.body);
-    if (response.statusCode == 200) {
-      return PreApproveEntry.fromJson(jsonDecode(response.body.toString()));
+    final isLastPage = dataList!.length < pageSize;
+    if (isLastPage) {
+      pagingController.appendLastPage(dataList);
     } else {
-      throw Exception("Failed to Search");
+      final nextPageKey = pageKey + 1;
+      pagingController.appendPage(dataList, nextPageKey);
     }
-  }
-
-  searchData({required userId, required token, required query}) {
-    apiData = searchPreApproveEntry(token: token, userId: userId, query: query);
-    update();
-  }
-
-  refreshApi({
-    required userId,
-    required token,
-  }) {
-    apiData = viewPreApproveEntryReportsApi(userId, token);
-    update();
   }
 }

@@ -1,13 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:hexcolor/hexcolor.dart';
 import 'package:userapp/Constants/api_routes.dart';
 import 'package:userapp/Constants/constants.dart';
 import 'package:userapp/Widgets/Loader/loader.dart';
 import 'package:userapp/Widgets/My%20Back%20Button/my_back_button.dart';
-
-// import 'package:zego_uikit_prebuilt_call/zego_uikit_prebuilt_call.dart';
-// import 'package:zego_uikit_signaling_plugin/zego_uikit_signaling_plugin.dart';
 
 import '../../../../Routes/set_routes.dart';
 import '../../../../Widgets/Empty List/empty_list.dart';
@@ -21,78 +22,77 @@ class NeighbourChatScreen extends GetView {
         builder: (controller) {
           return WillPopScope(
             onWillPop: () async {
-              Get.offNamed(chatavailbilityscreen,
-                  arguments: [controller.user, controller.resident]);
+              if (controller.chatType == "NeighbourChat") {
+                Get.offNamed(chatavailbilityscreen,
+                    arguments: [controller.user, controller.resident]);
+              } else if (controller.chatType == "MarketPlaceChat") {
+                Get.offNamed(marketPlaceScreen,
+                    arguments: [controller.user, controller.resident]);
+              }
               return true;
             },
             child: SafeArea(
               child: Scaffold(
+                // persistentFooterAlignment: AlignmentDirectional.center,
+                // persistentFooterButtons: [
+                //   Container(
+                //     width: 134.w,
+                //     height: 5.w,
+                //     decoration: BoxDecoration(
+                //         color: primaryColor,
+                //         borderRadius: BorderRadius.circular(100.r)),
+                //   )
+                // ],
+                backgroundColor: Colors.white,
                 body: Column(
                   children: [
                     MyBackButton(
-                      text: '.',
                       widget: Row(
                         children: [
-                          SizedBox(
-                            width: 2,
+                          FittedBox(
+                            child: Container(
+                              width: 36.w,
+                              height: 36.w,
+                              decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  border: Border.all(
+                                      color: primaryColor, width: 1.5)),
+                              child: Image.network(Api.imageBaseUrl +
+                                  controller.chatNeighbours.image.toString()),
+                            ),
                           ),
-                          CircleAvatar(
-                            backgroundImage: NetworkImage(Api.imageBaseUrl +
-                                controller.chatNeighbours.image.toString()),
-                            maxRadius: 20,
-                          ),
                           SizedBox(
-                            width: 12,
+                            width: 10.w,
                           ),
                           Text(
                             controller.chatNeighbours.firstname.toString() +
                                 ' ' +
                                 controller.chatNeighbours.lastname.toString(),
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500,
-                            ),
+                            style: GoogleFonts.ubuntu(
+                                fontStyle: FontStyle.normal,
+                                fontWeight: FontWeight.w500,
+                                fontSize: 16.sp,
+                                color: HexColor('#4D4D4D')),
                           ),
-
-//                             ZegoUIKitPrebuiltCallWithInvitation(
-//                               androidNotificationConfig: ZegoAndroidNotificationConfig(channelID:'ZegoUIKit',channelName: 'Zego Call' ),
-//                               appID: 1638049856,
-//                               appSign: 'a8d10d15eeba1ff7e3d154b941f9c3a8d3dd7853c8be379e04d5379ea14caaba',
-//                               userID:controller. chatneighbours.id.toString(),
-//                               userName:controller.chatneighbours.firstname.toString(),
-//                               plugins: [ZegoUIKitSignalingPlugin()],
-//                               notifyWhenAppRunningInBackgroundOrQuit: true, child: Container(),
-//
-//                             ),
-//                             ZegoSendCallInvitationButton(
-//                               iconSize: Size(MediaQuery.of(context).size.width*2,MediaQuery.of(context).size.height*0.04),
-//
-//                               onPressed: (String a,String b, List<String> str) async{
-// await controller.ZegoCallApi(token: controller!.userdata.bearerToken!, residentid:controller!.chatneighbours.id!);
-//
-//                               },
-//                               /// For offline call notification
-//                               resourceID: "zegouikit_call",
-//                               isVideoCall: false,
-//                               invitees: [
-//
-//                                 ZegoUIKitUser(
-//                                     id: controller.userdata.userid.toString(),
-//                                     name: controller.userdata.firstName.toString()
-//                                 ),
-//                               ],
-//                             ),
-//
                         ],
                       ),
                       onTap: () {
-                        Get.offNamed(chatavailbilityscreen,
-                            arguments: [controller.user, controller.resident]);
+                        if (controller.chatType == "NeighbourChat") {
+                          Get.offNamed(chatavailbilityscreen, arguments: [
+                            controller.user,
+                            controller.resident
+                          ]);
+                        } else if (controller.chatType == "MarketPlaceChat") {
+                          Get.offNamed(marketPlaceScreen, arguments: [
+                            controller.user,
+                            controller.resident
+                          ]);
+                        }
                       },
                     ),
                     Expanded(
                         child: Container(
-                            padding: EdgeInsets.symmetric(horizontal: 10),
+                            padding: EdgeInsets.only(right: 10.w, left: 38.w),
                             child: StreamBuilder(
                                 stream: FirebaseFirestore.instance
                                     .collection('chats')
@@ -108,79 +108,100 @@ class NeighbourChatScreen extends GetView {
                                     if (data.length == 0) {
                                       return EmptyList(
                                           name:
-                                              "Say Hi! to your Neighbour. 😊 .");
+                                              "Chat away! Your conversation starts here.. 😊 .");
                                     }
                                     return ListView.builder(
                                       reverse: true,
                                       itemCount: data.length,
                                       itemBuilder: (context, index) {
-                                        print(data[index]['residentid']);
-
-                                        return Row(
-                                          mainAxisAlignment: data[index]
-                                                      ['residentid'] ==
-                                                  controller.user.userId
-                                              ? MainAxisAlignment.end
-                                              : MainAxisAlignment.start,
-                                          children: [
-                                            Flexible(
-                                              child: Padding(
-                                                padding:
-                                                    const EdgeInsets.all(4),
-                                                child: Container(
-                                                    padding:
-                                                        EdgeInsets.symmetric(
-                                                            horizontal: 12,
-                                                            vertical: 16),
-                                                    decoration: BoxDecoration(
-                                                      color: data[index][
-                                                                  'residentid'] ==
-                                                              controller
-                                                                  .user.userId
-                                                          ? primaryColor
-                                                          : Colors.black,
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              4),
-                                                    ),
-                                                    child: data![index][
-                                                                'residentid'] ==
-                                                            controller
-                                                                .user.userId
-                                                        ? Text(
-                                                            data![index]
-                                                                    ['message']
-                                                                .toString(),
-                                                            style: TextStyle(
-                                                                color: Colors
-                                                                    .white),
-                                                          )
-                                                        : Column(
-                                                            crossAxisAlignment:
-                                                                CrossAxisAlignment
-                                                                    .start,
-                                                            children: [
-                                                              // Text(
-                                                              //   data![index]
-                                                              //   ['user']['firstname']
-                                                              //       .toString(),
-                                                              //   style: TextStyle(
-                                                              //       color:
-                                                              //       primaryColor),
-                                                              // ),
-                                                              Text(
-                                                                data![index][
-                                                                        'message']
-                                                                    .toString(),
-                                                                style: TextStyle(
-                                                                    color: Colors
-                                                                        .white),
-                                                              ),
-                                                            ],
-                                                          )),
-                                              ),
-                                            ),
-                                          ],
+                                        return Padding(
+                                          padding: EdgeInsets.only(
+                                              right: 13.w, bottom: 10.h),
+                                          child: Row(
+                                            mainAxisAlignment: data[index]
+                                                        ['residentid'] ==
+                                                    controller.user.userId
+                                                ? MainAxisAlignment.end
+                                                : MainAxisAlignment.start,
+                                            children: [
+                                              if (data[index]['residentid'] ==
+                                                  controller.user.userId) ...[
+                                                Flexible(
+                                                  child: Container(
+                                                      padding:
+                                                          EdgeInsets.all(16),
+                                                      decoration: BoxDecoration(
+                                                          color: Color.fromRGBO(
+                                                              255,
+                                                              153,
+                                                              0,
+                                                              0.19),
+                                                          borderRadius: BorderRadius.only(
+                                                              topLeft:
+                                                                  Radius.circular(
+                                                                      16.r),
+                                                              topRight: Radius
+                                                                  .circular(0),
+                                                              bottomLeft:
+                                                                  Radius.circular(
+                                                                      16.r),
+                                                              bottomRight:
+                                                                  Radius.circular(16.r)),
+                                                          border: Border.all(width: 1, color: primaryColor)),
+                                                      child: Text(
+                                                        data![index]['message']
+                                                            .toString(),
+                                                        style:
+                                                            GoogleFonts.poppins(
+                                                                color: HexColor(
+                                                                    '#5A5A5A'),
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w400,
+                                                                fontSize:
+                                                                    14.sp),
+                                                      )),
+                                                ),
+                                              ] else ...[
+                                                Flexible(
+                                                  child: Container(
+                                                      padding:
+                                                          EdgeInsets.all(16),
+                                                      decoration: BoxDecoration(
+                                                        color:
+                                                            HexColor('#E8E8E8'),
+                                                        borderRadius:
+                                                            BorderRadius.only(
+                                                                topLeft: Radius
+                                                                    .circular(
+                                                                        0.r),
+                                                                topRight: Radius
+                                                                    .circular(
+                                                                        16.r),
+                                                                bottomLeft: Radius
+                                                                    .circular(
+                                                                        16.r),
+                                                                bottomRight:
+                                                                    Radius.circular(
+                                                                        16.r)),
+                                                      ),
+                                                      child: Text(
+                                                        data![index]['message']
+                                                            .toString(),
+                                                        style:
+                                                            GoogleFonts.poppins(
+                                                                color: HexColor(
+                                                                    '#5A5A5A'),
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w400,
+                                                                fontSize:
+                                                                    14.sp),
+                                                      )),
+                                                ),
+                                              ]
+                                            ],
+                                          ),
                                         );
                                       },
                                     );
@@ -190,56 +211,84 @@ class NeighbourChatScreen extends GetView {
                                     return Loader();
                                   }
                                 }))),
+                    10.h.ph,
+                    Row(
+                      children: [
+                        7.w.pw,
+                        SvgPicture.asset(
+                          'assets/chat_plus.svg',
+                          width: 24.w,
+                          height: 24.w,
+                        ),
+                        7.w.pw,
+                        SizedBox(
+                          width: 292.w,
+                          height: 52.w,
+                          child: TextFormField(
+                            maxLines: null,
+                            controller: controller.msg,
+                            decoration: InputDecoration(
+                                contentPadding: EdgeInsets.only(
+                                  left: 16.13.w,
+                                ),
+                                hintText: "Type your message",
+                                hintStyle: GoogleFonts.poppins(
+                                    fontSize: 16.sp,
+                                    fontWeight: FontWeight.w500,
+                                    color: HexColor('#D0D0D0')),
+                                focusedBorder: OutlineInputBorder(
+                                    borderSide:
+                                        BorderSide(color: HexColor('#B8B8B8')),
+                                    borderRadius: BorderRadius.circular(8.r)),
+                                border: OutlineInputBorder(
+                                    borderSide:
+                                        BorderSide(color: HexColor('#B8B8B8')),
+                                    borderRadius: BorderRadius.circular(8.r))),
+                          ),
+                        ),
+                        7.w.pw,
+                        GestureDetector(
+                          onTap: () {
+                            if (controller.msg.text.isNotEmpty) {
+                              try {
+                                // Get a reference to the Firestore collection
+                                CollectionReference chats = FirebaseFirestore
+                                    .instance
+                                    .collection('chats');
+
+                                // Add a new document with a generated ID
+                                chats.add({
+                                  'residentid': controller.resident.residentid!,
+                                  'message': controller.msg.text,
+                                  'chatroomid': controller.chatRoomId,
+                                  'createdat': FieldValue.serverTimestamp(),
+                                });
+
+                                controller.msg.clear();
+                                print('Data added successfully');
+                              } catch (error) {
+                                print('Error adding data: $error');
+                              }
+                            }
+                          },
+                          child: SvgPicture.asset("assets/chat_send.svg",
+                              width: 24.w, height: 24.w),
+                        ),
+                        5.22.w.pw
+                      ],
+                    ),
+                    17.h.ph,
                     Container(
-                      color: Colors.white,
-                      child: Row(
-                        children: <Widget>[
-                          SizedBox(
-                            width: 15,
-                          ),
-                          Expanded(
-                            child: TextField(
-                              maxLines: null,
-                              controller: controller.msg,
-                              decoration: InputDecoration(
-                                  hintText: "Write message...",
-                                  hintStyle: TextStyle(color: Colors.black54),
-                                  border: InputBorder.none),
-                            ),
-                          ),
-                          SizedBox(
-                            width: 15,
-                          ),
-                          GestureDetector(
-                              onTap: () {
-                                try {
-                                  // Get a reference to the Firestore collection
-                                  CollectionReference chats = FirebaseFirestore
-                                      .instance
-                                      .collection('chats');
-
-                                  // Add a new document with a generated ID
-                                  chats.add({
-                                    'residentid':
-                                        controller.resident.residentid!,
-                                    'message': controller.msg.text,
-                                    'chatroomid': controller.chatRoomId,
-                                    'createdat': FieldValue.serverTimestamp(),
-                                  });
-
-                                  controller.msg.clear();
-                                  print('Data added successfully');
-                                } catch (error) {
-                                  print('Error adding data: $error');
-                                }
-                              },
-                              child: Icon(Icons.send)),
-                          SizedBox(
-                            width: 12,
-                          ),
-                        ],
+                      child: Center(
+                        child: Container(
+                            width: 134.w,
+                            height: 5.w,
+                            decoration: BoxDecoration(
+                                color: primaryColor,
+                                borderRadius: BorderRadius.circular(100.r))),
                       ),
                     ),
+                    8.h.ph,
                   ],
                 ),
               ),
@@ -247,6 +296,4 @@ class NeighbourChatScreen extends GetView {
           );
         });
   }
-
-  // Example function to get a Firestore collection stream with a condition
 }

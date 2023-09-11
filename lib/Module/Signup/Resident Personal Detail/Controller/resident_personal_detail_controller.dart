@@ -1,18 +1,19 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:http/http.dart' as Http;
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart' as Http;
 import 'package:image_picker/image_picker.dart';
 import 'package:userapp/Module/Signup/Resident%20Personal%20Detail/Model/resident.dart';
 
 import '../../../../Constants/api_routes.dart';
+import '../../../../Constants/constants.dart';
 import '../../../../Routes/set_routes.dart';
 
 class ResidentPersonalDetailController extends GetxController {
-  // var user = Get.arguments;
-  var isHidden = false;
-  var isLoading = false;
+  var isHidden = false.obs;
+  var isLoading = false.obs;
   TextEditingController firstnameController = TextEditingController();
   TextEditingController lastnameController = TextEditingController();
   TextEditingController cnicController = TextEditingController();
@@ -25,10 +26,7 @@ class ResidentPersonalDetailController extends GetxController {
   TextEditingController ownerphonenumController = TextEditingController();
   GlobalKey<FormState> formKey = new GlobalKey<FormState>();
   var imageFile;
-  String rentalorownerval = 'Rental';
-  String houseorapartment = 'House';
-  var rentalorownerlist = ['Rental', 'Owner'];
-  var houseorapartmentlist = ['House', 'Apartment'];
+
   Resident? resident;
 
   @override
@@ -52,7 +50,6 @@ class ResidentPersonalDetailController extends GetxController {
 
       print('Assigning Image file');
       imageFile = File(pickedFile.path);
-      update();
     } else {}
   }
 
@@ -68,23 +65,11 @@ class ResidentPersonalDetailController extends GetxController {
 
       print('Assigning Image file');
       imageFile = File(pickedFile.path);
-      update();
     } else {}
   }
 
-  RentalOrOwner(val) {
-    rentalorownerval = val;
-    update();
-  }
-
-  HouseApartment(val) {
-    houseorapartment = val;
-    update();
-  }
-
   void togglePasswordView() {
-    isHidden = !isHidden;
-    update();
+    isHidden.value = !isHidden.value;
   }
 
   Future signUpApi(
@@ -95,9 +80,7 @@ class ResidentPersonalDetailController extends GetxController {
       required String mobileno,
       required String password,
       required File? file}) async {
-
-isLoading=true;
-update();
+    isLoading.value = true;
     var request = Http.MultipartRequest('POST', Uri.parse(Api.signup));
     if (file != null) {
       request.files.add(await Http.MultipartFile.fromPath('image', file.path));
@@ -118,8 +101,7 @@ update();
     print(response.statusCode);
 
     if (response.statusCode == 200) {
-      isLoading=false;
-      update();
+      isLoading.value = false;
       var data = jsonDecode(response.body.toString());
       print(data);
       print(response.body);
@@ -135,153 +117,21 @@ update();
           image: data['data']['image'],
           token: data['token']);
 
-      Get.offAndToNamed(loginscreen);
+      Get.offAllNamed(loginscreen);
 
+      myToast(msg: 'Registration successfully');
     } else if (response.statusCode == 403) {
       var data = jsonDecode(response.body.toString());
-      isLoading=false;
+      isLoading.value = false;
       (data['errors'] as List)
           .map((e) => Get.snackbar(
-        "Error",
-        e.toString(),
-      ))
+                "Error",
+                e.toString(),
+              ))
           .toList();
-      update();
     } else {
-      isLoading=false;
-      update();
+      isLoading.value = false;
       Get.snackbar("Failed to Register", "");
     }
   }
-
-  Future ViewAllSocities() async {
-    // final response = await Http.get(
-    //   Uri.parse(Api.viewevent),
-    //   headers: <String, String>{
-    //     'Content-Type': 'application/json; charset=UTF-8',
-    //     'Authorization': "Bearer $token"
-    //   },
-    // );
-  }
-
-  // Future addResidentApi(
-  //     {
-  //     required File file,
-  //     //required String residentalType,
-  //     //required String propertyType,
-  //     required String firstName,
-  //     required String lastName,
-  //     required String cnic,
-  //     required String vechileno,
-  //     //required String address,
-  //     required String mobileno,
-  //     required String password,
-  //     //required String bearerToken,
-  //     //required int subadminid,
-  //     //required String ownerName,
-  //     //required String ownerAddress,
-  //     //required String ownerPhoneNo
-  //     }) async {
-  //   print('Add Resident Api  Function Call');
-  //   print("----Data----");
-  //   print(file.path);
-  //   //print(residentalType);
-  //   //print(propertyType);
-  //   print(firstName);
-  //   print(lastName);
-  //   print(cnic);
-  //   print(vechileno);
-  //   //print(address);
-  //   print(mobileno);
-  //   print(password);
-  //   //print(ownerName);
-  //   //print(ownerAddress);
-  //   //print(ownerPhoneNo);
-  //   //print(bearerToken);
-  //   //print(subadminid);
-
-  //   print("---------------------------");
-  //   Map<String, String> headers = {"Authorization": "Bearer $bearerToken"};
-  //   var request =
-  //       Http.MultipartRequest('POST', Uri.parse(Api.register_resident));
-  //   request.headers.addAll(headers);
-
-  //   request.files.add(await Http.MultipartFile.fromPath('image', file.path));
-  //   if (residentalType.contains('Rental')) {
-  //     print('iam inside rental');
-  //     request.fields['firstname'] = firstName;
-  //     request.fields['lastname'] = lastName;
-  //     request.fields['cnic'] = cnic;
-  //     request.fields['address'] = address;
-  //     request.fields['mobileno'] = mobileno;
-  //     request.fields['roleid'] = 3.toString();
-  //     request.fields['rolename'] = 'resident';
-  //     request.fields['password'] = password;
-  //     request.fields['vechileno'] = vechileno;
-  //     request.fields['subadminid'] = subadminid.toString();
-  //     request.fields['propertytype'] = propertyType;
-  //     request.fields['residenttype'] = residentalType;
-  //     request.fields['committeemember'] ="0";
-  //     request.fields['ownername'] = ownerName;
-  //     request.fields['owneraddress'] = ownerAddress;
-  //     request.fields['ownermobileno'] = ownerPhoneNo;
-  //     var responsed = await request.send();
-  //     var response = await Http.Response.fromStream(responsed);
-
-  //     print(response.statusCode);
-  //     print(response.body);
-  //     if (response.statusCode == 200) {
-  //       var data = jsonDecode(response.body.toString());
-  //       print(data);
-  //       print(response.body);
-  //       Get.snackbar("Resident Register Successfully", "");
-  //       Get.offAndToNamed(viewuser, arguments: user);
-  //     } else if (response.statusCode == 403) {
-  //       var data = jsonDecode(response.body.toString());
-
-  //       Get.snackbar(
-  //         "Error",
-  //         data.toString(),
-  //       );
-  //     } else {
-  //       Get.snackbar("Failed to Register", "");
-  //     }
-  //   } else {
-  //     print("ima in else");
-  //     request.fields['firstname'] = firstName;
-  //     request.fields['lastname'] = lastName;
-  //     request.fields['cnic'] = cnic;
-  //     request.fields['address'] = address;
-  //     request.fields['mobileno'] = mobileno;
-  //     request.fields['roleid'] = 3.toString();
-  //     request.fields['rolename'] = 'resident';
-  //     request.fields['password'] = password;
-  //     request.fields['vechileno'] = vechileno;
-  //     request.fields['subadminid'] = subadminid.toString();
-  //     request.fields['propertytype'] = propertyType;
-  //     request.fields['residenttype'] = residentalType;
-  //     request.fields['committeemember'] ="0";
-  //     var responsed = await request.send();
-  //     var response = await Http.Response.fromStream(responsed);
-  //     print(response.statusCode);
-  //     print(response.body);
-  //     if (response.statusCode == 200) {
-  //       var data = jsonDecode(response.body.toString());
-  //       print(data);
-  //       print(response.body);
-  //       Get.snackbar("Resident Register Successfully", "");
-  //       // Get.toNamed(homescreen, arguments: user);
-  //       Get.offAndToNamed(viewuser, arguments: user);
-  //     } else if (response.statusCode == 403) {
-  //       var data = jsonDecode(response.body.toString());
-
-  //       Get.snackbar(
-  //         "Error",
-  //         data.toString(),
-  //       );
-  //     } else {
-  //       Get.snackbar("Failed to Register", "");
-  //     }
-  //   }
-
 }

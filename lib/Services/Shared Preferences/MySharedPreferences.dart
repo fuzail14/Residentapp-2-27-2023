@@ -1,9 +1,6 @@
-import 'dart:developer';
-
-import '../../Constants/shared_preferences_constants.dart';
-
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../Constants/shared_preferences_constants.dart';
 import '../../Module/Login/Model/User.dart';
 
 class MySharedPreferences {
@@ -20,9 +17,6 @@ class MySharedPreferences {
       value.setString(roleNameSPKey, user.roleName ?? '');
       value.setInt(roleIdSPKey, user.roleId ?? 0);
       value.setString(addressSPKey, user.address ?? '');
-
-
-
     });
   }
 
@@ -44,41 +38,37 @@ class MySharedPreferences {
       value.getInt(roleIdSPKey) ?? value.setInt(roleIdSPKey, 0);
       value.getString(addressSPKey) ?? value.setString(addressSPKey, '');
 
-
       _user = User(
-
-          userId: value.getInt(userIdSPKey),
-          subadminid: value.getInt(subAminIdSPKey),
-          familyMemberId: value.getInt(familymemberIdSPKey),
-          residentid: value.getInt(residentIdSPKey),
-          firstName: value.getString(firstNameSPKey),
-          lastName: value.getString(lastNameSPKey),
-          bearerToken: value.getString(bearerTokenSPKey),
-          cnic: value.getString(cnicSPKey),
-          roleId: value.getInt(roleIdSPKey),
-          roleName: value.getString(roleNameSPKey),
-          address:  value.getString(addressSPKey),
+        userId: value.getInt(userIdSPKey),
+        subadminid: value.getInt(subAminIdSPKey),
+        familyMemberId: value.getInt(familymemberIdSPKey),
+        residentid: value.getInt(residentIdSPKey),
+        firstName: value.getString(firstNameSPKey),
+        lastName: value.getString(lastNameSPKey),
+        bearerToken: value.getString(bearerTokenSPKey),
+        cnic: value.getString(cnicSPKey),
+        roleId: value.getInt(roleIdSPKey),
+        roleName: value.getString(roleNameSPKey),
+        address: value.getString(addressSPKey),
       );
-
-
-
-
     });
 
     return _user;
   }
 
   static deleteUserData() async {
-
     await SharedPreferences.getInstance().then((value) {
-      // value.remove(userIdSPKey);
-      // value.remove(firstNameSPKey);
-      // value.remove(lastNameSPKey);
-      final success = value.remove(bearerTokenSPKey);
-      print(success.then((value) => value));
-      // value.remove(cnicSPKey);
-      // value.remove(roleNameSPKey);
-      // value.remove(roleIdSPKey);
+      value.remove(userIdSPKey);
+      value.remove(firstNameSPKey);
+      value.remove(lastNameSPKey);
+      value.remove(bearerTokenSPKey);
+      value.remove(cnicSPKey);
+      value.remove(roleNameSPKey);
+      value.remove(roleIdSPKey);
+      value.remove(addressSPKey);
+      value.remove(residentIdSPKey);
+      value.remove(familymemberIdSPKey);
+      value.remove(subAminIdSPKey);
     });
   }
 }

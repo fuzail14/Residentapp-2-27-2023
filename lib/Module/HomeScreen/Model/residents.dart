@@ -2,18 +2,16 @@ class Residents {
   int? id;
   int? residentid;
   int? subadminid;
-
   int? societyid;
   int? superadminid;
-
   String? country;
   String? state;
   String? city;
-
   String? houseaddress;
   String? vechileno;
   String? residenttype;
   String? propertytype;
+  String? username;
   int? committeemember;
   int? status;
   String? createdAt;
@@ -21,6 +19,7 @@ class Residents {
 
   Residents({
     required this.id,
+    required this.username,
     required this.residentid,
     required this.subadminid,
     required this.societyid,

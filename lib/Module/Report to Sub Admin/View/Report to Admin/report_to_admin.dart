@@ -13,6 +13,7 @@ import '../../Controller/Report to Admin Controller/report_to_admin_controller.d
 class ReportToAdmin extends GetView {
   @override
   Widget build(BuildContext context) {
+    print('build');
     return SafeArea(
       child: Scaffold(
         body: GetBuilder<AddReportToAdminController>(
@@ -43,6 +44,8 @@ class ReportToAdmin extends GetView {
                         20.h.ph,
                         SvgPicture.asset(
                           "assets/report_to_admin_vector.svg",
+                          width: 302.w,
+                          height: 201.w,
                         ),
                         74.h.ph,
                         MyTextFormField(
@@ -64,24 +67,23 @@ class ReportToAdmin extends GetView {
                         76.h.ph,
 
                         MyButton(
-                          color: primaryColor,
-                          onPressed: controller.isLoading
-                              ? null
-                              : () {
-                                  if (controller.formKey.currentState!
-                                      .validate()) {
-                                    controller.reportToAdminApi(
-                                        token: controller.userdata.bearerToken!,
-                                        subadminid:
-                                            controller.resident!.subadminid!,
-                                        userid: controller.userdata.userId!,
-                                        title: controller
-                                            .reportTitleController.text,
-                                        description: controller
-                                            .reportDescriptionController.text);
-                                  }
-                                },
-                          name: 'Submit Report',
+                          loading: controller.isLoading,
+                          onPressed: () {
+                            if (controller.formKey.currentState!.validate()) {
+                              if (!controller.isLoading) {
+                                controller.reportToAdminApi(
+                                    token: controller.userdata.bearerToken!,
+                                    subadminid:
+                                        controller.resident!.subadminid!,
+                                    userid: controller.userdata.userId!,
+                                    title:
+                                        controller.reportTitleController.text,
+                                    description: controller
+                                        .reportDescriptionController.text);
+                              }
+                            }
+                          },
+                          name: 'Submit',
                         ),
                         20.h.ph,
 

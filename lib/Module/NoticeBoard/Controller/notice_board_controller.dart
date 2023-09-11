@@ -1,22 +1,20 @@
 import 'dart:convert';
 
 import 'package:get/get.dart';
+import 'package:http/http.dart' as Http;
+import 'package:userapp/Constants/constants.dart';
+import 'package:userapp/Module/NoticeBoard/Model/NoticeBoardModel.dart';
 
 import '../../../Constants/api_routes.dart';
 import '../../HomeScreen/Model/residents.dart';
 import '../../Login/Model/User.dart';
-
-import 'package:http/http.dart' as Http;
-
-import '../Model/notice_board_model.dart';
 
 class NoticeBoardController extends GetxController {
   var data = Get.arguments;
 
   late final User userdata;
   late final Residents resident;
-  List<NoticeBoardModel> noticeBoardList = [];
-
+  var snapShot;
   @override
   void onInit() {
     // TODO: implement onInit
@@ -25,10 +23,7 @@ class NoticeBoardController extends GetxController {
     resident = data[1];
   }
 
-  Future<List<NoticeBoardModel>> viewNoticeBoardApi(
-      int subadminid, String token) async {
-    
-
+  viewNoticeBoardApi(int subadminid, String token) async {
     final response = await Http.get(
       Uri.parse(Api.viewAllNotices + "/" + subadminid.toString()),
       headers: <String, String>{
@@ -38,28 +33,14 @@ class NoticeBoardController extends GetxController {
     );
     var data = jsonDecode(response.body.toString());
 
-    if (response.statusCode == 200) {
-      
-
-      noticeBoardList = (data["data"] as List)
-          .map((e) => NoticeBoardModel(
-                id: e['id'],
-                noticetitle: e['noticetitle'],
-                noticedetail: e['noticedetail'],
-                startdate: e['startdate'],
-                enddate: e['enddate'],
-                starttime: e['starttime'],
-                endtime: e['endtime'],
-                status: e['status'],
-                subadminid: e['subadminid'],
-              ))
-          .toList();
-
-      return noticeBoardList;
-      
+    try {
+      if (response.statusCode == 200) {
+        return NoticeBoardModel.fromJson(data);
+      } else {
+        myToast(msg: 'Something Went Wrong', isNegative: true);
+      }
+    } catch (e) {
+      myToast(msg: 'Something Went Wrong', isNegative: true);
     }
-    return noticeBoardList;
   }
-
-
 }

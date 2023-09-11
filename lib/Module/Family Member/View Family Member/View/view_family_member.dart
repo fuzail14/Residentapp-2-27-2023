@@ -198,7 +198,7 @@ class ViewFamilyMember extends GetView {
                                                                                       name: 'Reset Password',
                                                                                       onPressed: () {
                                                                                         if (_formKey.currentState!.validate()) {
-                                                                                          resetPasswordController.resetPasswordApi(familymemberid: snapshot.data.data[index].familyMemberId, bearerToken: controller.userdata.bearerToken!, password: resetPasswordController.passwordController.text);
+                                                                                          resetPasswordController.resetPasswordApi(familymemberid: snapshot.data.data[index].familymemberid, bearerToken: controller.userdata.bearerToken!, password: resetPasswordController.passwordController.text);
                                                                                         }
                                                                                       },
                                                                                     ),

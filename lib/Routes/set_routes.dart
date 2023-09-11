@@ -1,4 +1,5 @@
 import 'dart:core';
+
 const String splashscreen = '/SplashScreen';
 const String loginscreen = '/Login';
 const String homescreen = '/UserHomeScreen';
@@ -9,8 +10,8 @@ const String reporttoadmin = '/ReportToAdmin';
 const String adminreports = '/AdminReports';
 const String preapproveentryscreen = '/PreApproveEntryScreen';
 const String addpreapproveentryscreen = '/AddPreApproveEntryScreen';
-const String reportshistoryscreen= '/ReportsHistoryScreen';
-const String guestshistoryscreen= '/GuestsHistoryScreen';
+const String reportshistoryscreen = '/ReportsHistoryScreen';
+const String guestshistoryscreen = '/GuestsHistoryScreen';
 const String notificationsscreen = '/NotificationsScreen';
 const String vieweventimages = '/ViewEventImages';
 const String viewimage = '/ViewImage';
@@ -23,9 +24,12 @@ const String viewfamilymember = '/ViewFamilyMember';
 const String discussion_form = '/DiscussionForm';
 const String monthly_bill = '/MonthlyBill';
 const String marketPlaceScreen = '/MarketPlaceScreen';
+const String marketPlaceProductDetails = '/market-place-product-details';
 const String sellProductsScreen = '/SellProductsScreen';
 const String addEmergencyScreen = '/AddEmergencyScreen';
-
-
-
-
+const String forgetPassword = '/forget-password';
+const String verificationCode = '/verification-code';
+const String changePassword = '/change-password';
+const String register = '/register';
+const String chatRequests = '/chat-requests';
+const String profile = '/profile';

@@ -1,4 +1,5 @@
 import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as Http;
@@ -29,9 +30,7 @@ class ResetPasswordController extends GetxController {
       print(response.body.toString());
       passwordController.clear();
 
-
       Get.snackbar('Success', data['message'].toString());
-
 
       update();
     } else if (response.statusCode == 403) {
@@ -43,7 +42,6 @@ class ResetPasswordController extends GetxController {
 
   void togglePasswordView() {
     isHidden = !isHidden;
-
     update();
   }
 }

@@ -1,8 +1,11 @@
 import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as Http;
+import 'package:userapp/Constants/constants.dart';
 import 'package:userapp/Routes/set_routes.dart';
+
 import '../../../../Constants/api_routes.dart';
 import '../../../HomeScreen/Model/residents.dart';
 import '../../../Login/Model/User.dart';
@@ -61,8 +64,6 @@ class AddReportToAdminController extends GetxController {
   TextEditingController reportDescriptionController = TextEditingController();
   TextEditingController dateController = TextEditingController();
 
-
-
   Future reportToAdminApi({
     required int userid,
     required String token,
@@ -70,14 +71,8 @@ class AddReportToAdminController extends GetxController {
     required String description,
     required int subadminid,
   }) async {
-    print(userid);
-    print(subadminid);
-    print(token);
-    print(title);
-    print(description);
-
-     isLoading = true;
-     update();
+    isLoading = true;
+    update();
     final response = await Http.post(
       Uri.parse(Api.reportToAdmin),
       headers: <String, String>{
@@ -96,12 +91,15 @@ class AddReportToAdminController extends GetxController {
 
     print(response.body);
     if (response.statusCode == 200) {
-
+      isLoading = false;
+      update();
       Get.offAndToNamed(adminreports, arguments: user);
 
-      Get.snackbar("Report Submitted  Successfully", "");
+      myToast(msg: 'Report Submitted  Successfully');
     } else {
-      Get.snackbar("Failed to Submit Report", "");
+      isLoading = false;
+      update();
+      myToast(msg: 'Failed to Submit Report');
     }
   }
 }

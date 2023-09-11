@@ -1,40 +1,43 @@
 import 'dart:convert';
-import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as Http;
-import 'package:userapp/Module/Add%20PreApprove%20Entry/View/add_pre_aprove_entry.dart';
+import 'package:userapp/Constants/constants.dart';
+import 'package:userapp/Module/Add%20PreApprove%20Entry/Model/GateKeeper.dart'
+    as gatekeeper;
 import 'package:userapp/Routes/set_routes.dart';
+
 import '../../../Constants/api_routes.dart';
 import '../../HomeScreen/Model/residents.dart';
-import '../../HomeScreen/View/home_screen.dart';
 import '../../Login/Model/User.dart';
-import '../Model/gatekeeper.dart';
 
-class AddPreApproveEntryController extends GetxController {
+class AddPreApproveEntryController extends GetxController
+    with GetSingleTickerProviderStateMixin {
   final formKey = new GlobalKey<FormState>();
-  // List<HomeScreenCard> li=[
-  //   HomeScreenCard(heading: 'Complaint', description: 'Resolve issues. Empower residents. Strengthen community bonds', iconPath: 'assets/icons/complaint.svg',type: 'services',),
-  //   HomeScreenCard(heading: 'Pre Approve Entry', description: 'Seamless access. Secure entry. Hassle-free resident approvals.', iconPath: 'assets/icons/preapprove_entry.svg',type: 'services',),
-  //   HomeScreenCard(heading: 'Family Members', description: 'Inclusive communities. Easy family additions. Strengthening bonds', iconPath: 'assets/icons/complaint.svg',type: 'services',),
-  //
-  //   HomeScreenCard(heading: 'Society Events', description: 'Unforgettable gatherings. Engaging community events.', iconPath: 'assets/icons/event.svg',type: 'events',),
-  //   HomeScreenCard(heading: 'Notice Board', description: 'Stay informed. Important updates. Community notices at fingertips', iconPath: 'assets/icons/noticeboard.svg',type: 'events',),
-  //
-  //   HomeScreenCard(heading: 'Neighbours', description: 'Connect with neighbors. Instant community communication', iconPath: 'assets/icons/chat.svg',type: 'chats',),
-  //   HomeScreenCard(heading: 'Discussion Forum', description: 'Engage. Discuss. Share. Community forum platform', iconPath: 'assets/icons/discussion_forum.svg',type: 'chats',),
-  //
-  //   HomeScreenCard(heading: 'Complaint History', description: 'Track. Resolve. Improve. Complaint history tracker', iconPath: 'assets/icons/history.svg',type: 'history',),
-  //   HomeScreenCard(heading: 'Guest History', description: 'Guest visits. History. Enhanced security.', iconPath: 'assets/icons/history.svg',type: 'history',),
-  //
-  //
-  //
-  //   HomeScreenCard(heading: 'Monthly Bills', description: 'Easy pay your Monthly Bills', iconPath: 'assets/icons/history.svg',type: 'bills',),
-  //
-  //
-  // ];
+  late TabController tabController;
+  gatekeeper.GateKeeper? gateKeepers;
+  var gateKeeperLi = <gatekeeper.GateKeeper>[];
 
-
+  final List<Tab> tabs = [
+    Tab(
+      text: 'Guest',
+      icon: SvgPicture.asset('assets/icons/guest_icon.svg'),
+    ),
+    Tab(
+      text: 'Delivery',
+      icon: SvgPicture.asset('assets/icons/delivery_icon.svg'),
+    ),
+    Tab(
+      text: 'Cab',
+      icon: SvgPicture.asset('assets/icons/cab_icon.svg'),
+    ),
+    Tab(
+      text: 'Visiting Help',
+      icon: SvgPicture.asset('assets/icons/visiting_help_icon.svg'),
+    ),
+  ];
 
   TextEditingController nameController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
@@ -43,7 +46,6 @@ class AddPreApproveEntryController extends GetxController {
   TextEditingController addressController = TextEditingController();
   TextEditingController vehicleNoController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-  File? imageFile;
   TextEditingController arrivaldate = TextEditingController();
   TextEditingController guestVehicleNo = TextEditingController();
   TextEditingController arrivaltime = TextEditingController();
@@ -51,73 +53,38 @@ class AddPreApproveEntryController extends GetxController {
   var data = Get.arguments;
   late final User userdata;
   late final Residents resident;
-
-  String? gateKeeperDropDownValue;
-  String? visitorTypeDropDownValue = 'Guest';
-  List<GateKeeper> gateKeeperList = [];
-  List<String> visitorTypesList = ['Guest', 'Delivery', 'Cab', 'Visiting Help'];
-
+  int visitorType = 0;
+  String? visitorTypeValue;
   bool isData = false;
-  bool isGateKeeper = false;
   bool isVisitorType = false;
+  bool isLoading = false;
 
-  List<Map<String, dynamic>> visitorTypes = [
-    {"id": 1, "name": "Cab", "status": false, "icon": "assets/cab_icon.svg"},
-    {
-      "id": 2,
-      "name": "Delivery",
-      "status": false,
-      "icon": "assets/delivery_icon.svg"
-    },
-    {
-      "id": 3,
-      "name": "Guest",
-      "status": false,
-      "icon": "assets/guest_icon.svg"
-    },
-    {
-      "id": 4,
-      "name": "Visiting Help",
-      "status": false,
-      "icon": "assets/visiting_help_icon.svg"
-    }
-  ];
-
-  setVisitorType(bool status) {
-    status = true;
-    print(visitorTypes);
-    update();
-    return status;
-  }
-
-  isSetGateKeeper() {
-    isGateKeeper = true;
-    update();
-  }
+  bool checkBoxValue = false;
 
   @override
   void onInit() {
     // TODO: implement onInit
     super.onInit();
-
+    visitorType = data[2];
+    tabController =
+        TabController(length: 4, vsync: this, initialIndex: visitorType);
     userdata = data[0];
     resident = data[1];
-    getGateKeeperList();
-    print(userdata);
+    if (visitorType == 0) {
+      visitorTypeValue = 'Guest';
+    } else if (visitorType == 1) {
+      visitorTypeValue = 'Delivery';
+    } else if (visitorType == 2) {
+      visitorTypeValue = 'Cab';
+    } else if (visitorType == 3) {
+      visitorTypeValue = 'Visiting Help';
+    }
   }
 
   setVisitorTypeDropDownValue(val) {
-    visitorTypeDropDownValue = val;
+    visitorTypeValue = val;
     update();
   }
-
-  getGateKeeperList() async {
-    gateKeeperList =
-        await getGateKeepersApi(resident.subadminid!, userdata.bearerToken!);
-    isData = true;
-    update();
-  }
-
 
   Future StartDate(context) async {
     DateTime? picked = await showDatePicker(
@@ -144,28 +111,21 @@ class AddPreApproveEntryController extends GetxController {
     print('time.$picked');
     var currentTime =
         '${picked!.hour.toString().padLeft(2, '0')}:${picked.minute.toString()}';
-    // .padLeft(2, '0')}:${picked.period.toString().split('.')[1]}';
 
     currentTime.toString();
     arrivaltime.text = currentTime.toString().split(' ')[0].trim();
     update();
   }
 
-  setGateKeeperDropDown(newValue) {
-    gateKeeperDropDownValue = newValue;
-
-    update();
-  }
-
   setVisitorTypeDropDown(newValue) {
-    visitorTypeDropDownValue = newValue;
+    visitorTypeValue = newValue;
 
     update();
   }
 
-  Future<List<GateKeeper>> getGateKeepersApi(
-      int subadminid, String token) async {
-    List<GateKeeper> li = [];
+  Future<List<gatekeeper.GateKeeper>> getGateKeepersApi(
+      {required int subadminid, required String token}) async {
+    List<gatekeeper.GateKeeper> li = [];
     print('getGateKeepersApi hit');
 
     final response = await Http.get(
@@ -182,7 +142,7 @@ class AddPreApproveEntryController extends GetxController {
 
     if (response.statusCode == 200) {
       li = (data['data'] as List)
-          .map((e) => GateKeeper(
+          .map((e) => gatekeeper.GateKeeper(
               e["gatekeeperid"],
               e["subadminid"],
               e["gateno"],
@@ -217,6 +177,8 @@ class AddPreApproveEntryController extends GetxController {
     required String arrivaldate,
     required String arrivaltime,
   }) async {
+    isLoading = true;
+    update();
     final response = await Http.post(
       Uri.parse(Api.addPreApproveEntry),
       headers: <String, String>{
@@ -241,15 +203,30 @@ class AddPreApproveEntryController extends GetxController {
     print(response.body);
 
     if (response.statusCode == 200) {
+      isLoading = false;
+      update();
       var data = jsonDecode(response.body);
       print(data);
       print(response.statusCode);
 
       Get.offAndToNamed(preapproveentryscreen, arguments: [userdata, resident]);
 
-      Get.snackbar(" PreApprove Entry Successfully", "");
+      myToast(msg: 'Operation Successful');
     } else {
-      Get.snackbar("Failed to Add PreApprove Entry", "");
+      isLoading = false;
+      update();
+      myToast(msg: 'Operation Failed', isNegative: true);
     }
+  }
+
+  SelectedGatekeeper(val) async {
+    gateKeepers = val;
+
+    update();
+  }
+
+  setCheckBox(val) async {
+    checkBoxValue = val;
+    update();
   }
 }

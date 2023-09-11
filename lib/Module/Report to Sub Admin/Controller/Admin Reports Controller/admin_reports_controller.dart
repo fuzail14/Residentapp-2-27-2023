@@ -1,83 +1,97 @@
-import 'dart:convert';
 import 'package:get/get.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:userapp/Constants/constants.dart';
-import 'package:userapp/Module/Report%20to%20Sub%20Admin/Model/Reports.dart';
-import '../../../../Constants/api_routes.dart';
+import 'package:userapp/Repo/Report%20Repository/report_repository.dart';
+
 import '../../../HomeScreen/Model/residents.dart';
 import '../../../Login/Model/User.dart';
-import 'package:http/http.dart' as Http;
+import '../../Model/Reports.dart';
 
 class AdminReportsController extends GetxController {
+  ReportRepository reportRepository = ReportRepository();
+
+  static const pageSize = 6;
+  final PagingController<int, Reports> pagingController =
+      PagingController(firstPageKey: 1);
+  List<Reports> reportsLi = [];
+  List<Reports> dataList = [];
+
   var data = Get.arguments;
-   Residents? resident;
+  Residents? resident;
   late final User user;
+  bool isLoading = false;
 
   @override
   void onInit() {
-    // TODO: implement onInit
+    pagingController.addPageRequestListener((pageKey) {
+      _fetchPage(pageKey);
+    });
     super.onInit();
+
     user = data[0];
-    resident=data[1];
-
+    resident = data[1];
   }
 
-  adminReportsApi(int userid, String token) async {
-    print("token $token");
+  Future<List<Reports>> adminReportsApi(
+      {required int userid, required String token, required pageKey}) async {
+    await reportRepository
+        .adminReportsApi(userid: userid, token: token, pageKey: pageKey)
+        .then((val) {
+      reportsLi = (val['data']['data'] as List)
+          .map((e) => Reports(
+              title: e['title'],
+              id: e['id'],
+              userid: e['userid'],
+              description: e['description'],
+              status: e['status'],
+              statusdescription: e['statusdescription'],
+              createdAt: e['created_at'],
+              updatedAt: e['updated_at'],
+              subadminid: e['subadminid']))
+          .toList();
+    }).onError((error, stackTrace) {
+      myToast(msg: error.toString(), isNegative: true);
+      throw Exception(error);
+    });
 
-    final response = await Http.get(
-      Uri.parse(Api.adminReports + "/" + userid.toString()),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        'Authorization': "Bearer $token"
-      },
-    );
-    var data = jsonDecode(response.body.toString());
-
-    if (response.statusCode == 200) {
-      return Reports.fromJson(data);
-    }
-    return Reports.fromJson(data);
-    ;
+    return reportsLi;
   }
 
-  ProblemSolvedButtonApi(int reportid, int userid, String token) async {
-    print('id $reportid');
-    print('userid $userid');
-
-    print('token $token');
-
-    final uri = Uri.parse(Api.updateReportStatus);
-    final headers = {
-      'Content-Type': 'application/json; charset=UTF-8',
-      'Authorization': "Bearer $token"
-    };
-    Map<String, dynamic> body = {
-      "id": reportid,
-      "userid": userid,
-      "status": 4,
+  ProblemSolvedButtonApi(
+      {required int id,
+      required int userId,
+      required String token,
+      required int index}) async {
+    Map<String, String> data = {
+      "id": id.toString(),
+      "userid": userId.toString(),
+      "status": 4.toString(),
       "statusdescription": 'completed',
     };
-    String jsonBody = json.encode(body);
-    final encoding = Encoding.getByName('utf-8');
 
-    Http.Response response = await Http.post(
-      uri,
-      headers: headers,
-      body: jsonBody,
-      encoding: encoding,
-    );
+    await reportRepository.ProblemSolvedButtonApi(data: data, token: token)
+        .then((val) {
+      final oldList = pagingController.itemList;
+      final newList = oldList!.removeAt(index);
 
-    print(response.statusCode);
-
-    if (response.statusCode == 200) {
-      Get.snackbar('Message:', 'Report Completed',
-          snackPosition: SnackPosition.BOTTOM,
-          showProgressIndicator: true,
-          progressIndicatorBackgroundColor: primaryColor);
-
-      adminReportsApi(user.userId!, user.bearerToken!);
-
+      pagingController.itemList = newList as List<Reports>?;
       update();
+      myToast(msg: 'Report Complete');
+    }).onError((e, stackTrace) {
+      myToast(msg: e.toString(), isNegative: true);
+    });
+  }
+
+  Future<void> _fetchPage(int pageKey) async {
+    dataList = await adminReportsApi(
+        userid: user.userId!, token: user.bearerToken!, pageKey: pageKey);
+
+    final isLastPage = dataList!.length < pageSize;
+    if (isLastPage) {
+      pagingController.appendLastPage(dataList);
+    } else {
+      final nextPageKey = pageKey + 1;
+      pagingController.appendPage(dataList, nextPageKey);
     }
   }
 }

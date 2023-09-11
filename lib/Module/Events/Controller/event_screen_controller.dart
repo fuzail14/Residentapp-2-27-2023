@@ -1,10 +1,10 @@
 import 'dart:convert';
+
 import 'package:get/get.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as Http;
+import 'package:image_picker/image_picker.dart';
 
 import '../../../Constants/api_routes.dart';
-
 import '../../HomeScreen/Model/residents.dart';
 import '../../Login/Model/User.dart';
 import '../Model/Event.dart';
@@ -13,7 +13,8 @@ class EventScreenController extends GetxController {
   final ImagePicker imagePicker = ImagePicker();
   var user = Get.arguments;
   late final User userdata;
-  late final  Residents resident;
+  late final Residents resident;
+  var snapShot;
 
   @override
   void onInit() {
@@ -22,10 +23,6 @@ class EventScreenController extends GetxController {
 
     userdata = user[0];
     resident = user[1];
-
-
-
-
   }
 
   Future<Event> viewEventsApi(

@@ -1,9 +1,12 @@
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_native_contact_picker/flutter_native_contact_picker.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:userapp/Constants/constants.dart';
+import 'package:userapp/Module/Add%20PreApprove%20Entry/Model/GateKeeper.dart';
 import 'package:userapp/Widgets/My%20Back%20Button/my_back_button.dart';
 import 'package:userapp/Widgets/My%20Button/my_button.dart';
 import 'package:userapp/Widgets/My%20TextForm%20Field/my_textform_field.dart';
@@ -14,6 +17,7 @@ import '../Controller/add_pre_approve_entry_controller.dart';
 class AddPreApproveEntry extends GetView {
   @override
   Widget build(BuildContext context) {
+    print('build');
     return SafeArea(
       child: GetBuilder<AddPreApproveEntryController>(
         init: AddPreApproveEntryController(),
@@ -34,7 +38,7 @@ class AddPreApproveEntry extends GetView {
                       key: controller.formKey,
                       child: SingleChildScrollView(
                         child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             MyBackButton(
                               text: 'Add PreApprove Entry',
@@ -46,58 +50,6 @@ class AddPreApproveEntry extends GetView {
                               },
                             ),
                             31.h.ph,
-                            controller.isData
-                                ? Padding(
-                                    padding:
-                                        EdgeInsets.fromLTRB(44.w, 0, 45.w, 0),
-                                    child: Align(
-                                      alignment: Alignment.centerLeft,
-                                      child: Text(
-                                        "Choose Gate",
-                                        style: GoogleFonts.ubuntu(
-                                            fontStyle: FontStyle.normal,
-                                            fontWeight: FontWeight.w400,
-                                            fontSize: 14,
-                                            color: HexColor('#717171')),
-                                      ),
-                                    ),
-                                  )
-                                : CircularProgressIndicator(
-                                    color: primaryColor,
-                                  ),
-                            Padding(
-                              padding: EdgeInsets.fromLTRB(44.w, 0, 45.w, 0),
-                              child: DropdownButton(
-                                style: GoogleFonts.ubuntu(
-                                    fontStyle: FontStyle.normal,
-                                    fontWeight: FontWeight.w300,
-                                    fontSize: 14,
-                                    color: Colors.black),
-                                value: controller.gateKeeperDropDownValue,
-                                isExpanded: true,
-                                icon: Icon(
-                                  Icons.arrow_drop_down_sharp,
-                                  color: primaryColor,
-                                ),
-                                items: controller.gateKeeperList.map((items) {
-                                  return DropdownMenuItem(
-                                    value: items.gateKeeperId.toString(),
-                                    child: Padding(
-                                        padding: EdgeInsets.all(8),
-                                        child: Row(
-                                          children: [
-                                            Text(items.gateNo.toString())
-                                          ],
-                                        )),
-                                  );
-                                }).toList(),
-                                onChanged: (String? newValue) {
-                                  controller.setGateKeeperDropDown(newValue);
-                                  controller.gateKeeperDropDownValue;
-                                  print(controller.gateKeeperDropDownValue);
-                                },
-                              ),
-                            ),
                             Padding(
                               padding: EdgeInsets.fromLTRB(44.w, 0, 45.w, 0),
                               child: Align(
@@ -107,57 +59,104 @@ class AddPreApproveEntry extends GetView {
                                   style: GoogleFonts.ubuntu(
                                       fontStyle: FontStyle.normal,
                                       fontWeight: FontWeight.w400,
-                                      fontSize: 14,
+                                      fontSize: 14.sp,
                                       color: HexColor('#4D4D4D')),
+                                ),
+                              ),
+                            ),
+                            12.h.ph,
+                            Padding(
+                              padding: EdgeInsets.fromLTRB(24.w, 0, 45.w, 0),
+                              child: Stack(
+                                children: [
+                                  Positioned(
+                                    top: 67.h,
+                                    left: 22.w,
+                                    child: Container(
+                                      color: HexColor('#E4E4E4'),
+                                      width: 275.w,
+                                      height: 2.w,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 300.w,
+                                    child: TabBar(
+                                        onTap: (visitorType) {
+                                          print(visitorType);
+
+                                          if (visitorType == 0) {
+                                            controller.visitorTypeValue =
+                                                'Guest';
+                                          } else if (visitorType == 1) {
+                                            controller.visitorTypeValue =
+                                                'Delivery';
+                                          } else if (visitorType == 2) {
+                                            controller.visitorTypeValue = 'Cab';
+                                          } else if (visitorType == 3) {
+                                            controller.visitorTypeValue =
+                                                'Visiting Help';
+                                          }
+                                        },
+                                        labelPadding: EdgeInsets.zero,
+                                        indicatorSize:
+                                            TabBarIndicatorSize.label,
+                                        automaticIndicatorColorAdjustment: true,
+                                        controller: controller.tabController,
+                                        indicatorWeight: 1.4,
+                                        indicatorColor: primaryColor,
+                                        labelColor: HexColor('#717171'),
+                                        labelStyle: GoogleFonts.ubuntu(
+                                            fontSize: 12.sp,
+                                            fontWeight: FontWeight.w300),
+                                        tabs: controller.tabs),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            31.h.ph,
+                            Padding(
+                              padding: EdgeInsets.fromLTRB(44.w, 0, 45.w, 0),
+                              child: Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  "Choose Gate",
+                                  style: GoogleFonts.ubuntu(
+                                      fontStyle: FontStyle.normal,
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 14.sp,
+                                      color: HexColor('#717171')),
                                 ),
                               ),
                             ),
                             Padding(
                               padding: EdgeInsets.fromLTRB(44.w, 0, 45.w, 0),
-                              child: DropdownButton(
-                                isExpanded: true,
-                                style: GoogleFonts.ubuntu(
-                                    fontStyle: FontStyle.normal,
-                                    fontWeight: FontWeight.w300,
-                                    fontSize: 14,
-                                    color: HexColor('#4D4D4D')),
-                                value: controller.visitorTypeDropDownValue,
-                                icon: Icon(
-                                  Icons.arrow_drop_down_sharp,
-                                  color: primaryColor,
-                                ),
-                                items: controller.visitorTypesList
-                                    .map((String? items) {
-                                  return DropdownMenuItem(
-                                    value: items,
-                                    child: Text(items!),
-                                  );
-                                }).toList(),
-                                onChanged: (String? newValue) {
-                                  controller
-                                      .setVisitorTypeDropDownValue(newValue);
+                              child: DropdownSearch<GateKeeper>(
+                                dropdownDecoratorProps: DropDownDecoratorProps(
+                                    dropdownSearchDecoration: InputDecoration(
+                                  focusedBorder: UnderlineInputBorder(
+                                      borderSide:
+                                          BorderSide(color: primaryColor)),
+                                  enabledBorder: UnderlineInputBorder(
+                                      borderSide: BorderSide(
+                                          color: HexColor('#E4E4E4'))),
+                                  suffixIconColor: primaryColor,
+                                )),
+                                validator: (value) =>
+                                    value == null ? 'Select Gatekeeper' : null,
+                                asyncItems: (String filter) async {
+                                  return controller.getGateKeepersApi(
+                                      subadminid:
+                                          controller.resident.subadminid!,
+                                      token: controller.userdata.bearerToken!);
+                                },
+                                onChanged: (GateKeeper? data) {
+                                  controller.SelectedGatekeeper(data!);
+                                },
+                                selectedItem: controller.gateKeepers,
+                                itemAsString: (GateKeeper gatekeeper) {
+                                  return gatekeeper.gateNo.toString();
                                 },
                               ),
-                            ),
-                            MyTextFormField(
-                              controller: controller.nameController,
-                              validator: emptyStringValidator,
-                              labelText: 'Enter Name',
-                              hintText: 'Name',
-                            ),
-                            MyTextFormField(
-                              controller: controller.descriptionController,
-                              // validator: emptyStringValidator,
-                              width: null, maxLines: 3,
-                              labelText: 'Description',
-                              hintText: 'Description',
-                            ),
-                            MyTextFormField(
-                              controller: controller.cnicController,
-                              // validator: emptyStringValidator,
-                              labelText: 'Cnic',
-                              hintText: 'Cnic',
-                              textInputType: TextInputType.number,
                             ),
                             MyTextFormField(
                               controller: controller.mobileNoController,
@@ -165,12 +164,25 @@ class AddPreApproveEntry extends GetView {
                               labelText: 'Mobile Number',
                               hintText: 'Mobile Number',
                               textInputType: TextInputType.number,
+                              suffixIcon: GestureDetector(
+                                  onTap: () async {
+                                    final FlutterContactPicker _contactPicker =
+                                        new FlutterContactPicker();
+
+                                    Contact? contact =
+                                        await _contactPicker.selectContact();
+                                    controller.mobileNoController.text =
+                                        contact!.phoneNumbers!.first.toString();
+                                    controller.nameController.text =
+                                        contact!.fullName.toString();
+                                  },
+                                  child: Icon(Icons.contact_page_sharp)),
                             ),
                             MyTextFormField(
-                              controller: controller.vehicleNoController,
+                              controller: controller.nameController,
                               validator: emptyStringValidator,
-                              labelText: 'Vehicle Number',
-                              hintText: 'Vehicle Number',
+                              labelText: 'Enter Name',
+                              hintText: 'Name',
                             ),
                             MyTextFormField(
                               controller: controller.arrivaldate,
@@ -192,51 +204,87 @@ class AddPreApproveEntry extends GetView {
                                 controller.GuestTime(context);
                               },
                             ),
-                            SizedBox(
-                              height: 20,
+                            if (controller.checkBoxValue) ...[
+                              MyTextFormField(
+                                controller: controller.descriptionController,
+                                // validator: emptyStringValidator,
+                                width: null, maxLines: 3,
+                                labelText: 'Description',
+                                hintText: 'Description',
+                              ),
+                              MyTextFormField(
+                                controller: controller.cnicController,
+                                // validator: emptyStringValidator,
+                                labelText: 'Cnic',
+                                hintText: 'Cnic',
+                                textInputType: TextInputType.number,
+                              ),
+                              MyTextFormField(
+                                controller: controller.vehicleNoController,
+                                // validator: emptyStringValidator,
+                                labelText: 'Vehicle Number',
+                                hintText: 'Vehicle Number',
+                              ),
+                            ],
+                            20.h.ph,
+                            Padding(
+                              padding: EdgeInsets.fromLTRB(44.w, 0, 45.w, 0),
+                              child: ListTile(
+                                title: Text('More Info',
+                                    style: GoogleFonts.ubuntu(
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 15.sp,
+                                        letterSpacing: 0.05)),
+                                trailing: Checkbox(
+                                  value: controller.checkBoxValue,
+                                  onChanged: (newValue) {
+                                    controller.setCheckBox(newValue);
+                                  },
+                                ),
+                              ),
                             ),
-                            MyButton(
-                              name: 'Save',
-                              onPressed: () {
-                                if (controller.formKey.currentState!
-                                    .validate()) {
-                                  print(controller.gateKeeperDropDownValue);
-
-                                  if (controller.gateKeeperDropDownValue ==
-                                      null) {
-                                    Get.snackbar('Error', 'Select Gatekeeper');
-                                    controller.isSetGateKeeper();
-                                  } else if (controller
-                                          .visitorTypeDropDownValue ==
-                                      null) {
-                                    Get.snackbar('Error', 'Select VisitorType');
-                                  } else {
-                                    controller.addPreApproveEntryApi(
-                                        token: controller.userdata.bearerToken!,
-                                        cnic: controller.cnicController.text,
-                                        name: controller.nameController.text,
-                                        mobileno:
-                                            controller.mobileNoController.text,
-                                        userid: controller.userdata.userId!,
-                                        arrivaldate:
-                                            controller.arrivaldate.text,
-                                        arrivaltime:
-                                            controller.arrivaltime.text,
-                                        description: controller
-                                            .descriptionController.text,
-                                        vechileno:
-                                            controller.vehicleNoController.text,
-                                        visitortype: controller
-                                            .visitorTypeDropDownValue!,
-                                        gatekeeperid: int.parse(controller
-                                            .gateKeeperDropDownValue!));
+                            20.h.ph,
+                            Center(
+                              child: MyButton(
+                                loading: controller.isLoading,
+                                name: 'Save',
+                                onPressed: () {
+                                  if (controller.formKey.currentState!
+                                      .validate()) {
+                                    if (controller.visitorTypeValue == null) {
+                                      Get.snackbar(
+                                          'Error', 'Select VisitorType');
+                                    } else {
+                                      if (!controller.isLoading) {
+                                        controller.addPreApproveEntryApi(
+                                            token: controller
+                                                .userdata.bearerToken!,
+                                            cnic:
+                                                controller.cnicController.text,
+                                            name:
+                                                controller.nameController.text,
+                                            mobileno: controller
+                                                .mobileNoController.text,
+                                            userid: controller.userdata.userId!,
+                                            arrivaldate:
+                                                controller.arrivaldate.text,
+                                            arrivaltime:
+                                                controller.arrivaltime.text,
+                                            description: controller
+                                                .descriptionController.text,
+                                            vechileno: controller
+                                                .vehicleNoController.text,
+                                            visitortype:
+                                                controller.visitorTypeValue!,
+                                            gatekeeperid: controller
+                                                .gateKeepers!.gateKeeperId!);
+                                      }
+                                    }
                                   }
-                                }
-                              },
+                                },
+                              ),
                             ),
-                            SizedBox(
-                              height: 20,
-                            ),
+                            20.h.ph
                           ],
                         ),
                       ),

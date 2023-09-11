@@ -1,17 +1,17 @@
 import 'dart:convert';
 import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as Http;
 import 'package:image_picker/image_picker.dart';
 import 'package:userapp/Routes/set_routes.dart';
+
 import '../../../../Constants/api_routes.dart';
 import '../../../HomeScreen/Model/residents.dart';
 import '../../../Login/Model/User.dart';
 
-class AddFamilyMemberController extends GetxController
-{
-
+class AddFamilyMemberController extends GetxController {
   var isHidden = false;
   var isLoading = false;
   TextEditingController firstnameController = TextEditingController();
@@ -33,10 +33,10 @@ class AddFamilyMemberController extends GetxController
     // TODO: implement onInit
     super.onInit();
 
-    userdata=data[0];
-    resident=data[1];
-
+    userdata = data[0];
+    resident = data[1];
   }
+
   getFromGallery(ImageSource source) async {
     XFile? pickedFile = await ImagePicker().pickImage(
       source: ImageSource.gallery,
@@ -69,24 +69,22 @@ class AddFamilyMemberController extends GetxController
     } else {}
   }
 
-
   void togglePasswordView() {
     isHidden = !isHidden;
     update();
   }
 
-
   Future addFamilyMemberApi(
       {required String firstName,
-        required String bearerToken,
-        required String lastName,
-        required String cnic,
-        required String address,
-        required String mobileno,
-        required String password,
-        required int subadminid,
-        required int residentid,
-        required File? file}) async {
+      required String bearerToken,
+      required String lastName,
+      required String cnic,
+      required String address,
+      required String mobileno,
+      required String password,
+      required int subadminid,
+      required int residentid,
+      required File? file}) async {
     print('Add Family Member  Api  Function Call');
     print("----Data----");
     print(firstName);
@@ -101,7 +99,6 @@ class AddFamilyMemberController extends GetxController
     print(bearerToken);
     print("---------------------------");
     Map<String, String> headers = {"Authorization": "Bearer $bearerToken"};
-
 
     var request = Http.MultipartRequest('POST', Uri.parse(Api.addFamilyMember));
     request.headers.addAll(headers);
@@ -126,10 +123,7 @@ class AddFamilyMemberController extends GetxController
       print(data);
       print(response.body);
 
-
-
-      Get.offAndToNamed(viewfamilymember,arguments: [userdata,resident]);
-
+      Get.offAndToNamed(viewfamilymember, arguments: [userdata, resident]);
     } else if (response.statusCode == 403) {
       var data = jsonDecode(response.body.toString());
 
@@ -141,8 +135,4 @@ class AddFamilyMemberController extends GetxController
       Get.snackbar("Failed to Add Family Member", "");
     }
   }
-
-
-
-
 }
